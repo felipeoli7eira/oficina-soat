@@ -1,9 +1,7 @@
 #!/bin/sh
 
-set -e
-
 echo "🔄 Clonando .env.example para .env"
-cp -n .env.example .env
+cp -n /var/www/html/.env.example /var/www/html/.env
 
 echo "🔄 Rodando permissão para o .env"
 chmod 777 /var/www/html/.env

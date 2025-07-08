@@ -39,6 +39,9 @@ services:
         - "9000:9000"
         volumes:
         - ./app:/var/www/html
+        entrypoint: 
+            - /bin/sh
+            - /var/www/sh/docker-entrypoint.sh
         networks:
             - oficina_soat_network
         depends_on:
