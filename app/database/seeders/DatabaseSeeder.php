@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->papeis();
+        $this->clientes();
     }
 
     public function papeis(): void
@@ -27,5 +28,10 @@ class DatabaseSeeder extends Seeder
         DB::table('roles')->insert(['name' => 'comercial', 'guard_name' => 'web']);
         DB::table('roles')->insert(['name' => 'mecanico', 'guard_name' => 'web']);
         DB::table('roles')->insert(['name' => 'gestor_estoque', 'guard_name' => 'web']);
+    }
+
+    public function clientes(): void
+    {
+        \App\Modules\Cliente\Model\Cliente::factory()->count(50)->create();
     }
 }

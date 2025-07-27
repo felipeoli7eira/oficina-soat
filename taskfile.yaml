@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  CONTAINER_LARAVEL: oficina_soat_php
+
+tasks:
+  build:
+    cmds:
+      - docker compose up -d --build
+    desc: "build the image"
+
+  run:
+    cmds:
+      - docker compose up -d
+    desc: "run the container"
+
+  stop:
+    cmds:
+      - docker compose down -v
+    desc: "stop the containers"
+
+  phcmd:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} {{.CLI_ARGS}}
+    desc: "run a command in the php container. example: task cmd -- php artisan serve"
+
+  doc:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan l5-swagger:generate
+    desc: "generate the api documentation"
+
+silent: true
