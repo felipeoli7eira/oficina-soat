@@ -7,13 +7,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
-
         Schema::create('cliente', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
@@ -39,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('cliente');

@@ -2,7 +2,7 @@ FROM nginx:1.28
 
 WORKDIR /var/www/html
 
-COPY code .
+COPY app .
 
 # Copia configurações customizadas do nginx (descomente se necessário)
 # COPY ./docker/nginx/http.d/default.conf /etc/nginx/conf.d/default.conf

@@ -2,31 +2,40 @@
 
 set -e
 
-echo "📁 Criando a pasta entrypoint"
-mkdir -p /var/www/html/entrypoint
+echo "🛠️ Ajustando permissões de pasta de cache e storage"
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
-echo "🗃️ Criando o arquivo index.md"
-echo "# Arquivo de Teste
+if [ ! -f vendor/autoload.php ]; then
+    echo "📦 Instalando dependências"
 
-Este arquivo foi criado pelo entrypoint do container.
+    composer install --no-interaction --prefer-dist --optimize-autoloader || {
+        echo "❌ Falha na instalação das dependências"
+        exit 1
+    }
+fi
 
-Data de criação: $(date)
-Container: oficina_soat_php
+if [ ! -f .env ]; then
+    echo "⚙️ Criando arquivo .env"
+    cp .env.example .env
 
-## Informações do Sistema
-- Hostname: $(hostname)
-- User: $(whoami)
-- Working Directory: $(pwd)
+    echo "🔑 Gerando chave da aplicação"
+    php artisan key:generate
 
-Teste realizado com sucesso!" > /var/www/html/entrypoint/index.md
+    php artisan migrate --seed
+fi
 
-echo "✅ Arquivo /var/www/html/entrypoint/index.md criado com sucesso!"
+if grep -q "^DB_CONNECTION=sqlite" .env; then
+    if [ ! -f database/database.sqlite ]; then
+        echo "💾 Criando database.sqlite"
+        touch database/database.sqlite
+    fi
 
-# Lista o conteúdo criado para confirmar
-echo "📁 Conteúdo do diretório /var/www/html/entrypoint:"
-ls -la /var/www/html/entrypoint/
+    echo "🔧 Corrigindo permissões do database/database.sqlite"
+    chown www-data:www-data database/database.sqlite
+    chmod 664 database/database.sqlite
+fi
 
 echo "🚀 Iniciando o container"
 
-# Executa o comando passado como parâmetro (nginx)
 exec "$@"
