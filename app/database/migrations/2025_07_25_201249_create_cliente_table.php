@@ -11,7 +11,15 @@ return new class extends Migration
     {
         Schema::create('cliente', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
+
+            if (Schema::getConnection()->getDriverName() === 'sqlite') {
+                $table->uuid('uuid')->unique();
+            }
+
+            if (Schema::getConnection()->getDriverName() === 'pgsql') {
+                $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
+            }
+
             $table->string('nome', 100);
             $table->string('cpf', 11)->nullable();
             $table->string('cnpj', 14)->nullable();

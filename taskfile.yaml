@@ -31,4 +31,9 @@ tasks:
       - docker exec -it {{.CONTAINER_LARAVEL}} php artisan l5-swagger:generate
     desc: "generate the api documentation"
 
+  testFeature:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan test --testsuite=Feature --stop-on-failure
+    desc: "run the tests"
+
 silent: true
