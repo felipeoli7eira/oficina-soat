@@ -33,7 +33,7 @@ tasks:
 
   testFeature:
     cmds:
-      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan test --testsuite=Feature --stop-on-failure
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan test --testsuite=Feature --stop-on-failure --coverage --min=80.3
     desc: "run the tests"
 
 silent: true
