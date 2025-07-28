@@ -2,11 +2,11 @@
 
 Este arquivo foi criado pelo entrypoint do container.
 
-Data de criação: Mon Jul 28
-Container: oficina_soat_nginx
+Data de criação: Mon Jul 28 14:13:10 UTC 2025
+Container: oficina_soat_php
 
 ## Informações do Sistema
-- Hostname: eb1d8e87db01
+- Hostname: d786242c171b
 - User: root
 - Working Directory: /var/www/html
 
