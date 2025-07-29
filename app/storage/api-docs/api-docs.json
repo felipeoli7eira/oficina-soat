@@ -13,43 +13,10 @@
                 ],
                 "summary": "Cliente",
                 "description": "Faz a listagem de clientes",
-                "operationId": "a72ae46d8fd04b9270f1c2611aa56f45",
+                "operationId": "d6f7fb3dd1f7b3948e1f45d3d267c374",
                 "responses": {
                     "200": {
                         "description": "Para quando a requisição for bem sucedida. Pode ou não retornar clientes."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Cliente"
-                ],
-                "summary": "Cadastra um cliente",
-                "description": "Cadastra um novo cliente no sistema.",
-                "operationId": "8a820d28c1f69f4601434ac1de851b58",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "./../OpenApi/Schemas/CadastroClienteSchema"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Cliente cadastrado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "./../OpenApi/Schemas/CadastroClienteSchema"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro interno no servidor"
                     }
                 }
             }
@@ -81,6 +48,163 @@
                     }
                 }
             }
+        },
+        "/api/veiculo": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Veiculo",
+                "description": "Faz a listagem de veículos",
+                "operationId": "d85792b8ded3ce84c22bb90793307e2c",
+                "responses": {
+                    "200": {
+                        "description": "Para quando a requisição for bem sucedida. Pode ou não retornar veículos."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Cadastrar veículo",
+                "description": "Cadastra um novo veículo",
+                "operationId": "54583f9eb0f040fe8120ec4ed058928c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "marca",
+                                    "modelo",
+                                    "ano",
+                                    "placa",
+                                    "chassi"
+                                ],
+                                "properties": {
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano": {
+                                        "type": "integer",
+                                        "example": 2020
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "ABC-1234"
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Prata"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "1234567890ABCDEFG"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Veículo cadastrado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            }
+        },
+        "/api/veiculo/{uuid}": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Obter veículo por UUID",
+                "description": "Obtém um veículo específico pelo seu UUID",
+                "operationId": "1642e956c7402aff493d1dac4e94ae80",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo encontrado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Atualizar veículo",
+                "description": "Atualiza os dados de um veículo pelo seu UUID",
+                "operationId": "92dfe8775ca61950d61736c60000d45e",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Remover veículo",
+                "description": "Remove um veículo pelo seu UUID",
+                "operationId": "1af1197535c8612671c8050a65869f12",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Veículo removido com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            }
         }
     },
     "tags": [
@@ -91,6 +215,10 @@
         {
             "name": "Example",
             "description": "Example"
+        },
+        {
+            "name": "Veiculo",
+            "description": "Veiculo"
         }
     ]
 }
