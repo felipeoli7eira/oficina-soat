@@ -28,7 +28,6 @@ class AtualizacaoRequest extends FormRequest
     {
         $dados = $this->all();
 
-        // Mapear 'ano' para 'ano_fabricacao' se existir
         if (isset($dados['ano'])) {
             $dados['ano_fabricacao'] = $dados['ano'];
             unset($dados['ano']);

@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $this->papeis();
-        $this->clientes();
+        // $this->papeis();
+        // $this->clientes();
+        $this->veiculos();
     }
 
     public function papeis(): void
@@ -33,5 +34,10 @@ class DatabaseSeeder extends Seeder
     public function clientes(): void
     {
         \App\Modules\Cliente\Model\Cliente::factory()->count(50)->create();
+    }
+
+    public function veiculos(): void
+    {
+        \App\Modules\Veiculo\Model\Veiculo::factory()->count(50)->create();
     }
 }

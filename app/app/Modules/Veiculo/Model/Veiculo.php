@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Modules\Veiculo\Model;
 
+namespace App\Modules\Veiculo\Model;
+use Database\Factories\VeiculoFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Veiculo extends Model
 {
+    /** @use HasFactory<\Database\Factories\VeiculoFactory> */
+    use HasFactory;
+
     public $table = 'veiculo';
 
     public $timestamps = false;
@@ -41,5 +46,10 @@ class Veiculo extends Model
                 $model->uuid = (string) Str::uuid();
             }
         });
+    }
+
+    protected static function newFactory(): VeiculoFactory
+    {
+        return VeiculoFactory::new();
     }
 }
