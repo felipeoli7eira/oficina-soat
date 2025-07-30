@@ -77,14 +77,15 @@ class VeiculoController extends Controller
     public function cadastro()
     {
         try {
-            // Implementação básica para passar no teste
-            return Response::json([], HttpResponse::HTTP_CREATED);
+            $dto = $request->toDto();
+            $response = $this->service->cadastro($dto);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+        return Response::json($response, HttpResponse::HTTP_CREATED);
     }
 
     /**
@@ -112,7 +113,7 @@ class VeiculoController extends Controller
     public function obterUmPorUuid(string $uuid)
     {
         try {
-            $response = $this->service->obterUmPorUuid($uuid);
+            $response = $this->service->obterUmPorUuid($request->uuid);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -148,7 +149,7 @@ class VeiculoController extends Controller
     public function remocao(string $uuid)
     {
         try {
-            $response = $this->service->remocao($uuid);
+            $response = $this->service->remocao($request->uuid);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -156,7 +157,7 @@ class VeiculoController extends Controller
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return Response::json($response);
+        return Response::json($response, HttpResponse::HTTP_NO_CONTENT);
     }
 
     /**
@@ -184,13 +185,14 @@ class VeiculoController extends Controller
     public function atualizacao(string $uuid)
     {
         try {
-            // Implementação básica para passar no teste
-            return Response::json([]);
+            $response = $this->service->atualizacao($request->route('uuid'), $request->toDto());
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        return Response::json($response);
     }
 }
