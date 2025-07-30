@@ -13,43 +13,10 @@
                 ],
                 "summary": "Cliente",
                 "description": "Faz a listagem de clientes",
-                "operationId": "a72ae46d8fd04b9270f1c2611aa56f45",
+                "operationId": "d6f7fb3dd1f7b3948e1f45d3d267c374",
                 "responses": {
                     "200": {
                         "description": "Para quando a requisição for bem sucedida. Pode ou não retornar clientes."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Cliente"
-                ],
-                "summary": "Cadastra um cliente",
-                "description": "Cadastra um novo cliente no sistema.",
-                "operationId": "8a820d28c1f69f4601434ac1de851b58",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "./../OpenApi/Schemas/CadastroClienteSchema"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Cliente cadastrado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "./../OpenApi/Schemas/CadastroClienteSchema"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro interno no servidor"
                     }
                 }
             }

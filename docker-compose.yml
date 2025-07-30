@@ -24,9 +24,6 @@ services:
         - "8080:80"
         volumes:
             - ./app:/var/www/html
-
-        # - ./docker/nginx/http.d/default.conf:/etc/nginx/conf.d/default.conf
-        # - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         networks:
             - oficina_soat_network
         depends_on:
@@ -42,10 +39,6 @@ services:
         - "9000:9000"
         volumes:
             - ./app:/var/www/html
-        # - ./app:/var/www/html
-        # entrypoint:
-        #     - /bin/sh
-        #     - /var/www/sh/docker-entrypoint.sh
         networks:
             - oficina_soat_network
         depends_on:
@@ -55,6 +48,6 @@ volumes:
     oficina_soat_pg_data:
 
 networks:
-  oficina_soat_network:
-    name: oficina_soat_network
-    driver: bridge
+    oficina_soat_network:
+        name: oficina_soat_network
+        driver: bridge
