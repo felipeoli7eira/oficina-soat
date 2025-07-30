@@ -22,18 +22,8 @@ if [ ! -f .env ]; then
     echo "🔑 Gerando chave da aplicação"
     php artisan key:generate
 
+    echo "🆙 Rodando migrations"
     php artisan migrate --seed
-fi
-
-if grep -q "^DB_CONNECTION=sqlite" .env; then
-    if [ ! -f database/database.sqlite ]; then
-        echo "💾 Criando database.sqlite"
-        touch database/database.sqlite
-    fi
-
-    echo "🔧 Corrigindo permissões do database/database.sqlite"
-    chown www-data:www-data database/database.sqlite
-    chmod 664 database/database.sqlite
 fi
 
 echo "🚀 Iniciando o container"

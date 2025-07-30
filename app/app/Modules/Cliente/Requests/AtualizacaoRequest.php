@@ -13,49 +13,44 @@ class AtualizacaoRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'uuid' => $this->route('uuid'),
-        ]);
+        $this->merge(['uuid' => $this->route('uuid')]);
+    }
+
+    protected function uuid(): string
+    {
+        return (string) $this->route('uuid');
     }
 
     public function rules(): array
     {
         return [
             'uuid' => ['required', 'uuid', 'exists:cliente,uuid'],
-
             'nome' => ['sometimes', 'string', 'min:3', 'max:100'],
 
-            // Se não fizer a exclusão do uuid atual, o Laravel vai acusar que o próprio valor atual já está no banco.
-            'cpf' => ['sometimes', 'string', 'size:11', 'required_without_all:cnpj', 'unique:cliente,cpf,' . $this->route('uuid') . ',uuid'],
-            'cnpj' => ['sometimes', 'string', 'size:14', 'required_without_all:cpf', 'unique:cliente,cnpj,' . $this->route('uuid') . ',uuid'],
+            // Se não fizer a exclusão do uuid atual, o Laravel vai acusar que o próprio valor atual já está no banco,
+            // ou seja, os campos CNPJ e CPF devem ser únicos, desconsiderando o próprio usuário que está realizando a atualização.
+            'cpf'  => ['sometimes', 'string', 'cpf', 'required_without_all:cnpj', 'unique:cliente,cpf,' . $this->uuid() . ',uuid'],
+            'cnpj' => ['sometimes', 'string', 'cnpj', 'required_without_all:cpf', 'unique:cliente,cnpj,' . $this->uuid() . ',uuid'],
 
-            'email' => ['sometimes', 'string', 'email', 'min:5', 'max:50', 'unique:cliente,email,' . $this->route('uuid') . ',uuid'],
-            'telefone_movel' => ['sometimes', 'string', 'min:10', 'max:20'],
+            'email'         => ['sometimes', 'string', 'email', 'unique:cliente,email,' . $this->uuid() . ',uuid'],
+            'telefone_movel' => ['sometimes', 'string', 'regex:/^\(\d{2}\) 9\d{4}-\d{4}$/'],
 
-            'cep' => ['sometimes', 'string', 'size:8'],
-            'logradouro' => ['sometimes', 'string', 'min:3', 'max:100'],
-            'numero' => ['sometimes', 'nullable', 'string', 'min:1', 'max:20'],
-            'bairro' => ['sometimes', 'string', 'min:3', 'max:50'],
+            'cep'         => ['sometimes', 'string', 'formato_cep'],
+            'logradouro'  => ['sometimes', 'string', 'min:3', 'max:100'],
+            'numero'      => ['sometimes', 'nullable', 'string', 'min:1', 'max:20'],
+            'bairro'      => ['sometimes', 'string', 'min:3', 'max:50'],
             'complemento' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'cidade' => ['sometimes', 'string', 'min:3', 'max:50'],
-            'uf' => ['sometimes', 'string', 'size:2'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'uuid.required' => 'O campo uuid é obrigatório.',
-            'uuid.uuid' => 'O UUID informado nao é valido.',
-            'uuid.exists' => 'O UUID informado nao existe.',
+            'cidade'      => ['sometimes', 'string', 'min:3', 'max:50'],
+            'uf'          => ['sometimes', 'string', 'uf'],
         ];
     }
 
     public function failedValidation(Validator $validator): void
     {
         throw new HttpResponseException(response()->json([
-            'message'   => 'Erros de validação',
-            'errors'    => $validator->errors()->all(),
+            'error'   => true,
+            'message' => 'Dados enviados incorretamente',
+            'data'    => $validator->errors()->all(),
         ], Response::HTTP_BAD_REQUEST));
     }
 

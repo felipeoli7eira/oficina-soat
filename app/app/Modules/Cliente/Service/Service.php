@@ -35,7 +35,7 @@ class Service
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        $dados = $dto->dados;
+        $dados = $dto->asArray();
         unset($dados['uuid']);
 
         if (empty($dados)) {
