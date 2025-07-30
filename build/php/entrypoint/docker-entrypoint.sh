@@ -26,6 +26,9 @@ if [ ! -f .env ]; then
     php artisan migrate --seed
 fi
 
+echo "📚 Atualizando doc da api"
+php artisan l5-swagger:generate
+
 echo "🚀 Iniciando o container"
 
 exec "$@"
