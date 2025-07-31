@@ -6,8 +6,6 @@ namespace App\Modules\Usuario\Controller;
 
 use App\Http\Controllers\Controller as BaseController;
 
-use App\Modules\Usuario\Dto\ListagemDto;
-
 use App\Modules\Usuario\Requests\AtualizacaoRequest;
 use App\Modules\Usuario\Requests\CadastroRequest;
 use App\Modules\Usuario\Requests\ObterUmPorUuidRequest;
@@ -254,10 +252,75 @@ class Controller extends BaseController
         return Response::json($response, HttpResponse::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/usuario/{uuid}",
+     *     summary="Atualiza os dados de um usuário",
+     *     description="Atualiza os dados de um usuário específico com base no UUID informado.",
+     *     tags={"Usuario"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         required=true,
+     *         description="UUID do usuário que será atualizado",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados que devem ser atualizados",
+     *         @OA\JsonContent(
+     *             required={"nome", "role_id", "status"},
+     *             @OA\Property(property="nome", type="string", example="Novo nome"),
+     *             @OA\Property(property="papel", type="string", example="mecanico || atendente || comercial || gestor_estoque"),
+     *             @OA\Property(property="status", type="string", example="inativo || ativo")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário atualizado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=17),
+     *             @OA\Property(property="uuid", type="string", format="uuid", example="b7466bb6-0d93-4f32-a4a0-f5cad13e3360"),
+     *             @OA\Property(property="nome", type="string", example="Novo nome"),
+     *             @OA\Property(property="role_id", type="integer", example=3),
+     *             @OA\Property(property="status", type="string", example="inativo"),
+     *             @OA\Property(property="excluido", type="boolean", example=false),
+     *             @OA\Property(property="data_exclusao", type="string", nullable=true, example=null),
+     *             @OA\Property(property="data_cadastro", type="string", example="31/07/2025 19:33"),
+     *             @OA\Property(property="data_atualizacao", type="string", nullable=true, example=null),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=3),
+     *                 @OA\Property(property="name", type="string", example="mecanico"),
+     *                 @OA\Property(property="guard_name", type="string", example="web"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-31T18:29:09.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-31T18:29:09.000000Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dados inválidos ou campos obrigatórios ausentes",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erros de validação"),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
+     */
     public function atualizacao(AtualizacaoRequest $request)
     {
         try {
-            $response = $this->service->atualizacao($request->route('uuid'), $request->toDto());
+            $response = $this->service->atualizacao($request->uuid(), $request->toDto());
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -265,6 +328,6 @@ class Controller extends BaseController
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return Response::json($response, HttpResponse::HTTP_NO_CONTENT);
+        return Response::json($response);
     }
 }

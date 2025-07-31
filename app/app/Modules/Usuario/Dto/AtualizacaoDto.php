@@ -4,32 +4,29 @@ declare(strict_types=1);
 
 namespace App\Modules\Usuario\Dto;
 
+use Spatie\Permission\Models\Role;
+
 class AtualizacaoDto
 {
-    public function __construct(public readonly array $dados) {}
+    public array $dados = [];
+
+    public function __construct(array $dados = [])
+    {
+        if (array_key_exists('papel', $dados)) {
+            $dados['role_id'] = Role::findByName($dados['papel'])->id;
+
+            unset($dados['papel']);
+        }
+
+        $this->dados = $dados;
+    }
 
     public function asArray(): array
     {
         $safe = $this->dados;
 
-        if (array_key_exists('cpf', $safe)) {
-            $safe['cpf'] = str_replace(['.', '-'], '', $safe['cpf']);
-        }
-
-        if (array_key_exists('cnpj', $safe)) {
-            $safe['cnpj'] = str_replace(['.', '-', '/'], '', $safe['cnpj']);
-        }
-
-        if (array_key_exists('telefone_movel', $safe)) {
-            $safe['telefone_movel'] = str_replace(['(', ')', '-'], '', $safe['telefone_movel']);
-        }
-
-        if (array_key_exists('cep', $safe)) {
-            $safe['cep'] = str_replace(['.', '-'], '', $safe['cep']);
-        }
-
-        if (array_key_exists('uf', $safe)) {
-            $safe['uf'] = strtoupper($safe['uf']);
+        if (array_key_exists('nome', $safe)) {
+            $safe['nome'] = strtolower(trim($safe['nome']));
         }
 
         return $safe;

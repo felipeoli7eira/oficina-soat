@@ -6,7 +6,6 @@ namespace App\Modules\Usuario\Service;
 
 use App\Modules\Usuario\Dto\AtualizacaoDto;
 use App\Modules\Usuario\Dto\CadastroDto;
-use App\Modules\Usuario\Dto\ListagemDto;
 use App\Modules\Usuario\Repository\UsuarioRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -37,19 +36,12 @@ class Service
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        $dados = $dto->asArray();
-        unset($dados['uuid']);
+        $usuario = $this->obterUmPorUuid($uuid);
 
-        if (empty($dados)) {
-            return [];
-        }
+        $novosDados = $dto->merge($usuario->toArray());
 
-        $cliente = $this->obterUmPorUuid($uuid);
+        $usuario->update($novosDados);
 
-        $atualizacao = $dto->merge($cliente->toArray());
-
-        $cliente->update($atualizacao);
-
-        return $cliente->refresh();
+        return $usuario->refresh();
     }
 }

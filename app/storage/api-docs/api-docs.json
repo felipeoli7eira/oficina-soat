@@ -688,6 +688,162 @@
                     }
                 }
             },
+            "put": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Atualiza os dados de um usuário",
+                "description": "Atualiza os dados de um usuário específico com base no UUID informado.",
+                "operationId": "2a4d0c5c9dbc3973c47ce40dc69a84d1",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do usuário que será atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados que devem ser atualizados",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "role_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Novo nome"
+                                    },
+                                    "papel": {
+                                        "type": "string",
+                                        "example": "mecanico || atendente || comercial || gestor_estoque"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "inativo || ativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 17
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "b7466bb6-0d93-4f32-a4a0-f5cad13e3360"
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "Novo nome"
+                                        },
+                                        "role_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "inativo"
+                                        },
+                                        "excluido": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data_exclusao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "data_cadastro": {
+                                            "type": "string",
+                                            "example": "31/07/2025 19:33"
+                                        },
+                                        "data_atualizacao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "role": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "mecanico"
+                                                },
+                                                "guard_name": {
+                                                    "type": "string",
+                                                    "example": "web"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou campos obrigatórios ausentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "O campo uuid selecionado é inválido."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "Usuario"
