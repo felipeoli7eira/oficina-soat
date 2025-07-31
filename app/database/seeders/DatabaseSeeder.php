@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -11,19 +10,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $this->papeis();
+        // $this->roles();
         $this->clientes();
         $this->veiculos();
     }
 
-    public function papeis(): void
+    public function roles(): void
     {
         DB::table('roles')->insert(['name' => 'atendente', 'guard_name' => 'web']);
         DB::table('roles')->insert(['name' => 'comercial', 'guard_name' => 'web']);
@@ -33,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
     public function clientes(): void
     {
-        \App\Modules\Cliente\Model\Cliente::factory()->count(50)->create();
+        \App\Modules\Cliente\Model\Cliente::factory()->count(10)->create();
     }
 
     public function veiculos(): void

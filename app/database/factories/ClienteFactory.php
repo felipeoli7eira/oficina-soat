@@ -13,28 +13,32 @@ class ClienteFactory extends Factory
 
     public function definition(): array
     {
+        $faker = \Faker\Factory::create('pt_BR');
+
+        $empresa = $faker->boolean(30); // 30% chance de ser empresa
+
         $data = [
-            'nome'             => fake()->name(),
-            'cpf'              => fake()->cpf(false),
-            'cnpj'             => fake()->cnpj(false),
-            'email'            => fake()->email(),
-            'telefone_movel'   => fake()->phoneNumber(),
+            'nome'             => $faker->name(),
+            'cpf'              => $empresa ? null : $faker->cpf(false),
+            'cnpj'             => $empresa ? $faker->cnpj(false) : null,
+            'email'            => $faker->email(),
+            'telefone_movel'   => str_replace(['(', ')', '-', ' '], '', $faker->phoneNumber()),
 
-            'cep'              => str_replace('-', '', fake()->postcode()),
-            'logradouro'       => fake()->streetName(),
-            'numero'           => fake()->buildingNumber(),
-            'bairro'           => fake()->cityPrefix(),
-            'complemento'      => fake()->secondaryAddress(),
-            'cidade'           => fake()->city(),
-            'uf'               => fake()->stateAbbr(),
+            'cep'              => str_replace('-', '', $faker->postcode()),
+            'logradouro'       => $faker->streetName(),
+            'numero'           => $faker->buildingNumber(),
+            'bairro'           => $faker->citySuffix(),
+            'complemento'      => $faker->optional(0.3)->secondaryAddress(), // nem todo mundo tem
+            'cidade'           => $faker->city(),
+            'uf'               => $faker->stateAbbr(),
 
-            'excluido'         => fake()->boolean(),
-            'data_cadastro'    => fake()->dateTimeBetween('-1 year', 'now'),
-            'data_atualizacao' => fake()->dateTimeBetween('-1 year', 'now'),
+            'excluido'         => $faker->boolean(10), // só 10% excluídos
+            'data_cadastro'    => $faker->dateTimeBetween('-1 year', 'now'),
+            'data_atualizacao' => $faker->dateTimeBetween('-1 year', 'now'),
         ];
 
         if ($data['excluido']) {
-            $data['data_exclusao'] = fake()->dateTimeBetween('-1 year', 'now');
+            $data['data_exclusao'] = $faker->dateTimeBetween($data['data_atualizacao'], 'now');
         }
 
         return $data;

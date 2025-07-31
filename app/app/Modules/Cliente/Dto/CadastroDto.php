@@ -25,17 +25,17 @@ class CadastroDto
     {
         return [
             'nome'           => $this->nome,
-            'cpf'            => $this->cpf,
-            'cnpj'           => $this->cnpj,
+            'cpf'            => str_replace(['.', '-'], '', $this?->cpf ?? ''),
+            'cnpj'           => str_replace(['.', '-', '/'], '', $this?->cnpj ?? ''),
             'email'          => $this->email,
-            'telefone_movel' => $this->telefone_movel,
-            'cep'            => $this->cep,
+            'telefone_movel' => str_replace(['(', ')', '-'], '', $this->telefone_movel),
+            'cep'            => str_replace(['.', '-'], '', $this->cep),
             'logradouro'     => $this->logradouro,
             'numero'         => $this->numero,
             'bairro'         => $this->bairro,
             'complemento'    => $this->complemento,
             'cidade'         => $this->cidade,
-            'uf'             => $this->uf,
+            'uf'             => strtoupper($this->uf),
         ];
     }
 
