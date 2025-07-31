@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // $this->papeis();
-        // $this->clientes();
+        $this->papeis();
+        $this->clientes();
         $this->veiculos();
     }
 
