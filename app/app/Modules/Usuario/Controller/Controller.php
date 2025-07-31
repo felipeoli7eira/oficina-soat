@@ -23,11 +23,65 @@ class Controller extends BaseController
 {
     public function __construct(private readonly UsuarioService $service) {}
 
+    /**
+     * @OA\Get(
+     *     path="/api/usuario",
+     *     tags={"Usuario"},
+     *     summary="Faz a listagem dos usuários cadastrados",
+     *     description="Retorna uma lista paginada de usuários cadastrados no sistema.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Para quando a requisição for bem-sucedida. Pode ou não retornar usuários.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="current_page", type="integer", example=1),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=17),
+     *                     @OA\Property(property="uuid", type="string", format="uuid", example="b7466bb6-0d93-4f32-a4a0-f5cad13e3360"),
+     *                     @OA\Property(property="nome", type="string", example="Felipe"),
+     *                     @OA\Property(property="role_id", type="integer", example=3),
+     *                     @OA\Property(property="status", type="string", example="ativo"),
+     *                     @OA\Property(property="excluido", type="boolean", example=false),
+     *                     @OA\Property(property="data_exclusao", type="string", nullable=true, example=null),
+     *                     @OA\Property(property="data_cadastro", type="string", example="31/07/2025 19:33"),
+     *                     @OA\Property(property="data_atualizacao", type="string", nullable=true, example=null)
+     *                 )
+     *             ),
+     *             @OA\Property(property="first_page_url", type="string", example="http://localhost:8080/api/usuario?page=1"),
+     *             @OA\Property(property="from", type="integer", example=1),
+     *             @OA\Property(property="last_page", type="integer", example=1),
+     *             @OA\Property(property="last_page_url", type="string", example="http://localhost:8080/api/usuario?page=1"),
+     *             @OA\Property(
+     *                 property="links",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="url", type="string", nullable=true, example=null),
+     *                     @OA\Property(property="label", type="string", example="&laquo; Anterior"),
+     *                     @OA\Property(property="active", type="boolean", example=false)
+     *                 )
+     *             ),
+     *             @OA\Property(property="next_page_url", type="string", nullable=true, example=null),
+     *             @OA\Property(property="path", type="string", example="http://localhost:8080/api/usuario"),
+     *             @OA\Property(property="per_page", type="integer", example=10),
+     *             @OA\Property(property="prev_page_url", type="string", nullable=true, example=null),
+     *             @OA\Property(property="to", type="integer", example=4),
+     *             @OA\Property(property="total", type="integer", example=4)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro inesperado no servidor"
+     *     )
+     * )
+     */
     public function listagem()
     {
         try {
-            $dto = new ListagemDto();
-            $response = $this->service->listagem($dto);
+            $response = $this->service->listagem();
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -151,6 +205,41 @@ class Controller extends BaseController
         return Response::json($response);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/usuario/{uuid}",
+     *     summary="Remove um usuário",
+     *     description="Remove um usuário com base no UUID informado.",
+     *     tags={"Usuario"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID do usuário a ser removido",
+     *         required=true,
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Usuário removido com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erros de validação"),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno não tratado"
+     *     )
+     * )
+     */
     public function remocao(ObterUmPorUuidRequest $request)
     {
         try {
@@ -176,6 +265,6 @@ class Controller extends BaseController
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return Response::json($response);
+        return Response::json($response, HttpResponse::HTTP_NO_CONTENT);
     }
 }
