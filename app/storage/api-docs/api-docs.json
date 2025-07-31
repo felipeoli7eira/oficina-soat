@@ -1,50 +1,372 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Minha API",
-        "description": "Documentação da minha API com L5-Swagger",
+        "title": "Oficina SOAT",
+        "description": "Documentação da api do tech challenge FIAP 06.2025",
         "version": "1.0.0"
     },
     "paths": {
         "/api/cliente": {
             "get": {
                 "tags": [
-                    "Cliente"
+                    "cliente"
                 ],
-                "summary": "Cliente",
+                "summary": "Faz a listagem dos clientes cadastrados",
                 "description": "Faz a listagem de clientes",
                 "operationId": "d6f7fb3dd1f7b3948e1f45d3d267c374",
                 "responses": {
                     "200": {
-                        "description": "Para quando a requisição for bem sucedida. Pode ou não retornar clientes."
+                        "description": "Para quando a requisição for bem-sucedida. Pode ou não retornar clientes."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Cadastra um cliente",
+                "description": "Cadastra um cliente",
+                "operationId": "8a820d28c1f69f4601434ac1de851b58",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email",
+                                    "telefone_movel",
+                                    "cep",
+                                    "logradouro",
+                                    "bairro",
+                                    "cidade",
+                                    "uf"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Felipe Oliveira"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "03364266239"
+                                    },
+                                    "cnpj": {
+                                        "type": "string",
+                                        "example": "50162731000101"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "me.felipeoliveira@gmail.com"
+                                    },
+                                    "telefone_movel": {
+                                        "type": "string",
+                                        "example": "(96) 98415-7994"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "68909-811"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "18"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Portal D'Oeste"
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "example": "Casa 2"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "Osasco"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "maxLength": 2,
+                                        "example": "AP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Para quando a requisição for bem-sucedida. Retorna o cadastro do cliente."
                     }
                 }
             }
         },
-        "/api/example": {
+        "/api/cliente/{uuid}": {
             "get": {
                 "tags": [
-                    "Example"
+                    "cliente"
                 ],
-                "summary": "Exemplo de endpoint",
-                "description": "Retorna um exemplo de mensagem.",
-                "operationId": "d0d58b72527483f0bb0cbeb6e206ba63",
+                "summary": "Obtém os dados de um cliente",
+                "description": "Retorna os dados completos de um cliente específico com base no UUID informado.",
+                "operationId": "2cc7b1f2eff3d14b5605ceb9ca85a583",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente que deseja consultar",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "Cliente encontrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
+                                        "uuid": {
                                             "type": "string",
-                                            "example": "Hello World"
+                                            "format": "uuid",
+                                            "example": "b53b68c6-bc87-4553-b72a-8b2d6dbad7d6"
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "Felipe Oliveira"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "example": "03364266239"
+                                        },
+                                        "cnpj": {
+                                            "type": "string",
+                                            "example": "50162731000101"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "me.felipeoliveira@gmail.com"
+                                        },
+                                        "telefone_movel": {
+                                            "type": "string",
+                                            "example": "(96) 98415-7994"
+                                        },
+                                        "cep": {
+                                            "type": "string",
+                                            "example": "68909-811"
+                                        },
+                                        "logradouro": {
+                                            "type": "string",
+                                            "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                        },
+                                        "numero": {
+                                            "type": "string",
+                                            "example": "18"
+                                        },
+                                        "bairro": {
+                                            "type": "string",
+                                            "example": "Portal D'Oeste"
+                                        },
+                                        "complemento": {
+                                            "type": "string",
+                                            "example": "Casa 2"
+                                        },
+                                        "cidade": {
+                                            "type": "string",
+                                            "example": "Osasco"
+                                        },
+                                        "uf": {
+                                            "type": "string",
+                                            "example": "AP"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Atualiza os dados de um cliente",
+                "description": "Atualiza os dados de um cliente já existente, identificado pelo UUID.",
+                "operationId": "2d1d623766fe612e3d5b56727bc9fae8",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "João da Silva"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "cnpj": {
+                                        "type": "string",
+                                        "example": "12345678000199"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "joao@email.com"
+                                    },
+                                    "telefone_movel": {
+                                        "type": "string",
+                                        "example": "(11) 91234-5678"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "12345-678"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Rua Exemplo"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "123A"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "example": "Apartamento 101"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "São Paulo"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "example": "SP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cliente atualizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dados enviados incorretamente"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Remove um cliente",
+                "description": "Remove um cliente com base no UUID informado.",
+                "operationId": "17ab120998fa3d965091c090ce7e89f0",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Cliente removido com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
                     }
                 }
             }
@@ -52,12 +374,8 @@
     },
     "tags": [
         {
-            "name": "Cliente",
-            "description": "Cliente"
-        },
-        {
-            "name": "Example",
-            "description": "Example"
+            "name": "cliente",
+            "description": "cliente"
         }
     ]
 }
