@@ -8,19 +8,21 @@ use App\Modules\Usuario\Dto\AtualizacaoDto;
 use App\Modules\Usuario\Dto\CadastroDto;
 use App\Modules\Usuario\Dto\ListagemDto;
 use App\Modules\Usuario\Repository\UsuarioRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Service
 {
     public function __construct(private readonly UsuarioRepository $repo) {}
 
-    public function listagem(ListagemDto $dto)
+    public function listagem(): ResourceCollection|LengthAwarePaginator
     {
         return $this->repo->read();
     }
 
     public function cadastro(CadastroDto $dto)
     {
-        return $this->repo->createOrFirst($dto->asArray())->fresh();
+        return $this->repo->createOrFirst($dto->asArray())->fresh(['role']);
     }
 
     public function obterUmPorUuid(string $uuid)

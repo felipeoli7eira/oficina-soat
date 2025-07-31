@@ -5,6 +5,9 @@ namespace App\Modules\Usuario\Model;
 // use Database\Factories\ClienteFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Permission\Models\Role;
+
 // use Illuminate\Support\Facades\Schema;
 
 class Usuario extends Model
@@ -18,27 +21,27 @@ class Usuario extends Model
 
     protected $fillable = [
         'nome',
-        'cpf',
-        'cnpj',
-        'email',
-        'telefone_movel',
-        'cep',
-        'logradouro',
-        'numero',
-        'cidade',
-        'bairro',
-        'uf',
-        'complemento',
+        'role_id',
+        'status',
         'excluido',
-        'data_cadastro',
-        'data_atualizacao',
+        'data_exclusao',
+        'data_atualizacao'
 ]   ;
 
     protected $hidden = [];
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'data_cadastro'    => 'datetime:d/m/Y H:i',
+            'data_exclusao'    => 'datetime:d/m/Y H:i',
+            'data_atualizacao' => 'datetime:d/m/Y H:i',
+        ];
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
     // protected static function newFactory(): ClienteFactory

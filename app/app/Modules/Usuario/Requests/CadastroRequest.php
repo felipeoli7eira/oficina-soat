@@ -13,25 +13,21 @@ class CadastroRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
-    /**
-     * @see https://github.com/LaravelLegends/pt-br-validator
-     * @return array
-    */
+    protected function prepareForValidation(): void
+    {
+        if ($this->papel) {
+            $this->merge([
+                'papel' => strtolower(trim($this->papel)),
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
-            'nome'           => ['required', 'string', 'min:3', 'max:100'],
-            'cpf'            => ['numeric', 'cpf', 'required_without:cnpj', 'unique:cliente,cpf'],
-            'cnpj'           => ['numeric', 'cnpj', 'required_without:cpf', 'unique:cliente,cnpj'],
-            'email'          => ['required', 'string', 'email', 'unique:cliente,email'],
-            'telefone_movel' => ['required', 'string', 'regex:/^\(\d{2}\) 9\d{4}-\d{4}$/'],
-            'cep'            => ['required', 'string', 'formato_cep'],
-            'logradouro'     => ['required', 'string', 'min:3', 'max:100'],
-            'numero'         => ['nullable', 'string', 'min:1', 'max:20'],
-            'bairro'         => ['required', 'string', 'min:3', 'max:50'],
-            'complemento'    => ['nullable', 'string', 'max:100'],
-            'cidade'         => ['required', 'string', 'min:3', 'max:50'],
-            'uf'             => ['required', 'string', 'uf'],
+            'nome' => ['required', 'string', 'max:255', 'min:3'],
+            'papel' => ['required', 'string', 'max:255', 'min:3', 'exists:roles,name'],
+            'status' => ['required', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
         ];
     }
 
@@ -46,19 +42,6 @@ class CadastroRequest extends FormRequest
 
     public function toDto(): CadastroDto
     {
-        return new CadastroDto(
-            $this->validated('nome'),
-            $this->validated('cpf'),
-            $this->validated('cnpj'),
-            $this->validated('email'),
-            $this->validated('telefone_movel'),
-            $this->validated('cep'),
-            $this->validated('logradouro'),
-            $this->validated('numero'),
-            $this->validated('bairro'),
-            $this->validated('complemento'),
-            $this->validated('cidade'),
-            $this->validated('uf')
-        );
+        return new CadastroDto(...$this->validated());
     }
 }

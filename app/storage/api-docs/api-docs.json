@@ -9,7 +9,7 @@
         "/api/cliente": {
             "get": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Faz a listagem dos clientes cadastrados",
                 "description": "Faz a listagem de clientes",
@@ -22,7 +22,7 @@
             },
             "post": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Cadastra um cliente",
                 "description": "Cadastra um cliente",
@@ -45,53 +45,53 @@
                                 "properties": {
                                     "nome": {
                                         "type": "string",
-                                        "example": "Felipe Oliveira"
+                                        "example": "Maria Joaquina"
                                     },
                                     "cpf": {
                                         "type": "string",
-                                        "example": "03364266239"
+                                        "example": "98192899047"
                                     },
                                     "cnpj": {
                                         "type": "string",
-                                        "example": "50162731000101"
+                                        "example": "68551440000170"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "me.felipeoliveira@gmail.com"
+                                        "example": "maria.joaquina@gmail.com"
                                     },
                                     "telefone_movel": {
                                         "type": "string",
-                                        "example": "(96) 98415-7994"
+                                        "example": "(11) 99123-4567"
                                     },
                                     "cep": {
                                         "type": "string",
-                                        "example": "68909-811"
+                                        "example": "01153-000"
                                     },
                                     "logradouro": {
                                         "type": "string",
-                                        "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                        "example": "Rua Vitorino Carmilo"
                                     },
                                     "numero": {
                                         "type": "string",
-                                        "example": "18"
+                                        "example": "10"
                                     },
                                     "bairro": {
                                         "type": "string",
-                                        "example": "Portal D'Oeste"
+                                        "example": "Barra Funda"
                                     },
                                     "complemento": {
                                         "type": "string",
-                                        "example": "Casa 2"
+                                        "example": ""
                                     },
                                     "cidade": {
                                         "type": "string",
-                                        "example": "Osasco"
+                                        "example": "São Paulo"
                                     },
                                     "uf": {
                                         "type": "string",
                                         "maxLength": 2,
-                                        "example": "AP"
+                                        "example": "SP"
                                     }
                                 },
                                 "type": "object"
@@ -109,7 +109,7 @@
         "/api/cliente/{uuid}": {
             "get": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Obtém os dados de um cliente",
                 "description": "Retorna os dados completos de um cliente específico com base no UUID informado.",
@@ -199,7 +199,7 @@
             },
             "put": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Atualiza os dados de um cliente",
                 "description": "Atualiza os dados de um cliente já existente, identificado pelo UUID.",
@@ -322,7 +322,7 @@
             },
             "delete": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Remove um cliente",
                 "description": "Remove um cliente com base no UUID informado.",
@@ -367,6 +367,57 @@
                     },
                     "404": {
                         "description": "Cliente não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/usuario": {
+            "post": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Cadastra um usuário",
+                "description": "Cadastra um usuário",
+                "operationId": "e3b7665b59e0bfe01053a50f95e14568",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "papel",
+                                    "status",
+                                    "cep"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Jacinto Pinto"
+                                    },
+                                    "papel": {
+                                        "type": "string",
+                                        "example": "mecanico || comercial || gestor_estoque || atendente"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ativo || inativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Para quando a requisição for bem-sucedida. Retorna o cadastro do usuário."
+                    },
+                    "400": {
+                        "description": "Para quando a requisição falhar por erros nos dados."
+                    },
+                    "500": {
+                        "description": "Para quando houver algum erro não mapeado na aplicação de forma geral ou no endpoint."
                     }
                 }
             }
@@ -776,8 +827,12 @@
     },
     "tags": [
         {
-            "name": "cliente",
-            "description": "cliente"
+            "name": "Cliente",
+            "description": "Cliente"
+        },
+        {
+            "name": "Usuario",
+            "description": "Usuario"
         },
         {
             "name": "Veiculo",

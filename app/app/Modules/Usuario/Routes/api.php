@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Usuario\Controller\UsuarioController;
+use App\Modules\Usuario\Controller\Controller as UsuarioController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/usuario', [UsuarioController::class, 'listagem']);

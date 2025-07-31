@@ -10,6 +10,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(PapelSeed::class);
+
         // $this->roles();
         $this->clientes();
         $this->veiculos();

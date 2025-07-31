@@ -25,7 +25,7 @@ class ClienteController extends Controller
     /**
      * @OA\Get(
      *      path="/api/cliente",
-     *      tags={"cliente"},
+     *      tags={"Cliente"},
      *      summary="Faz a listagem dos clientes cadastrados",
      *      description="Faz a listagem de clientes",
      *      @OA\Response(
@@ -52,25 +52,25 @@ class ClienteController extends Controller
      /**
      * @OA\Post(
      *      path="/api/cliente",
-     *      tags={"cliente"},
+     *      tags={"Cliente"},
      *      summary="Cadastra um cliente",
      *      description="Cadastra um cliente",
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
      *              required={"nome", "email", "telefone_movel", "cep", "logradouro", "bairro", "cidade", "uf"},
-     *              @OA\Property(property="nome", type="string", example="Felipe Oliveira"),
-     *              @OA\Property(property="cpf", type="string", example="03364266239"),
-     *              @OA\Property(property="cnpj", type="string", example="50162731000101"),
-     *              @OA\Property(property="email", type="string", format="email", example="me.felipeoliveira@gmail.com"),
-     *              @OA\Property(property="telefone_movel", type="string", example="(96) 98415-7994"),
-     *              @OA\Property(property="cep", type="string", example="68909-811"),
-     *              @OA\Property(property="logradouro", type="string", example="Viela Ambrósio Rodrigues de Medeiros"),
-     *              @OA\Property(property="numero", type="string", example="18"),
-     *              @OA\Property(property="bairro", type="string", example="Portal D'Oeste"),
-     *              @OA\Property(property="complemento", type="string", example="Casa 2"),
-     *              @OA\Property(property="cidade", type="string", example="Osasco"),
-     *              @OA\Property(property="uf", type="string", example="AP", maxLength=2)
+     *              @OA\Property(property="nome", type="string", example="Maria Joaquina"),
+     *              @OA\Property(property="cpf", type="string", example="98192899047"),
+     *              @OA\Property(property="cnpj", type="string", example="68551440000170"),
+     *              @OA\Property(property="email", type="string", format="email", example="maria.joaquina@gmail.com"),
+     *              @OA\Property(property="telefone_movel", type="string", example="(11) 99123-4567"),
+     *              @OA\Property(property="cep", type="string", example="01153-000"),
+     *              @OA\Property(property="logradouro", type="string", example="Rua Vitorino Carmilo"),
+     *              @OA\Property(property="numero", type="string", example="10"),
+     *              @OA\Property(property="bairro", type="string", example="Barra Funda"),
+     *              @OA\Property(property="complemento", type="string", example=""),
+     *              @OA\Property(property="cidade", type="string", example="São Paulo"),
+     *              @OA\Property(property="uf", type="string", example="SP", maxLength=2)
      *          )
      *      ),
      *      @OA\Response(
@@ -100,7 +100,7 @@ class ClienteController extends Controller
      *     path="/api/cliente/{uuid}",
      *     summary="Obtém os dados de um cliente",
      *     description="Retorna os dados completos de um cliente específico com base no UUID informado.",
-     *     tags={"cliente"},
+     *     tags={"Cliente"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -152,7 +152,7 @@ class ClienteController extends Controller
      *     path="/api/cliente/{uuid}",
      *     summary="Remove um cliente",
      *     description="Remove um cliente com base no UUID informado.",
-     *     tags={"cliente"},
+     *     tags={"Cliente"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -197,7 +197,7 @@ class ClienteController extends Controller
      *     path="/api/cliente/{uuid}",
      *     summary="Atualiza os dados de um cliente",
      *     description="Atualiza os dados de um cliente já existente, identificado pelo UUID.",
-     *     tags={"cliente"},
+     *     tags={"Cliente"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
