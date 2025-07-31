@@ -82,6 +82,61 @@ class Controller extends BaseController
         return Response::json($response, HttpResponse::HTTP_CREATED);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/usuario/{uuid}",
+     *     summary="Obtém os dados de um usuário pelo uuid",
+     *     description="Retorna os dados completos de um usuário específico com base no UUID informado.",
+     *     tags={"Usuario"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         required=true,
+     *         description="UUID do usuário que deseja consultar",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário encontrado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=17),
+     *             @OA\Property(property="uuid", type="string", format="uuid", example="b7466bb6-0d93-4f32-a4a0-f5cad13e3360"),
+     *             @OA\Property(property="nome", type="string", example="Felipe"),
+     *             @OA\Property(property="role_id", type="integer", example=3),
+     *             @OA\Property(property="status", type="string", example="ativo"),
+     *             @OA\Property(property="excluido", type="boolean", example=false),
+     *             @OA\Property(property="data_exclusao", type="string", nullable=true, example=null),
+     *             @OA\Property(property="data_cadastro", type="string", example="31/07/2025 19:33"),
+     *             @OA\Property(property="data_atualizacao", type="string", nullable=true, example=null),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=3),
+     *                 @OA\Property(property="name", type="string", example="mecanico"),
+     *                 @OA\Property(property="guard_name", type="string", example="web"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-31T18:29:09.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-31T18:29:09.000000Z")
+     *             )
+     *         )
+     *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Usuário não encontrado",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="Erros de validação"),
+    *             @OA\Property(
+    *                 property="errors",
+    *                 type="array",
+    *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
+    *             )
+    *         )
+    *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro não mapeado na aplicação ou no endpoint"
+     *     )
+     * )
+     */
     public function obterUmPorUuid(ObterUmPorUuidRequest $request)
     {
         try {

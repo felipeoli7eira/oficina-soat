@@ -23,7 +23,7 @@ class ObterUmPorUuidRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:cliente,uuid']];
+        return ['uuid' => ['required', 'uuid', 'exists:usuario,uuid']];
     }
 
     public function failedValidation(Validator $validator): void
