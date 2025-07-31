@@ -370,12 +370,418 @@
                     }
                 }
             }
+        },
+        "/api/veiculo": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Listar veículos",
+                "description": "Faz a listagem paginada de todos os veículos cadastrados",
+                "operationId": "d85792b8ded3ce84c22bb90793307e2c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Quantidade de itens por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de veículos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "uuid": {
+                                                        "type": "string",
+                                                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                                                    },
+                                                    "marca": {
+                                                        "type": "string",
+                                                        "example": "Toyota"
+                                                    },
+                                                    "modelo": {
+                                                        "type": "string",
+                                                        "example": "Corolla"
+                                                    },
+                                                    "placa": {
+                                                        "type": "string",
+                                                        "example": "ABC-1234"
+                                                    },
+                                                    "ano_fabricacao": {
+                                                        "type": "integer",
+                                                        "example": 2020
+                                                    },
+                                                    "cor": {
+                                                        "type": "string",
+                                                        "example": "Prata"
+                                                    },
+                                                    "chassi": {
+                                                        "type": "string",
+                                                        "example": "1234567890ABCDEFG"
+                                                    },
+                                                    "excluido": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "data_cadastro": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-01-15T10:30:00.000000Z"
+                                                    },
+                                                    "data_atualizacao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "data_exclusao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=1"
+                                        },
+                                        "from": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "last_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=5"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=2",
+                                            "nullable": true
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 75
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Cadastrar veículo",
+                "description": "Cadastra um novo veículo",
+                "operationId": "54583f9eb0f040fe8120ec4ed058928c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "marca",
+                                    "modelo",
+                                    "ano",
+                                    "placa",
+                                    "chassi"
+                                ],
+                                "properties": {
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano": {
+                                        "type": "integer",
+                                        "example": 2020
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "ABC-1234"
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Prata"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "1234567890ABCDEFG"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Veículo cadastrado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            }
+        },
+        "/api/veiculo/{uuid}": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Obter veículo por UUID",
+                "description": "Obtém um veículo específico pelo seu UUID",
+                "operationId": "1642e956c7402aff493d1dac4e94ae80",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo encontrado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Atualizar veículo",
+                "description": "Atualiza os dados de um veículo pelo seu UUID",
+                "operationId": "92dfe8775ca61950d61736c60000d45e",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano": {
+                                        "type": "integer",
+                                        "example": 2021
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "DEF-5678"
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Azul"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "0987654321ZYXWVUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Veículo atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Remover veículo",
+                "description": "Remove um veículo pelo seu UUID",
+                "operationId": "1af1197535c8612671c8050a65869f12",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do veículo a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Veículo removido com sucesso (sem conteúdo de retorno)"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Veículo não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "cliente",
             "description": "cliente"
+        },
+        {
+            "name": "Veiculo",
+            "description": "Veiculo"
         }
     ]
 }

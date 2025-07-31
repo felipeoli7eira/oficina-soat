@@ -10,3 +10,6 @@ Route::get('health', fn() => response()->json(['healthy' => true]));
 
 // * endpoints de cliente
 require __DIR__ . '/../app/Modules/Cliente/Routes/api.php';
+
+// * endpoints de veiculo
+require __DIR__ . '/../app/Modules/Veiculo/Routes/api.php';

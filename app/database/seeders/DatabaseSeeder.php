@@ -10,8 +10,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->roles();
-        $this->customers();
+        // $this->roles();
+        $this->clientes();
+        $this->veiculos();
     }
 
     public function roles(): void
@@ -22,8 +23,13 @@ class DatabaseSeeder extends Seeder
         DB::table('roles')->insert(['name' => 'gestor_estoque', 'guard_name' => 'web']);
     }
 
-    public function customers(): void
+    public function clientes(): void
     {
         \App\Modules\Cliente\Model\Cliente::factory()->count(10)->create();
+    }
+
+    public function veiculos(): void
+    {
+        \App\Modules\Veiculo\Model\Veiculo::factory()->count(50)->create();
     }
 }
