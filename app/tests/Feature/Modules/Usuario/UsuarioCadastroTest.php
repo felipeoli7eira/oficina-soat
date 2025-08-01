@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Modules\Cliente;
 
+use App\Enums\Papel;
+use App\Modules\Usuario\Enums\StatusUsuario;
 use Database\Seeders\PapelSeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,8 +26,8 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Comercial',
-            'status' => 'ativo',
-            'papel'  => 'comercial'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::COMERCIAL->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -37,8 +39,8 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Mecânico',
-            'status' => 'ativo',
-            'papel'  => 'mecanico'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::MECANICO->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -50,8 +52,8 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Atendente',
-            'status' => 'ativo',
-            'papel'  => 'atendente'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::ATENDENTE->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -63,8 +65,8 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Gestor de estoque',
-            'status' => 'ativo',
-            'papel'  => 'gestor_estoque'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -75,8 +77,8 @@ class UsuarioCadastroTest extends TestCase
     public function test_usuario_atendente_nao_pode_ser_cadastrado_sem_um_nome(): void
     {
         $payload = [
-            'status' => 'ativo',
-            'papel'  => 'atendente'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::ATENDENTE->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -87,8 +89,8 @@ class UsuarioCadastroTest extends TestCase
     public function test_usuario_mecanico_nao_pode_ser_cadastrado_sem_um_nome(): void
     {
         $payload = [
-            'status' => 'ativo',
-            'papel'  => 'mecanico'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::MECANICO->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -99,8 +101,8 @@ class UsuarioCadastroTest extends TestCase
     public function test_usuario_comercial_nao_pode_ser_cadastrado_sem_um_nome(): void
     {
         $payload = [
-            'status' => 'ativo',
-            'papel'  => 'comercial'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::COMERCIAL->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
@@ -111,8 +113,8 @@ class UsuarioCadastroTest extends TestCase
     public function test_usuario_gestor_estoque_nao_pode_ser_cadastrado_sem_um_nome(): void
     {
         $payload = [
-            'status' => 'ativo',
-            'papel'  => 'gestor_estoque'
+            'status' => StatusUsuario::ATIVO->value,
+            'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
         $response = $this->postJson('/api/usuario', $payload);
