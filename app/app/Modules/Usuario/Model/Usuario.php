@@ -2,7 +2,7 @@
 
 namespace App\Modules\Usuario\Model;
 
-// use Database\Factories\ClienteFactory;
+use Database\Factories\UsuarioFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,8 +12,8 @@ use Spatie\Permission\Models\Role;
 
 class Usuario extends Model
 {
-    /** @use HasFactory<\Database\Factories\ClienteFactory> */
-    // use HasFactory;
+    /** @use HasFactory<\Database\Factories\UsuarioFactory> */
+    use HasFactory;
 
     public $table = 'usuario';
 
@@ -44,8 +44,8 @@ class Usuario extends Model
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
-    // protected static function newFactory(): ClienteFactory
-    // {
-    //     return ClienteFactory::new();
-    // }
+    protected static function newFactory(): UsuarioFactory
+    {
+        return UsuarioFactory::new();
+    }
 }
