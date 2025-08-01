@@ -10,10 +10,6 @@ class UsuarioCadastroTest extends TestCase
 {
     use RefreshDatabase;
 
-    private array $payload;
-
-    private $fake;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -22,8 +18,6 @@ class UsuarioCadastroTest extends TestCase
         $this->assertDatabaseEmpty('roles');
 
         $this->seed(PapelSeed::class);
-
-        $this->fake = fake('pt_BR');
     }
 
     public function test_usuario_pode_ser_cadastrado_como_comercial(): void
