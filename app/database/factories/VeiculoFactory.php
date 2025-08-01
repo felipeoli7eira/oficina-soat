@@ -50,7 +50,7 @@ class VeiculoFactory extends Factory
             'chassi'           => $chassi,
             'excluido'         => fake()->boolean(20),
             'data_cadastro'    => fake()->dateTimeBetween('-2 years', 'now'),
-            'data_atualizacao' => null,
+            'data_atualizacao' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
 
         if ($data['excluido']) {

@@ -371,6 +371,246 @@
                 }
             }
         },
+        "/api/servico": {
+            "get": {
+                "tags": [
+                    "servico"
+                ],
+                "summary": "Faz a listagem dos serviços cadastrados",
+                "description": "Faz a listagem de serviços",
+                "operationId": "e4c124e59a30dd5f5a8749ca7cde1cbc",
+                "responses": {
+                    "200": {
+                        "description": "Para quando a requisição for bem-sucedida. Pode ou não retornar serviços."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "servico"
+                ],
+                "summary": "Cadastra um serviço",
+                "description": "Cadastra um serviço",
+                "operationId": "4bb07c224a4c2a1d313f6459842736cd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "descricao",
+                                    "valor"
+                                ],
+                                "properties": {
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Troca de pastilha de freio"
+                                    },
+                                    "valor": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 150
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Para quando a requisição for bem-sucedida. Retorna o cadastro do serviço."
+                    }
+                }
+            }
+        },
+        "/api/servico/{uuid}": {
+            "get": {
+                "tags": [
+                    "servico"
+                ],
+                "summary": "Obtém os dados de um serviço",
+                "description": "Retorna os dados completos de um serviço específico com base no UUID informado.",
+                "operationId": "e0d7a25dcbdfa73cf292a594b3b99abb",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do serviço que deseja consultar",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Serviço encontrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "b53b68c6-bc87-4553-b72a-8b2d6dbad7d6"
+                                        },
+                                        "descricao": {
+                                            "type": "string",
+                                            "example": "Troca de pastilha de freio"
+                                        },
+                                        "valor": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 150
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Serviço não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "servico"
+                ],
+                "summary": "Atualiza os dados de um serviço",
+                "description": "Atualiza os dados de um serviço já existente, identificado pelo UUID.",
+                "operationId": "b38de8392187a9d5ac3653c624507451",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do serviço",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Troca de pastilha de freio"
+                                    },
+                                    "valor": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 150
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Serviço atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Serviço atualizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dados enviados incorretamente"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "servico"
+                ],
+                "summary": "Remove um servico",
+                "description": "Remove um serviço com base no UUID informado.",
+                "operationId": "d93a79d2c8b0ac7a9dfbdea5c4c7dae7",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do serviço a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Serviço removido com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Serviço não encontrado"
+                    }
+                }
+            }
+        },
         "/api/veiculo": {
             "get": {
                 "tags": [
@@ -778,6 +1018,10 @@
         {
             "name": "cliente",
             "description": "cliente"
+        },
+        {
+            "name": "servico",
+            "description": "servico"
         },
         {
             "name": "Veiculo",

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         // $this->roles();
         $this->clientes();
         $this->veiculos();
+        $this->servicos();
     }
 
     public function roles(): void
@@ -31,5 +32,10 @@ class DatabaseSeeder extends Seeder
     public function veiculos(): void
     {
         \App\Modules\Veiculo\Model\Veiculo::factory()->count(50)->create();
+    }
+
+    public function servicos(): void
+    {
+        \App\Modules\Servico\Model\Servico::factory()->count(10)->create();
     }
 }
