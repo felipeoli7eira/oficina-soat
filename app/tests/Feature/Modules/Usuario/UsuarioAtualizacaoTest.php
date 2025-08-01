@@ -24,11 +24,6 @@ class UsuarioAtualizacaoTest extends TestCase
         $this->seed(PapelSeed::class);
     }
 
-    // a
-    // c
-    // g
-    // m
-
     public function test_usuario_atendente_pode_ter_o_nome_atualizado(): void
     {
         // Arrange
