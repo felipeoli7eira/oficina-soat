@@ -13,6 +13,28 @@ services:
         - oficina_soat_pg_data:/var/lib/postgresql/data
         networks:
             - oficina_soat_network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 3s
+            retries: 5
+            start_period: 5s
+
+    php:
+        build:
+            context: .
+            dockerfile: ./build/php/Dockerfile/Dockerfile
+        container_name: oficina_soat_php
+        restart: on-failure:3
+        ports:
+        - "9000:9000"
+        volumes:
+            - ./app:/var/www/html
+        networks:
+            - oficina_soat_network
+        depends_on:
+            postgres:
+                condition: service_healthy
 
     nginx:
         build:
@@ -28,22 +50,13 @@ services:
         networks:
             - oficina_soat_network
         depends_on:
-            - php
-
-    php:
-        build:
-            context: .
-            dockerfile: ./build/php/Dockerfile/Dockerfile
-        container_name: oficina_soat_php
-        restart: on-failure:3
-        ports:
-        - "9000:9000"
-        volumes:
-            - ./app:/var/www/html
-        networks:
-            - oficina_soat_network
-        depends_on:
-            - postgres
+            php:
+                condition: service_started
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost/api/health || exit 1"]
+            interval: 5s
+            timeout: 3s
+            retries: 3
 
 volumes:
     oficina_soat_pg_data:

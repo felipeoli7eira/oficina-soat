@@ -11,6 +11,7 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "laravellegends/pt-br-validator": "^12.2",
         "spatie/laravel-permission": "^6.21"
     },
     "require-dev": {
@@ -18,6 +19,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
+        "lucascudo/laravel-pt-br-localization": "^3.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "phpunit/phpunit": "^11.5.3"

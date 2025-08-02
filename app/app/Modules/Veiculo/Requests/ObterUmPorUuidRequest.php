@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Cliente\Requests;
+namespace App\Modules\Veiculo\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,19 +11,27 @@ class ObterUmPorUuidRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
-    protected function uuid(): string
-    {
-        return (string) $this->route('uuid');
-    }
-
     public function prepareForValidation(): void
     {
-        $this->merge(['uuid' => $this->route('uuid')]);
+        $this->merge([
+            'uuid' => $this->route('uuid'),
+        ]);
     }
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:cliente,uuid']];
+        return [
+            'uuid' => ['required', 'uuid', 'exists:veiculo,uuid'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'uuid.required' => 'O campo uuid é obrigatório',
+            'uuid.uuid'     => 'O campo uuid deve ser um UUID válido',
+            'uuid.exists'   => 'O uuid informado não existe',
+        ];
     }
 
     public function failedValidation(Validator $validator): void
@@ -34,3 +42,4 @@ class ObterUmPorUuidRequest extends FormRequest
         ], Response::HTTP_BAD_REQUEST));
     }
 }
+

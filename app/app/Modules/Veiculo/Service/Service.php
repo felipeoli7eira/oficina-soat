@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Cliente\Service;
+namespace App\Modules\Veiculo\Service;
 
-use App\Modules\Cliente\Dto\AtualizacaoDto;
-use App\Modules\Cliente\Dto\CadastroDto;
-use App\Modules\Cliente\Dto\ListagemDto;
-use App\Modules\Cliente\Repository\ClienteRepository;
+use App\Modules\Veiculo\Dto\AtualizacaoDto;
+use App\Modules\Veiculo\Dto\CadastroDto;
+use App\Modules\Veiculo\Dto\ListagemDto;
+use App\Modules\Veiculo\Repository\VeiculoRepository;
 
 class Service
 {
-    public function __construct(private readonly ClienteRepository $repo) {}
+    public function __construct(private readonly VeiculoRepository $repo) {}
 
     public function listagem(ListagemDto $dto)
     {
@@ -35,19 +35,19 @@ class Service
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        $dados = $dto->asArray();
+        $dados = $dto->dados;
         unset($dados['uuid']);
 
         if (empty($dados)) {
             return [];
         }
 
-        $cliente = $this->obterUmPorUuid($uuid);
+        $veiculo = $this->obterUmPorUuid($uuid);
 
-        $atualizacao = $dto->merge($cliente->toArray());
+        $atualizacao = $dto->merge($veiculo->toArray());
 
-        $cliente->update($atualizacao);
+        $veiculo->update($atualizacao);
 
-        return $cliente->refresh();
+        return $veiculo->refresh();
     }
 }

@@ -36,4 +36,29 @@ tasks:
       - docker exec -it {{.CONTAINER_LARAVEL}} php artisan test --testsuite=Feature --stop-on-failure --coverage --min=80.3
     desc: "run the tests"
 
+  migrate:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan migrate
+    desc: "run the migrations"
+
+  dbseed:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan db:seed
+    desc: "run the db:seed command"
+
+  migseed:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan migrate --seed
+    desc: "run the migrations and seed the db"
+
+  dbfresh:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan migrate:fresh
+    desc: "fresh database"
+
+  freshseed:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan migrate:fresh --seed
+    desc: "fresh database and seed the db"
+
 silent: true
