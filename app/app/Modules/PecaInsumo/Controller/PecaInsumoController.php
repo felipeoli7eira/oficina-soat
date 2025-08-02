@@ -13,7 +13,7 @@ use App\Modules\PecaInsumo\Service\Service as PecaInsumoService;
 
 use App\Modules\PecaInsumo\Requests\AtualizacaoRequest;
 use App\Modules\PecaInsumo\Requests\CadastroRequest;
-use App\Modules\PecaInsumo\Requests\obterUmPorId;
+use App\Modules\PecaInsumo\Requests\ObterUmPorIdRequest;
 use App\Modules\PecaInsumo\Requests\ListagemRequest;
 
 use Illuminate\Support\Facades\Response;
@@ -169,7 +169,7 @@ class PecaInsumoController extends Controller
      *      ),
      *     )
      */
-    public function obterUmPorId(obterUmPorId $request)
+    public function obterUmPorId(ObterUmPorIdRequest $request)
     {
         try {
             $response = $this->service->obterUmPorId($request->id);
@@ -218,7 +218,7 @@ class PecaInsumoController extends Controller
      *      ),
      *     )
      */
-    public function remocao(obterUmPorId $request)
+    public function remocao(ObterUmPorIdRequest $request)
     {
         try {
             $response = $this->service->remocao($request->id);

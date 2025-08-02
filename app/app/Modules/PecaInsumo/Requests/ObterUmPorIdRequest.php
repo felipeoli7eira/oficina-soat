@@ -21,7 +21,7 @@ class ObterUmPorIdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'id', 'exists:veiculo,id'],
+            'id' => ['required', 'integer', 'exists:peca_insumo,id'],
         ];
     }
 
