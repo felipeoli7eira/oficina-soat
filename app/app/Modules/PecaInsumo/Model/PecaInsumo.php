@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 
 class PecaInsumo extends Model
 {
-    // /** @use HasFactory<\Database\Factories\PecaInsumoFactory> */
-    // use HasFactory;
+    /** @use HasFactory<\Database\Factories\PecaInsumoFactory> */
+    use HasFactory;
 
     public $table = 'peca_insumo';
 
@@ -42,8 +42,8 @@ class PecaInsumo extends Model
         parent::boot();
     }
 
-    // protected static function newFactory(): PecaInsumoFactory
-    // {
-    //     return PecaInsumoFactory::new();
-    // }
+    protected static function newFactory(): PecaInsumoFactory
+    {
+        return PecaInsumoFactory::new();
+    }
 }
