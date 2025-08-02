@@ -22,6 +22,7 @@ class Servico extends Model
         'status',
         'excluido',
         'data_cadastro',
+        'data_exclusao',
         'data_atualizacao',
 ]   ;
 

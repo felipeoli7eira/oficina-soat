@@ -25,12 +25,18 @@ class Service
 
     public function obterUmPorUuid(string $uuid)
     {
-        return $this->repo->model()->where('uuid', $uuid)->firstOrFail();
+        return $this->repo->model()
+                          ->where('uuid', $uuid)
+                          ->where('excluido', false)
+                          ->firstOrFail();
     }
 
     public function remocao(string $uuid)
     {
-        return $this->obterUmPorUuid($uuid)->delete();
+        $this->repo->model()->where('uuid', $uuid)->update([
+            'excluido' => true,
+            'data_exclusao' => now(),
+        ]);
     }
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)

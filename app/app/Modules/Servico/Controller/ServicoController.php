@@ -13,6 +13,7 @@ use App\Modules\Servico\Requests\ObterUmPorUuidRequest;
 
 use App\Modules\Servico\Service\Service as ServicoService;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use OpenApi\Annotations as OA;
@@ -118,6 +119,12 @@ class ServicoController extends Controller
     {
         try {
             $response = $this->service->obterUmPorUuid($request->uuid);
+            
+        }catch (ModelNotFoundException $th){
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
