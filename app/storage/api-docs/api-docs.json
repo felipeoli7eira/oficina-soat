@@ -1,44 +1,1181 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Minha API",
-        "description": "Documentação da minha API com L5-Swagger",
+        "title": "Oficina SOAT",
+        "description": "Documentação da api do tech challenge FIAP 06.2025",
         "version": "1.0.0"
     },
     "paths": {
         "/api/cliente": {
             "get": {
                 "tags": [
-                    "Cliente"
+                    "cliente"
                 ],
-                "summary": "Cliente",
+                "summary": "Faz a listagem dos clientes cadastrados",
                 "description": "Faz a listagem de clientes",
                 "operationId": "d6f7fb3dd1f7b3948e1f45d3d267c374",
                 "responses": {
                     "200": {
-                        "description": "Para quando a requisição for bem sucedida. Pode ou não retornar clientes."
+                        "description": "Para quando a requisição for bem-sucedida. Pode ou não retornar clientes."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Cadastra um cliente",
+                "description": "Cadastra um cliente",
+                "operationId": "8a820d28c1f69f4601434ac1de851b58",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email",
+                                    "telefone_movel",
+                                    "cep",
+                                    "logradouro",
+                                    "bairro",
+                                    "cidade",
+                                    "uf"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Felipe Oliveira"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "03364266239"
+                                    },
+                                    "cnpj": {
+                                        "type": "string",
+                                        "example": "50162731000101"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "me.felipeoliveira@gmail.com"
+                                    },
+                                    "telefone_movel": {
+                                        "type": "string",
+                                        "example": "(96) 98415-7994"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "68909-811"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "18"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Portal D'Oeste"
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "example": "Casa 2"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "Osasco"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "maxLength": 2,
+                                        "example": "AP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Para quando a requisição for bem-sucedida. Retorna o cadastro do cliente."
                     }
                 }
             }
         },
-        "/api/example": {
+        "/api/cliente/{uuid}": {
             "get": {
                 "tags": [
-                    "Example"
+                    "cliente"
                 ],
-                "summary": "Exemplo de endpoint",
-                "description": "Retorna um exemplo de mensagem.",
-                "operationId": "d0d58b72527483f0bb0cbeb6e206ba63",
+                "summary": "Obtém os dados de um cliente",
+                "description": "Retorna os dados completos de um cliente específico com base no UUID informado.",
+                "operationId": "2cc7b1f2eff3d14b5605ceb9ca85a583",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente que deseja consultar",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "Cliente encontrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "b53b68c6-bc87-4553-b72a-8b2d6dbad7d6"
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "Felipe Oliveira"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "example": "03364266239"
+                                        },
+                                        "cnpj": {
+                                            "type": "string",
+                                            "example": "50162731000101"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "me.felipeoliveira@gmail.com"
+                                        },
+                                        "telefone_movel": {
+                                            "type": "string",
+                                            "example": "(96) 98415-7994"
+                                        },
+                                        "cep": {
+                                            "type": "string",
+                                            "example": "68909-811"
+                                        },
+                                        "logradouro": {
+                                            "type": "string",
+                                            "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                        },
+                                        "numero": {
+                                            "type": "string",
+                                            "example": "18"
+                                        },
+                                        "bairro": {
+                                            "type": "string",
+                                            "example": "Portal D'Oeste"
+                                        },
+                                        "complemento": {
+                                            "type": "string",
+                                            "example": "Casa 2"
+                                        },
+                                        "cidade": {
+                                            "type": "string",
+                                            "example": "Osasco"
+                                        },
+                                        "uf": {
+                                            "type": "string",
+                                            "example": "AP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Atualiza os dados de um cliente",
+                "description": "Atualiza os dados de um cliente já existente, identificado pelo UUID.",
+                "operationId": "2d1d623766fe612e3d5b56727bc9fae8",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "João da Silva"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "cnpj": {
+                                        "type": "string",
+                                        "example": "12345678000199"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "joao@email.com"
+                                    },
+                                    "telefone_movel": {
+                                        "type": "string",
+                                        "example": "(11) 91234-5678"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "12345-678"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Rua Exemplo"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "123A"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "example": "Apartamento 101"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "São Paulo"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "example": "SP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Hello World"
+                                            "example": "Cliente atualizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dados enviados incorretamente"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Remove um cliente",
+                "description": "Remove um cliente com base no UUID informado.",
+                "operationId": "17ab120998fa3d965091c090ce7e89f0",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do cliente a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Cliente removido com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/peca_insumo": {
+            "get": {
+                "tags": [
+                    "PecaInsumo"
+                ],
+                "summary": "Listar peças e insumos",
+                "description": "Faz a listagem paginada de todas as peças e insumos cadastrados",
+                "operationId": "d41606b9e20da90731da60f27d7d6245",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Quantidade de itens por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de peças e insumos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "gtin": {
+                                                        "type": "string",
+                                                        "example": "7891234567890"
+                                                    },
+                                                    "descricao": {
+                                                        "type": "string",
+                                                        "example": "Filtro de óleo"
+                                                    },
+                                                    "valor_custo": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 25.5
+                                                    },
+                                                    "valor_venda": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 45.9
+                                                    },
+                                                    "qtd_atual": {
+                                                        "type": "integer",
+                                                        "example": 100
+                                                    },
+                                                    "qtd_segregada": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "ativo"
+                                                    },
+                                                    "excluido": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "data_cadastro": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-01-15T10:30:00.000000Z"
+                                                    },
+                                                    "data_atualizacao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "data_exclusao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/peca_insumo?page=1"
+                                        },
+                                        "from": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "last_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/peca_insumo?page=5"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/peca_insumo?page=2",
+                                            "nullable": true
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/peca_insumo"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 75
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PecaInsumo"
+                ],
+                "summary": "Cadastrar peça ou insumo",
+                "description": "Cadastra uma nova peça ou insumo",
+                "operationId": "79508ea81b195de084ebcfe24514aba3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "gtin",
+                                    "descricao",
+                                    "valor_custo",
+                                    "valor_venda",
+                                    "qtd_atual"
+                                ],
+                                "properties": {
+                                    "gtin": {
+                                        "type": "string",
+                                        "example": "7891234567890"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Filtro de óleo"
+                                    },
+                                    "valor_custo": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25.5
+                                    },
+                                    "valor_venda": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 45.9
+                                    },
+                                    "qtd_atual": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "qtd_segregada": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Peça ou insumo cadastrado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            }
+        },
+        "/api/peca_insumo/{id}": {
+            "get": {
+                "tags": [
+                    "PecaInsumo"
+                ],
+                "summary": "Obter peça ou insumo por ID",
+                "description": "Obtém uma peça ou insumo específico pelo seu ID",
+                "operationId": "cefa90f9b4400f9fcedeb1eb63520abc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Peça ou insumo encontrado com sucesso"
+                    },
+                    "404": {
+                        "description": "Peça ou insumo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "PecaInsumo"
+                ],
+                "summary": "Atualizar peça ou insumo",
+                "description": "Atualiza os dados de uma peça ou insumo pelo seu ID",
+                "operationId": "e56262ad8e57187b0b4f1aa5080c84e8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gtin": {
+                                        "type": "string",
+                                        "example": "7891234567890"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Filtro de óleo atualizado"
+                                    },
+                                    "valor_custo": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 30
+                                    },
+                                    "valor_venda": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50
+                                    },
+                                    "qtd_atual": {
+                                        "type": "integer",
+                                        "example": 85
+                                    },
+                                    "qtd_segregada": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Peça ou insumo atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Peça ou insumo não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "PecaInsumo"
+                ],
+                "summary": "Remover peça ou insumo",
+                "description": "Remove uma peça ou insumo pelo seu ID",
+                "operationId": "81682879907838e6d8dccd9bb42249e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da peça ou insumo a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Peça ou insumo removido com sucesso (sem conteúdo de retorno)"
+                    },
+                    "404": {
+                        "description": "Peça ou insumo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Peça ou insumo não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/veiculo": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Listar veículos",
+                "description": "Faz a listagem paginada de todos os veículos cadastrados",
+                "operationId": "d85792b8ded3ce84c22bb90793307e2c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Quantidade de itens por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de veículos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "uuid": {
+                                                        "type": "string",
+                                                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                                                    },
+                                                    "marca": {
+                                                        "type": "string",
+                                                        "example": "Toyota"
+                                                    },
+                                                    "modelo": {
+                                                        "type": "string",
+                                                        "example": "Corolla"
+                                                    },
+                                                    "placa": {
+                                                        "type": "string",
+                                                        "example": "ABC-1234"
+                                                    },
+                                                    "ano_fabricacao": {
+                                                        "type": "integer",
+                                                        "example": 2020
+                                                    },
+                                                    "cor": {
+                                                        "type": "string",
+                                                        "example": "Prata"
+                                                    },
+                                                    "chassi": {
+                                                        "type": "string",
+                                                        "example": "1234567890ABCDEFG"
+                                                    },
+                                                    "excluido": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "data_cadastro": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-01-15T10:30:00.000000Z"
+                                                    },
+                                                    "data_atualizacao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "data_exclusao": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=1"
+                                        },
+                                        "from": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "last_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=5"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo?page=2",
+                                            "nullable": true
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/veiculo"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 75
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Cadastrar veículo",
+                "description": "Cadastra um novo veículo",
+                "operationId": "54583f9eb0f040fe8120ec4ed058928c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "marca",
+                                    "modelo",
+                                    "ano",
+                                    "placa",
+                                    "chassi"
+                                ],
+                                "properties": {
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano": {
+                                        "type": "integer",
+                                        "example": 2020
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "ABC-1234"
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Prata"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "1234567890ABCDEFG"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Veículo cadastrado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            }
+        },
+        "/api/veiculo/{uuid}": {
+            "get": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Obter veículo por UUID",
+                "description": "Obtém um veículo específico pelo seu UUID",
+                "operationId": "1642e956c7402aff493d1dac4e94ae80",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo encontrado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Atualizar veículo",
+                "description": "Atualiza os dados de um veículo pelo seu UUID",
+                "operationId": "92dfe8775ca61950d61736c60000d45e",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano": {
+                                        "type": "integer",
+                                        "example": 2021
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "DEF-5678"
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Azul"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "0987654321ZYXWVUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Veículo atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Veiculo"
+                ],
+                "summary": "Remover veículo",
+                "description": "Remove um veículo pelo seu UUID",
+                "operationId": "1af1197535c8612671c8050a65869f12",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do veículo a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Veículo removido com sucesso (sem conteúdo de retorno)"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Veículo não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
                                         }
                                     },
                                     "type": "object"
@@ -52,12 +1189,16 @@
     },
     "tags": [
         {
-            "name": "Cliente",
-            "description": "Cliente"
+            "name": "cliente",
+            "description": "cliente"
         },
         {
-            "name": "Example",
-            "description": "Example"
+            "name": "PecaInsumo",
+            "description": "PecaInsumo"
+        },
+        {
+            "name": "Veiculo",
+            "description": "Veiculo"
         }
     ]
 }
