@@ -81,10 +81,30 @@ class CadastroServicoTest extends TestCase
         $this->assertDatabaseCount('servicos', 1);
     }
 
-    // public function test_atualizar_servico_por_uuid(): void
-    // {
-        
-    // }
+    public function test_atualizar_servico_por_uuid(): void
+    {
+         $servico = \App\Modules\Servico\Model\Servico::factory()->createOne()->fresh();
+
+        $this->payload['descricao'] = 'Serviço atualizado';
+        $this->payload['valor'] = 200.00;
+
+        $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
+
+        $response->assertOk();
+
+        $response->assertJson(function (AssertableJson $json) use($servico){
+            $json->has('descricao')
+                 ->has('valor')
+                 ->has('status')
+                 ->etc();
+
+            $json->whereAll([
+                'descricao' => $this->payload['descricao'],
+                'valor'     => '200.00',
+                'status'    => 'ATIVO',
+            ]);
+        });
+    }
 
     public function test_exclusao_logica_do_servico_por_uuid(): void
     {
