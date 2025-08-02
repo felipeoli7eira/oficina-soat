@@ -24,10 +24,10 @@ return new class extends Migration
             $table->string('status', 30);
 
             $table->boolean('excluido')->default(false);
-            $table->timestamp('data_exclusao');
+            $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->nullable()->useCurrentOnUpdate();
         });
     }
 
