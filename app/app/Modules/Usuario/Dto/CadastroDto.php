@@ -14,7 +14,7 @@ class CadastroDto
     {
         return [
             'nome'    => trim($this->nome),
-            'role_id' => Role::findByName(trim(strtolower($this->papel)))->id,
+            'role'    => Role::findByName(trim(strtolower($this->papel))),
             'status'  => trim($this->status),
         ];
     }

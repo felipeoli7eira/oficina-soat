@@ -18,9 +18,6 @@ return new class extends Migration
             $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->string('nome');
 
-            $table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles');
-
             $table->string('status');
 
             $table->boolean('excluido')->default(false);
