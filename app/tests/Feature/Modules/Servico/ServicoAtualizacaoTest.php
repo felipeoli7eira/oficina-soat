@@ -33,7 +33,7 @@ class ServicoAtualizacaoTest extends TestCase
         $servico = \App\Modules\Servico\Model\Servico::where('id', $servico->id)->first();
 
         $this->payload['descricao'] = 'Serviço atualizado';
-        $this->payload['valor'] = 200.00;
+        $this->payload['valor'] = 200;
         $this->payload['status'] = 'ATIVO';
 
         $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
@@ -48,7 +48,7 @@ class ServicoAtualizacaoTest extends TestCase
 
             $json->whereAll([
                 'descricao' => $this->payload['descricao'],
-                'valor'     => '200.00',
+                'valor'     => 200,
                 'status'    => $this->payload['status'],
             ]);
         });

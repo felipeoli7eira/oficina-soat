@@ -30,7 +30,10 @@ class Servico extends Model
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'valor' => 'float'
+        ];
+
     }
 
     protected static function newFactory(): ServicoFactory

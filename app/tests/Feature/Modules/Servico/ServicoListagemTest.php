@@ -33,10 +33,9 @@ class ServicoListagemTest extends TestCase
                  ->etc();
 
             $servico = $servicos->first();
-
             $json->whereAll([
                 'data.0.descricao' => $servico->descricao,
-                'data.0.valor'     => number_format($servico->valor, 2, '.', ''), 
+                'data.0.valor'     => (int) $servico->valor,
                 'data.0.status'    => $servico->status,
             ]);
         });
@@ -58,7 +57,7 @@ class ServicoListagemTest extends TestCase
 
             $json->whereAll([
                 'descricao' => $servico->descricao,
-                'valor'     => number_format($servico->valor, 2, '.', ''),
+                'valor'     => (int) $servico->valor,
                 'status'    => $servico->status,
             ]);
         });
