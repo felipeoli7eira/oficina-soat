@@ -11,7 +11,7 @@ use App\Modules\Usuario\Requests\CadastroRequest;
 use App\Modules\Usuario\Requests\ObterUmPorUuidRequest;
 
 use App\Modules\Usuario\Service\Service as UsuarioService;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use OpenApi\Annotations as OA;
@@ -193,7 +193,13 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->obterUmPorUuid($request->uuid);
-        } catch (Throwable $th) {
+        } catch(ModelNotFoundException $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => 'Nenhum registro correspondente ao informado'
+            ], HttpResponse::HTTP_NOT_FOUND);
+        }
+        catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
@@ -242,6 +248,11 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->remocao($request->uuid);
+        } catch(ModelNotFoundException $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => 'Nenhum registro correspondente ao informado'
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -321,6 +332,11 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->atualizacao($request->uuid(), $request->toDto());
+        } catch(ModelNotFoundException $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => 'Nenhum registro correspondente ao informado'
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,

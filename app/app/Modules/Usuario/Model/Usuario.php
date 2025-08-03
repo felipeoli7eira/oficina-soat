@@ -2,6 +2,7 @@
 
 namespace App\Modules\Usuario\Model;
 
+use App\Traits\SoftDeletes;
 use Database\Factories\UsuarioFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ class Usuario extends Model
 {
     /** @use HasFactory<\Database\Factories\UsuarioFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     public $table = 'usuario';
 
@@ -25,6 +27,7 @@ class Usuario extends Model
         'status',
         'excluido',
         'data_exclusao',
+        'data_cadastro',
         'data_atualizacao'
 ]   ;
 
