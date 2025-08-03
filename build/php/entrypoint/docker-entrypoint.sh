@@ -6,14 +6,11 @@ echo "🛠️ Ajustando permissões de pasta de cache e storage"
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-if [ ! -f vendor/autoload.php ]; then
-    echo "📦 Instalando dependências"
-
-    composer install --no-interaction --prefer-dist --optimize-autoloader || {
-        echo "❌ Falha na instalação das dependências"
-        exit 1
-    }
-fi
+echo "📦 Instalando dependências"
+composer install --optimize-autoloader || {
+    echo "❌ Falha na instalação das dependências"
+    exit 1
+}
 
 if [ ! -f .env ]; then
     echo "⚙️ Criando arquivo .env"
@@ -21,10 +18,10 @@ if [ ! -f .env ]; then
 
     echo "🔑 Gerando chave da aplicação"
     php artisan key:generate
-
-    echo "🆙 Rodando migrations"
-    php artisan migrate --seed
 fi
+
+echo "🆙 Preparando banco de dados"
+php artisan migrate:fresh --seed
 
 echo "📚 Atualizando doc da api"
 php artisan l5-swagger:generate
