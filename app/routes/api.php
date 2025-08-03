@@ -13,3 +13,6 @@ require __DIR__ . '/../app/Modules/Cliente/Routes/api.php';
 
 // * endpoints de veiculo
 require __DIR__ . '/../app/Modules/Veiculo/Routes/api.php';
+
+// * endpoints de usuario
+require __DIR__ . '/../app/Modules/Usuario/Routes/api.php';

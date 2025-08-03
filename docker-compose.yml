@@ -10,7 +10,7 @@ services:
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: postgres
         volumes:
-        - oficina_soat_pg_data:/var/lib/postgresql/data
+            - oficina_soat_pg_data:/var/lib/postgresql/data
         networks:
             - oficina_soat_network
         healthcheck:

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,7 +15,7 @@ return new class extends Migration
         Schema::create('usuario', function (Blueprint $table) {
 
             $table->id();
-            $table->uuid('uuid')->unique();
+            $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->string('nome');
 
             $table->unsignedBigInteger('role_id');
@@ -23,10 +24,10 @@ return new class extends Migration
             $table->string('status');
 
             $table->boolean('excluido')->default(false);
-            $table->timestamp('data_exclusao');
+            $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->nullable()->useCurrentOnUpdate();
         });
 
         // Schema::create('password_reset_tokens', function (Blueprint $table) {
