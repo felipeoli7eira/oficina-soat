@@ -9,7 +9,7 @@
         "/api/cliente": {
             "get": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Faz a listagem dos clientes cadastrados",
                 "description": "Faz a listagem de clientes",
@@ -22,7 +22,7 @@
             },
             "post": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Cadastra um cliente",
                 "description": "Cadastra um cliente",
@@ -45,53 +45,53 @@
                                 "properties": {
                                     "nome": {
                                         "type": "string",
-                                        "example": "Felipe Oliveira"
+                                        "example": "Maria Joaquina"
                                     },
                                     "cpf": {
                                         "type": "string",
-                                        "example": "03364266239"
+                                        "example": "98192899047"
                                     },
                                     "cnpj": {
                                         "type": "string",
-                                        "example": "50162731000101"
+                                        "example": "68551440000170"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "me.felipeoliveira@gmail.com"
+                                        "example": "maria.joaquina@gmail.com"
                                     },
                                     "telefone_movel": {
                                         "type": "string",
-                                        "example": "(96) 98415-7994"
+                                        "example": "(11) 99123-4567"
                                     },
                                     "cep": {
                                         "type": "string",
-                                        "example": "68909-811"
+                                        "example": "01153-000"
                                     },
                                     "logradouro": {
                                         "type": "string",
-                                        "example": "Viela Ambrósio Rodrigues de Medeiros"
+                                        "example": "Rua Vitorino Carmilo"
                                     },
                                     "numero": {
                                         "type": "string",
-                                        "example": "18"
+                                        "example": "10"
                                     },
                                     "bairro": {
                                         "type": "string",
-                                        "example": "Portal D'Oeste"
+                                        "example": "Barra Funda"
                                     },
                                     "complemento": {
                                         "type": "string",
-                                        "example": "Casa 2"
+                                        "example": ""
                                     },
                                     "cidade": {
                                         "type": "string",
-                                        "example": "Osasco"
+                                        "example": "São Paulo"
                                     },
                                     "uf": {
                                         "type": "string",
                                         "maxLength": 2,
-                                        "example": "AP"
+                                        "example": "SP"
                                     }
                                 },
                                 "type": "object"
@@ -109,7 +109,7 @@
         "/api/cliente/{uuid}": {
             "get": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Obtém os dados de um cliente",
                 "description": "Retorna os dados completos de um cliente específico com base no UUID informado.",
@@ -199,7 +199,7 @@
             },
             "put": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Atualiza os dados de um cliente",
                 "description": "Atualiza os dados de um cliente já existente, identificado pelo UUID.",
@@ -322,7 +322,7 @@
             },
             "delete": {
                 "tags": [
-                    "cliente"
+                    "Cliente"
                 ],
                 "summary": "Remove um cliente",
                 "description": "Remove um cliente com base no UUID informado.",
@@ -399,7 +399,8 @@
                             "schema": {
                                 "required": [
                                     "descricao",
-                                    "valor"
+                                    "valor",
+                                    "status"
                                 ],
                                 "properties": {
                                     "descricao": {
@@ -410,6 +411,10 @@
                                         "type": "number",
                                         "format": "float",
                                         "example": 150
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ATIVO"
                                     }
                                 },
                                 "type": "object"
@@ -509,6 +514,10 @@
                                         "type": "number",
                                         "format": "float",
                                         "example": 150
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ATIVO"
                                     }
                                 },
                                 "type": "object"
@@ -556,7 +565,7 @@
                         }
                     },
                     "404": {
-                        "description": "Cliente não encontrado"
+                        "description": "Serviço não encontrado"
                     }
                 }
             },
@@ -607,6 +616,531 @@
                     },
                     "404": {
                         "description": "Serviço não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/usuario": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Faz a listagem dos usuários cadastrados",
+                "description": "Retorna uma lista paginada de usuários cadastrados no sistema.",
+                "operationId": "dafc873c21da2766f35065138f773566",
+                "responses": {
+                    "200": {
+                        "description": "Para quando a requisição for bem-sucedida. Pode ou não retornar usuários.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 17
+                                                    },
+                                                    "uuid": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "example": "b7466bb6-0d93-4f32-a4a0-f5cad13e3360"
+                                                    },
+                                                    "nome": {
+                                                        "type": "string",
+                                                        "example": "Felipe"
+                                                    },
+                                                    "role_id": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "ativo"
+                                                    },
+                                                    "excluido": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "data_exclusao": {
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "data_cadastro": {
+                                                        "type": "string",
+                                                        "example": "31/07/2025 19:33"
+                                                    },
+                                                    "data_atualizacao": {
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/usuario?page=1"
+                                        },
+                                        "from": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "last_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/usuario?page=1"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "example": "&laquo; Anterior"
+                                                    },
+                                                    "active": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/api/usuario"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": 4
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 4
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro inesperado no servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Cadastra um usuário",
+                "description": "Cadastra um usuário",
+                "operationId": "e3b7665b59e0bfe01053a50f95e14568",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "papel",
+                                    "status",
+                                    "cep"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Jacinto Pinto"
+                                    },
+                                    "papel": {
+                                        "type": "string",
+                                        "example": "mecanico || comercial || gestor_estoque || atendente"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ativo || inativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Para quando a requisição for bem-sucedida. Retorna o cadastro do usuário."
+                    },
+                    "400": {
+                        "description": "Para quando a requisição falhar por erros nos dados."
+                    },
+                    "500": {
+                        "description": "Para quando houver algum erro não mapeado na aplicação de forma geral ou no endpoint."
+                    }
+                }
+            }
+        },
+        "/api/usuario/{uuid}": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Obtém os dados de um usuário pelo uuid",
+                "description": "Retorna os dados completos de um usuário específico com base no UUID informado.",
+                "operationId": "c35d0c447cc21eb0c6272310be7e4246",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do usuário que deseja consultar",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário encontrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 17
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "b7466bb6-0d93-4f32-a4a0-f5cad13e3360"
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "Felipe"
+                                        },
+                                        "role_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ativo"
+                                        },
+                                        "excluido": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data_exclusao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "data_cadastro": {
+                                            "type": "string",
+                                            "example": "31/07/2025 19:33"
+                                        },
+                                        "data_atualizacao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "role": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "mecanico"
+                                                },
+                                                "guard_name": {
+                                                    "type": "string",
+                                                    "example": "web"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "O campo uuid selecionado é inválido."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro não mapeado na aplicação ou no endpoint"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Atualiza os dados de um usuário",
+                "description": "Atualiza os dados de um usuário específico com base no UUID informado.",
+                "operationId": "2a4d0c5c9dbc3973c47ce40dc69a84d1",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do usuário que será atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados que devem ser atualizados",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "role_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Novo nome"
+                                    },
+                                    "papel": {
+                                        "type": "string",
+                                        "example": "mecanico || atendente || comercial || gestor_estoque"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "inativo || ativo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 17
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "b7466bb6-0d93-4f32-a4a0-f5cad13e3360"
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "Novo nome"
+                                        },
+                                        "role_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "inativo"
+                                        },
+                                        "excluido": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data_exclusao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "data_cadastro": {
+                                            "type": "string",
+                                            "example": "31/07/2025 19:33"
+                                        },
+                                        "data_atualizacao": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "role": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "mecanico"
+                                                },
+                                                "guard_name": {
+                                                    "type": "string",
+                                                    "example": "web"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-31T18:29:09.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou campos obrigatórios ausentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "O campo uuid selecionado é inválido."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Remove um usuário",
+                "description": "Remove um usuário com base no UUID informado.",
+                "operationId": "af7b609f3152df39dabb12ccbce54b83",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID do usuário a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuário removido com sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erros de validação"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "O campo uuid selecionado é inválido."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno não tratado"
                     }
                 }
             }
@@ -1016,12 +1550,16 @@
     },
     "tags": [
         {
-            "name": "cliente",
-            "description": "cliente"
+            "name": "Cliente",
+            "description": "Cliente"
         },
         {
             "name": "servico",
             "description": "servico"
+        },
+        {
+            "name": "Usuario",
+            "description": "Usuario"
         },
         {
             "name": "Veiculo",
