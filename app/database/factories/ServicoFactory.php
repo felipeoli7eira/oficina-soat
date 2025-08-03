@@ -33,7 +33,7 @@ class ServicoFactory extends Factory
             'descricao'        => $faker->unique()->randomElement($servicos),
             'valor'            => $faker->randomFloat(0, 100, 1000),
             'status'           => $faker->randomElement($status),
-            'excluido'         => $faker->boolean(10), // só 10% excluídos
+            'excluido'         => false, // atenção ao testes
             'data_cadastro'    => $faker->dateTimeBetween('-1 year', 'now'),
             'data_atualizacao' => $faker->dateTimeBetween('-1 year', 'now'),
         ];

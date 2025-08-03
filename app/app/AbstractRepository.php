@@ -18,7 +18,9 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public static function read(int $perPage = 10, array $columns = ['*'], array $relations = []): ResourceCollection|LengthAwarePaginator
     {
-        return self::model()::query()->with($relations)->paginate($perPage, $columns);
+        return self::model()::query()->with($relations)
+                                     ->where('excluido', false)
+                                     ->paginate($perPage, $columns);
     }
 
     public static function findOne(int $identifier, array $columns = ['*'], array $relations = []): Model
