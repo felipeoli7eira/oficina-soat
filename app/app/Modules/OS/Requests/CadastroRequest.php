@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Usuario\Requests;
+namespace App\Modules\OS\Requests;
 
-use App\Modules\Usuario\Dto\CadastroDto;
+use App\Modules\OS\Dto\CadastroDto;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;

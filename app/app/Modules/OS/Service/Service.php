@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Usuario\Service;
+namespace App\Modules\OS\Service;
 
-use App\Modules\Usuario\Dto\AtualizacaoDto;
-use App\Modules\Usuario\Dto\CadastroDto;
-use App\Modules\Usuario\Repository\UsuarioRepository;
+use App\Modules\OS\Dto\AtualizacaoDto;
+use App\Modules\OS\Dto\CadastroDto;
+
+use App\Modules\OS\Repository\Repository as OSRepository;
+
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Service
 {
-    public function __construct(private readonly UsuarioRepository $repo) {}
+    public function __construct(private readonly OSRepository $repo) {}
 
     public function listagem(): ResourceCollection|LengthAwarePaginator
     {

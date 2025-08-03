@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Usuario\Requests;
+namespace App\Modules\OS\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Usuario\Requests;
+namespace App\Modules\OS\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +56,8 @@ class AtualizacaoRequest extends FormRequest
         }
     }
 
-    public function toDto(): \App\Modules\Usuario\Dto\AtualizacaoDto
+    public function toDto(): \App\Modules\OS\Dto\AtualizacaoDto
     {
-        return new \App\Modules\Usuario\Dto\AtualizacaoDto($this->validated());
+        return new \App\Modules\OS\Dto\AtualizacaoDto($this->validated());
     }
 }
