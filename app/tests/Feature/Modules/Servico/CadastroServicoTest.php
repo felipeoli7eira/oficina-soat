@@ -55,6 +55,7 @@ class CadastroServicoTest extends TestCase
     public function test_listar_servico_por_uuid(): void
     {
         $servico = \App\Modules\Servico\Model\Servico::factory(1)->createOne()->fresh();
+        $servico = \App\Modules\Servico\Model\Servico::where('id', $servico->id)->first();
         $response = $this->getJson('/api/servico/' . $servico->uuid);
 
         $response->assertOk();
@@ -73,6 +74,20 @@ class CadastroServicoTest extends TestCase
         });
     }
 
+    public function test_listar_servico_por_uuid_que_nao_existe(): void
+    {
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
+        $response = $this->getJson('/api/servico/' . $uuid);
+        $response->assertNotFound();
+    }
+
+    public function test_listar_servico_por_uuid_com_formato_invalido(): void
+    {
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380-invalido';
+        $response = $this->getJson('/api/servico/' . $uuid);
+        $response->assertUnprocessable();
+    }
+
     public function test_cadastrar_servico(): void
     {
         $response = $this->postJson('/api/servico', $this->payload);
@@ -83,16 +98,18 @@ class CadastroServicoTest extends TestCase
 
     public function test_atualizar_servico_por_uuid(): void
     {
-         $servico = \App\Modules\Servico\Model\Servico::factory()->createOne()->fresh();
+        $servico = \App\Modules\Servico\Model\Servico::factory()->createOne()->fresh();
+        $servico = \App\Modules\Servico\Model\Servico::where('id', $servico->id)->first();
 
         $this->payload['descricao'] = 'Serviço atualizado';
         $this->payload['valor'] = 200.00;
+        $this->payload['status'] = 'ATIVO';
 
         $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
 
         $response->assertOk();
 
-        $response->assertJson(function (AssertableJson $json) use($servico){
+        $response->assertJson(function (AssertableJson $json){
             $json->has('descricao')
                  ->has('valor')
                  ->has('status')
@@ -101,9 +118,31 @@ class CadastroServicoTest extends TestCase
             $json->whereAll([
                 'descricao' => $this->payload['descricao'],
                 'valor'     => '200.00',
-                'status'    => 'ATIVO',
+                'status'    => $this->payload['status'],
             ]);
         });
+    }
+
+    public function test_atualizar_servico_por_uuid_que_nao_existe(): void
+    {
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
+        $this->payload['descricao'] = 'Serviço com UUID que não existe';
+        $this->payload['valor'] = 200.00;
+        $this->payload['status'] = 'ATIVO';
+        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+
+        $response->assertNotFound();
+    }
+
+    public function test_atualizar_servico_por_uuid_com_formato_invalido(): void
+    {
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380-invalido';
+        $this->payload['descricao'] = 'Serviço com UUID inválido';
+        $this->payload['valor'] = 200.00;
+        $this->payload['status'] = 'ATIVO';
+        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+
+        $response->assertUnprocessable();
     }
 
     public function test_exclusao_logica_do_servico_por_uuid(): void
@@ -114,6 +153,20 @@ class CadastroServicoTest extends TestCase
 
         $response = $this->getJson('/api/servico/' . $servico->uuid);
         $response->assertNotFound();
+    }
+
+    public function test_exclusao_logica_do_servico_por_uuid_que_nao_existe(): void
+    {
+        $uuid = fake()->uuid();
+        $response = $this->deleteJson('/api/servico/' . $uuid);
+        $response->assertNotFound();
+    }
+
+    public function test_exclusao_logica_do_servico_por_uuid_com_formato_invalido(): void
+    {
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380-invalido';
+        $response = $this->deleteJson('/api/servico/' . $uuid);
+        $response->assertUnprocessable();
     }
 
     public function test_descricao_eh_obrigatoria_e_deve_ter_minimo_3_caracteres(): void

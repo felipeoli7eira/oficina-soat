@@ -170,6 +170,11 @@ class ServicoController extends Controller
     {
         try {
             $response = $this->service->remocao($request->uuid);
+        } catch (ModelNotFoundException $th){
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -226,6 +231,11 @@ class ServicoController extends Controller
     {
         try {
             $response = $this->service->atualizacao($request->route('uuid'), $request->toDto());
+         }catch (ModelNotFoundException $th){
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
