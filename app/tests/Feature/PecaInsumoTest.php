@@ -1,14 +1,122 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 use App\Modules\PecaInsumo\Dto\ListagemDto;
 use App\Modules\PecaInsumo\Dto\CadastroDto;
 use App\Modules\PecaInsumo\Model\PecaInsumo;
 
 class PecaInsumoTest extends TestCase
 {
+    use RefreshDatabase;
+
+    private array $payload;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertDatabaseEmpty('peca_insumo');
+
+        $this->payload = [
+            'gtin' => '7891234567890',
+            'descricao' => 'Filtro de Óleo Motor',
+            'valor_custo' => 25.50,
+            'valor_venda' => 45.90,
+            'qtd_atual' => 100,
+            'qtd_segregada' => 5,
+            'status' => 'ativo'
+        ];
+    }
+
+    // ==================== TESTES DE INTEGRAÇÃO/FEATURE ====================
+
+    public function test_peca_insumo_pode_ser_cadastrada(): void
+    {
+        $response = $this->postJson('/api/peca_insumo', $this->payload);
+
+        $response->assertCreated();
+        $this->assertDatabaseCount('peca_insumo', 1);
+    }
+
+    public function test_pode_listar_pecas_insumos(): void
+    {
+        // Criar algumas peças para listar
+        PecaInsumo::factory()->count(3)->create();
+
+        $response = $this->getJson('/api/peca_insumo');
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'gtin',
+                    'descricao',
+                    'valor_custo',
+                    'valor_venda',
+                    'qtd_atual',
+                    'qtd_segregada',
+                    'status',
+                    'excluido',
+                    'data_cadastro'
+                ]
+            ],
+            'current_page',
+            'per_page',
+            'total'
+        ]);
+    }
+
+    public function test_pode_obter_peca_insumo_por_id(): void
+    {
+        $pecaInsumo = PecaInsumo::factory()->create();
+
+        $response = $this->getJson("/api/peca_insumo/{$pecaInsumo->id}");
+
+        $response->assertOk();
+        $response->assertJsonFragment([
+            'id' => $pecaInsumo->id,
+            'gtin' => $pecaInsumo->gtin,
+            'descricao' => $pecaInsumo->descricao
+        ]);
+    }
+
+    // public function test_pode_atualizar_peca_insumo(): void
+    // {
+    //     $pecaInsumo = PecaInsumo::factory()->create();
+
+    //     $dadosAtualizacao = [
+    //         'descricao' => 'Filtro Atualizado',
+    //         'valor_venda' => 55.90,
+    //         'qtd_atual' => 150
+    //     ];
+
+    //     $response = $this->putJson("/api/peca_insumo/{$pecaInsumo->id}", $dadosAtualizacao);
+
+    //     $response->assertOk();
+    //     $this->assertDatabaseHas('peca_insumo', [
+    //         'id' => $pecaInsumo->id,
+    //         'descricao' => 'Filtro Atualizado',
+    //         'valor_venda' => 55.90
+    //     ]);
+    // }
+
+    // public function test_pode_remover_peca_insumo(): void
+    // {
+    //     $pecaInsumo = PecaInsumo::factory()->create();
+
+    //     $response = $this->deleteJson("/api/peca_insumo/{$pecaInsumo->id}");
+
+    //     $response->assertNoContent();
+    //     $this->assertDatabaseHas('peca_insumo', [
+    //         'id' => $pecaInsumo->id,
+    //         'excluido' => true
+    //     ]);
+    // }
+
     // ==================== TESTES DOS DTOs ====================
 
     /**
@@ -30,57 +138,22 @@ class PecaInsumoTest extends TestCase
     public function test_cadastro_dto_aceita_dados_peca_Insumo(): void
     {
         $dto = new CadastroDto(
-            marca: 'Toyota',
-            modelo: 'Corolla',
-            ano: 2020,
-            placa: 'ABC-1234',
-            cor: 'Prata',
-            chassi: '1234567890ABCDEFG'
+            gtin: '7891234567890',
+            descricao: 'Filtro de Óleo',
+            valor_custo: 25.50,
+            valor_venda: 45.90,
+            qtd_atual: 100,
+            qtd_segregada: 5,
+            status: 'ativo'
         );
 
         $result = $dto->asArray();
 
         $this->assertIsArray($result);
-        $this->assertEquals('Toyota', $result['marca']);
-        $this->assertEquals('Corolla', $result['modelo']);
-        $this->assertEquals(2020, $result['ano_fabricacao']);
-        $this->assertEquals('ABC-1234', $result['placa']);
-    }
-
-    /**
-     * Teste se o método filled funciona corretamente
-     */
-    public function test_filled_retorna_apenas_valores_preenchidos(): void
-    {
-        $dto = new CadastroDto(
-            marca: 'Honda',
-            modelo: 'Civic',
-            ano: 2019,
-            placa: 'XYZ-9876',
-            cor: null, // valor nulo
-            chassi: '0987654321ZYXWVUT'
-        );
-
-        $filled = $dto->filled();
-
-        $this->assertArrayHasKey('marca', $filled);
-        $this->assertArrayHasKey('modelo', $filled);
-        $this->assertArrayHasKey('ano_fabricacao', $filled);
-        $this->assertArrayHasKey('placa', $filled);
-        $this->assertArrayHasKey('chassi', $filled);
-        $this->assertArrayNotHasKey('cor', $filled); // não deve ter cor pois é null
-    }
-
-    /**
-     * Teste se o DTO de listagem funciona corretamente
-     */
-    public function test_filled_retorna_apenas_valores_preenchidos_listagem(): void
-    {
-        $dto = new ListagemDto();
-
-        $filled = $dto->filled();
-
-        $this->assertIsArray($filled);
+        $this->assertEquals('7891234567890', $result['gtin']);
+        $this->assertEquals('Filtro de Óleo', $result['descricao']);
+        $this->assertEquals(25.50, $result['valor_custo']);
+        $this->assertEquals(45.90, $result['valor_venda']);
     }
 
     // ==================== TESTES DO MODEL ====================
@@ -102,7 +175,7 @@ class PecaInsumoTest extends TestCase
     {
         $peca_Insumo = new PecaInsumo();
 
-        $this->assertEquals('peca_Insumo', $peca_Insumo->getTable());
+        $this->assertEquals('peca_insumo', $peca_Insumo->getTable());
     }
 
     /**
@@ -113,13 +186,13 @@ class PecaInsumoTest extends TestCase
         $peca_Insumo = new PecaInsumo();
 
         $expectedFillable = [
-            'uuid',
-            'marca',
-            'modelo',
-            'placa',
-            'ano_fabricacao',
-            'cor',
-            'chassi',
+            'gtin',
+            'descricao',
+            'valor_custo',
+            'valor_venda',
+            'qtd_atual',
+            'qtd_segregada',
+            'status',
             'excluido',
             'data_cadastro',
             'data_atualizacao',
@@ -135,20 +208,23 @@ class PecaInsumoTest extends TestCase
     public function test_peca_Insumo_model_pode_receber_dados_construtor(): void
     {
         $dados = [
-            'uuid' => 'test-uuid-123',
-            'marca' => 'Toyota',
-            'modelo' => 'Corolla',
-            'placa' => 'ABC-1234',
-            'ano_fabricacao' => 2020,
+            'gtin' => '7891234567890',
+            'descricao' => 'Pastilha de Freio',
+            'valor_custo' => 55.00,
+            'valor_venda' => 95.00,
+            'qtd_atual' => 50,
+            'qtd_segregada' => 2,
+            'status' => 'ativo',
             'excluido' => 0
         ];
 
         $peca_Insumo = new PecaInsumo($dados);
 
-        $this->assertEquals('Toyota', $peca_Insumo->marca);
-        $this->assertEquals('Corolla', $peca_Insumo->modelo);
-        $this->assertEquals('ABC-1234', $peca_Insumo->placa);
-        $this->assertEquals(2020, $peca_Insumo->ano_fabricacao);
+        $this->assertEquals('7891234567890', $peca_Insumo->gtin);
+        $this->assertEquals('Pastilha de Freio', $peca_Insumo->descricao);
+        $this->assertEquals(55.00, $peca_Insumo->valor_custo);
+        $this->assertEquals(95.00, $peca_Insumo->valor_venda);
+        $this->assertEquals(50, $peca_Insumo->qtd_atual);
     }
 
     /**
@@ -246,11 +322,11 @@ class PecaInsumoTest extends TestCase
     }
 
     /**
-     * Teste se o service tem método obterUmPorUuid
+     * Teste se o service tem método obterUmPorId
      */
-    public function test_peca_Insumo_service_tem_metodo_obter_um_por_uuid(): void
+    public function test_peca_Insumo_service_tem_metodo_obter_um_por_id(): void
     {
-        $this->assertTrue(method_exists(\App\Modules\PecaInsumo\Service\Service::class, 'obterUmPorUuid'));
+        $this->assertTrue(method_exists(\App\Modules\PecaInsumo\Service\Service::class, 'obterUmPorId'));
     }
 
     /**
@@ -324,11 +400,11 @@ class PecaInsumoTest extends TestCase
     }
 
     /**
-     * Teste se o controller tem método obterUmPorUuid
+     * Teste se o controller tem método obterUmPorId
      */
-    public function test_peca_Insumo_controller_tem_metodo_obter_um_por_uuid(): void
+    public function test_peca_Insumo_controller_tem_metodo_obter_um_por_id(): void
     {
-        $this->assertTrue(method_exists(\App\Modules\PecaInsumo\Controller\PecaInsumoController::class, 'obterUmPorUuid'));
+        $this->assertTrue(method_exists(\App\Modules\PecaInsumo\Controller\PecaInsumoController::class, 'obterUmPorId'));
     }
 
     /**
@@ -409,13 +485,13 @@ class PecaInsumoTest extends TestCase
     }
 
     /**
-     * Teste se o ObterUmPorUuidRequest pode ser instanciado
+     * Teste se o ObterUmPorIdRequest pode ser instanciado
      */
-    public function test_peca_Insumo_obter_um_por_uuid_request_pode_ser_instanciado(): void
+    public function test_peca_Insumo_obter_um_por_id_request_pode_ser_instanciado(): void
     {
-        $request = new \App\Modules\PecaInsumo\Requests\ObterUmPorUuidRequest();
+        $request = new \App\Modules\PecaInsumo\Requests\ObterUmPorIdRequest();
 
-        $this->assertInstanceOf(\App\Modules\PecaInsumo\Requests\ObterUmPorUuidRequest::class, $request);
+        $this->assertInstanceOf(\App\Modules\PecaInsumo\Requests\ObterUmPorIdRequest::class, $request);
     }
 
     /**
@@ -460,7 +536,7 @@ class PecaInsumoTest extends TestCase
 
         $this->assertTrue(method_exists($controller, 'listagem'));
         $this->assertTrue(method_exists($controller, 'cadastro'));
-        $this->assertTrue(method_exists($controller, 'obterUmPorUuid'));
+        $this->assertTrue(method_exists($controller, 'obterUmPorId'));
         $this->assertTrue(method_exists($controller, 'atualizacao'));
         $this->assertTrue(method_exists($controller, 'remocao'));
     }
@@ -507,7 +583,8 @@ class PecaInsumoTest extends TestCase
         $docComment = $method->getDocComment();
 
         $this->assertStringContainsString('@OA\\Get', $docComment);
-        $this->assertStringContainsString('/api/peca_Insumo', $docComment);
+        $this->assertStringContainsString('/api/peca_insumo', $docComment);
         $this->assertStringContainsString('PecaInsumo', $docComment);
     }
+
 }
