@@ -30,6 +30,7 @@ services:
         - "9000:9000"
         volumes:
             - ./app:/var/www/html
+            - ./build/php/php.ini:/usr/local/etc/php/php.ini
         networks:
             - oficina_soat_network
         depends_on:
