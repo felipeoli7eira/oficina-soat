@@ -781,15 +781,15 @@
                                 "properties": {
                                     "nome": {
                                         "type": "string",
-                                        "example": "Jacinto Pinto"
+                                        "example": "Jhon Doe"
                                     },
                                     "papel": {
                                         "type": "string",
-                                        "example": "mecanico || comercial || gestor_estoque || atendente"
+                                        "example": "mecanico,comercial,gestor_estoque,atendente"
                                     },
                                     "status": {
                                         "type": "string",
-                                        "example": "ativo || inativo"
+                                        "example": "ativo,inativo"
                                     }
                                 },
                                 "type": "object"
