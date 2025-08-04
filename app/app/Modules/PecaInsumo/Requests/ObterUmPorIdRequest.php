@@ -36,10 +36,26 @@ class ObterUmPorIdRequest extends FormRequest
 
     public function failedValidation(Validator $validator): void
     {
+        $errors = $validator->errors();
+        $status = Response::HTTP_BAD_REQUEST;
+        $idErrors = $errors->get('id');
+
+        if (!empty($idErrors)) {
+            foreach ($idErrors as $message) {
+                if (str_contains($message, 'existe') || str_contains($message, 'válido')) {
+                    $status = Response::HTTP_NOT_FOUND;
+                    break;
+                }
+
+                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
+                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+                }
+            }
+        }
         throw new HttpResponseException(response()->json([
             'message'   => 'Erros de validação',
-            'errors'    => $validator->errors()->all(),
-        ], Response::HTTP_BAD_REQUEST));
+            'errors'    => $errors->all(),
+        ], $status));
     }
 }
 

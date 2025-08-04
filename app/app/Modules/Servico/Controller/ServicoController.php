@@ -119,7 +119,7 @@ class ServicoController extends Controller
     {
         try {
             $response = $this->service->obterUmPorUuid($request->uuid);
-            
+
         }catch (ModelNotFoundException $th){
             return Response::json([
                 'error'   => true,

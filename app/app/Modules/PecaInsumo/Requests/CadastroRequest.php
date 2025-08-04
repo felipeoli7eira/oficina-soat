@@ -21,12 +21,12 @@ class CadastroRequest extends FormRequest
     {
         return [
             'gtin' => ['required', 'string', 'max:50'],
-            'descricao' => ['required', 'string', 'min:2', 'max:255'],
+            'descricao' => ['required', 'string', 'min:3', 'max:255'],
             'valor_custo' => ['required', 'numeric', 'min:0'],
             'valor_venda' => ['required', 'numeric', 'min:0'],
             'qtd_atual' => ['required', 'integer', 'min:0'],
             'qtd_segregada' => ['required', 'integer', 'min:0'],
-            'status' => ['required', 'string', 'in:ativo,inativo'],
+            'status' => ['required', 'string', 'min:3', 'max:30']
         ];
     }
 

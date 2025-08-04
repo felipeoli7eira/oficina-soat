@@ -25,17 +25,22 @@ class Service
 
     public function obterUmPorId(string $id)
     {
-        return $this->repo->model()->where('id', $id)->firstOrFail();
+        $pecaInsumo = $this->repo->findOne((int)$id);
+        if (!$pecaInsumo) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException("PecaInsumo with ID {$id} not found.");
+        }
+        return $pecaInsumo;
     }
 
     public function remocao(string $id)
     {
-        return $this->obterUmPorId($id)->delete();
+        $pecaInsumo = $this->obterUmPorId($id);
+        return $pecaInsumo->delete();
     }
 
     public function atualizacao(string $id, AtualizacaoDto $dto)
     {
-        $dados = $dto->dados;
+        $dados = $dto->asArray();
         unset($dados['id']);
 
         if (empty($dados)) {
@@ -43,7 +48,6 @@ class Service
         }
 
         $pecaInsumo = $this->obterUmPorId($id);
-
         $atualizacao = $dto->merge($pecaInsumo->toArray());
 
         $pecaInsumo->update($atualizacao);

@@ -16,6 +16,7 @@ use App\Modules\PecaInsumo\Requests\CadastroRequest;
 use App\Modules\PecaInsumo\Requests\ObterUmPorIdRequest;
 use App\Modules\PecaInsumo\Requests\ListagemRequest;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use OpenApi\Annotations as OA;
@@ -177,7 +178,7 @@ class PecaInsumoController extends Controller
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
-            ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+            ], HttpResponse::HTTP_NOT_FOUND);
         }
 
         return Response::json($response);
@@ -220,8 +221,13 @@ class PecaInsumoController extends Controller
      */
     public function remocao(ObterUmPorIdRequest $request)
     {
-        try {
+         try {
             $response = $this->service->remocao($request->id);
+        } catch (ModelNotFoundException $th){
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -274,6 +280,11 @@ class PecaInsumoController extends Controller
     {
         try {
             $response = $this->service->atualizacao($request->route('id'), $request->toDto());
+         }catch (ModelNotFoundException $th){
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
