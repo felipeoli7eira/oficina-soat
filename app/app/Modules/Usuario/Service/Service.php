@@ -21,12 +21,23 @@ class Service
 
     public function cadastro(CadastroDto $dto)
     {
-        return $this->repo->createOrFirst($dto->asArray())->fresh(['role']);
+        $data = $dto->asArray();
+        $role = $data['role'];
+
+        unset($data['role']);
+
+        $usuario = $this->repo->createOrFirst($data);
+
+        if (! $usuario->hasRole($role)) {
+            $usuario->assignRole($role);
+        }
+
+        return $usuario->fresh();
     }
 
     public function obterUmPorUuid(string $uuid)
     {
-        return $this->repo->model()->where('uuid', $uuid)->with(['role'])->firstOrFail();
+        return $this->repo->model()->where('uuid', $uuid)->with(['roles'])->firstOrFail();
     }
 
     public function remocao(string $uuid)
@@ -38,10 +49,15 @@ class Service
     {
         $usuario = $this->obterUmPorUuid($uuid);
 
-        $novosDados = $dto->merge($usuario->toArray());
+        $dadosAntigos = $usuario->toArray();
+        $novosDados = $dto->merge($dadosAntigos);
 
         $usuario->update($novosDados);
 
-        return $usuario->refresh();
+        if ($novoPapel = $novosDados['role'] ?? null) {
+            $usuario->syncRoles($novoPapel);
+        }
+
+        return $usuario->fresh(['roles']);
     }
 }

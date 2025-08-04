@@ -90,7 +90,7 @@ class Controller extends BaseController
         return Response::json($response);
     }
 
-     /**
+    /**
      * @OA\Post(
      *      path="/api/usuario",
      *      tags={"Usuario"},
@@ -100,9 +100,9 @@ class Controller extends BaseController
      *          required=true,
      *          @OA\JsonContent(
      *              required={"nome", "papel", "status", "cep"},
-     *              @OA\Property(property="nome", type="string", example="Jacinto Pinto"),
-     *              @OA\Property(property="papel", type="string", example="mecanico || comercial || gestor_estoque || atendente"),
-     *              @OA\Property(property="status", type="string", example="ativo || inativo"),
+     *              @OA\Property(property="nome", type="string", example="Jhon Doe"),
+     *              @OA\Property(property="papel", type="string", example="mecanico,comercial,gestor_estoque,atendente"),
+     *              @OA\Property(property="status", type="string", example="ativo,inativo"),
      *          )
      *      ),
      *      @OA\Response(

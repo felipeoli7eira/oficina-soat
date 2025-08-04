@@ -14,7 +14,9 @@ require __DIR__ . '/../app/Modules/Cliente/Routes/api.php';
 // * endpoints de veiculo
 require __DIR__ . '/../app/Modules/Veiculo/Routes/api.php';
 
-// * endpoints de usuario
+// * endpoints de serviços
+require __DIR__ . '/../app/Modules/Servico/Routes/api.php';
+
 require __DIR__ . '/../app/Modules/Usuario/Routes/api.php';
 
 // * endpoints de ordem de servico (OS)

@@ -31,7 +31,6 @@ class UsuarioRemocaoTest extends TestCase
         $payload = [
             'nome'    => 'Atendente',
             'status'  => StatusUsuario::ATIVO->value,
-            'role_id' => Role::findByName(Papel::ATENDENTE->value)->id,
         ];
 
         $usuario = Usuario::factory()->create($payload)->fresh();

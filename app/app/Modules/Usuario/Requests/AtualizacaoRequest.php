@@ -30,9 +30,9 @@ class AtualizacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uuid' => ['required', 'uuid', 'exists:usuario,uuid'],
-            'nome' => ['sometimes', 'string', 'max:255', 'min:3'],
-            'papel' => ['sometimes', 'string', 'max:255', 'min:3', 'exists:roles,name'],
+            'uuid'   => ['required', 'uuid', 'exists:usuario,uuid'],
+            'nome'   => ['sometimes', 'string', 'max:255', 'min:3'],
+            'papel'  => ['sometimes', 'string', 'max:255', 'min:3', 'exists:roles,name'],
             'status' => ['sometimes', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
         ];
     }
