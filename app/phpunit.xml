@@ -25,6 +25,14 @@
         <include>
             <directory>app/Modules</directory>
         </include>
+
+        <exclude>
+            <directory>app/Modules/**/Requests</directory>
+            <directory>app/Modules/**/Dto</directory>
+
+            <directory>app/Modules/**/Enums</directory>
+            <directory>app/Modules/**/Routes</directory>
+        </exclude>
     </source>
 
     <php>
