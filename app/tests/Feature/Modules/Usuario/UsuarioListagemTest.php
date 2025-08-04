@@ -7,7 +7,6 @@ use App\Modules\Usuario\Enums\StatusUsuario;
 use App\Modules\Usuario\Model\Usuario;
 use Database\Seeders\PapelSeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UsuarioListagemTest extends TestCase
@@ -46,7 +45,6 @@ class UsuarioListagemTest extends TestCase
         $payload = [
             'nome'    => fake()->name(),
             'status'  => StatusUsuario::ATIVO->value,
-            'role_id' => Role::findByName(Papel::MECANICO->value)->id,
         ];
 
         $usuario = Usuario::factory()->create($payload)->fresh();

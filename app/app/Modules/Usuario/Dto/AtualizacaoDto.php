@@ -13,7 +13,7 @@ class AtualizacaoDto
     public function __construct(array $dados = [])
     {
         if (array_key_exists('papel', $dados)) {
-            $dados['role_id'] = Role::findByName($dados['papel'])->id;
+            $dados['role'] = Role::findByName($dados['papel']);
 
             unset($dados['papel']);
         }
