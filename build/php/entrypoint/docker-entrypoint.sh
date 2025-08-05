@@ -7,7 +7,7 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
 mkdir -p storage/api-docs
-chmod -R 777 storage/api-docs
+chown -R www-data:www-data storage/api-docs
 
 mkdir -p /tmp
 touch /tmp/xdebug.log
