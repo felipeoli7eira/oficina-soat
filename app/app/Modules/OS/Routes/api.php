@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Os\Controller\Controller as OSController;
+use App\Modules\OS\Controller\Controller as OSController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/os', [OSController::class, 'listagem']);

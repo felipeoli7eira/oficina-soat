@@ -15,19 +15,19 @@ class CadastroRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if ($this->papel) {
-            $this->merge([
-                'papel' => strtolower(trim($this->papel)),
-            ]);
-        }
     }
 
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255', 'min:3'],
-            'papel' => ['required', 'string', 'max:255', 'min:3', 'exists:roles,name'],
-            'status' => ['required', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
+            'cliente_uuid'             => ['required', 'uuid', 'exists:cliente,uuid'],
+            'veiculo_uuid'             => ['required', 'uuid', 'exists:veiculo,uuid'],
+            'descricao'                => ['required', 'string', 'min:10', 'max:1000'],
+            'valor_desconto'           => ['required', 'numeric', 'min:0.01', 'lte:valor_total'],
+            'valor_total'              => ['required', 'numeric', 'min:0.01'],
+            'usuario_uuid_atendente'   => ['required', 'uuid', 'exists:usuario,uuid'],
+            'usuario_uuid_mecanico'    => ['required', 'uuid', 'exists:usuario,uuid'],
+            'prazo_validate'           => ['required', 'integer', 'min:1'],
         ];
     }
 

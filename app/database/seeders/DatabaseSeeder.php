@@ -2,28 +2,18 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call(PapelSeed::class);
+        $this->call(UsuarioSeed::class);
 
-        // $this->roles();
         $this->clientes();
         $this->veiculos();
         $this->servicos();
-    }
-
-    public function roles(): void
-    {
-        DB::table('roles')->insert(['name' => 'atendente', 'guard_name' => 'web']);
-        DB::table('roles')->insert(['name' => 'comercial', 'guard_name' => 'web']);
-        DB::table('roles')->insert(['name' => 'mecanico', 'guard_name' => 'web']);
-        DB::table('roles')->insert(['name' => 'gestor_estoque', 'guard_name' => 'web']);
     }
 
     public function clientes(): void
