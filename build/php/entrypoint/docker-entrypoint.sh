@@ -2,9 +2,16 @@
 
 set -e
 
-echo "🛠️ Ajustando permissões de pasta de cache e storage"
+echo "🛠️ Ajustando permissões"
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
+
+mkdir -p storage/api-docs
+chown -R www-data:www-data storage/api-docs
+
+mkdir -p /tmp
+touch /tmp/xdebug.log
+chmod 777 /tmp/xdebug.log
 
 echo "📦 Instalando dependências"
 composer install --optimize-autoloader || {
@@ -23,7 +30,7 @@ fi
 echo "🆙 Preparando banco de dados"
 php artisan migrate:fresh --seed
 
-echo "📚 Atualizando doc da api"
+echo "📚 Gerando api docs"
 php artisan l5-swagger:generate
 
 echo "🚀 Iniciando o container"
