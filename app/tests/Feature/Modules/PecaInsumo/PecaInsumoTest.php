@@ -202,6 +202,28 @@ class PecaInsumoTest extends TestCase
         $this->assertInstanceOf(\App\Modules\PecaInsumo\Service\Service::class, $service);
     }
 
+    public function test_atualizacao_retorna_array_vazio_quando_dados_vazios(): void
+    {
+        // Criar uma PecaInsumo usando factory e forçar refresh para garantir que o UUID existe
+        $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
+
+        // Verificar se o UUID foi criado corretamente
+        $this->assertNotNull($pecaInsumo->uuid, 'O UUID da PecaInsumo não pode ser null');
+        $this->assertIsString($pecaInsumo->uuid, 'O UUID deve ser uma string');
+
+        // Mock do DTO que retorna apenas UUID
+        $dto = $this->mock(\App\Modules\PecaInsumo\Dto\AtualizacaoDto::class, function ($mock) use ($pecaInsumo) {
+            $mock->shouldReceive('asArray')
+                ->once()
+                ->andReturn(['uuid' => $pecaInsumo->uuid]); // Apenas UUID será removido, deixando array vazio
+        });
+
+        $service = app(\App\Modules\PecaInsumo\Service\Service::class);
+        $resultado = $service->atualizacao($pecaInsumo->uuid, $dto);
+
+        $this->assertEquals([], $resultado);
+    }
+
     /**
      * Teste se o service tem método de listagem
      */

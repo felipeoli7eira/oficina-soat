@@ -34,14 +34,14 @@ class ObterUmPorUuidRequest extends FormRequest
 
         if (!empty($uuidErrors)) {
             foreach ($uuidErrors as $message) {
+                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
+                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+                }
                 if (str_contains($message, 'inválido') || str_contains($message, 'invalid')  ) {
                     $status = Response::HTTP_NOT_FOUND;
                     break;
                 }
 
-                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
-                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                }
             }
         }
 

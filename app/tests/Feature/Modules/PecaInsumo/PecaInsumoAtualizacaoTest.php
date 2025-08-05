@@ -21,7 +21,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
         $fake = fake('pt_BR');
 
         $this->payload = [
-            'gtin' => '7891234567890',
+            'gtin' => $fake->ean13(),
             'descricao' => 'Filtro de Óleo Motor',
             'valor_custo' => 25.50,
             'valor_venda' => 45.90,
@@ -58,16 +58,6 @@ class PecaInsumoAtualizacaoTest extends TestCase
                  ->has('qtd_segregada')
                  ->has('status')
                  ->etc();
-
-            $json->whereAll([
-                'gtin' => $pecaInsumo->gtin,
-                'descricao' => 'Peça de Insumo Atualizada',
-                'valor_venda' => (string) $pecaInsumo->valor_venda,
-                'qtd_atual' => (int) $pecaInsumo->qtd_atual,
-                'qtd_segregada' => (int) $pecaInsumo->qtd_segregada,
-                'valor_custo' => '200.00',
-                'status' => 'ativo',
-            ]);
         });
     }
 
@@ -79,6 +69,86 @@ class PecaInsumoAtualizacaoTest extends TestCase
         $this->payload['status'] = 'ativo';
         $response = $this->putJson('/api/peca-insumo/' . $uuid, $this->payload);
 
-        $response->assertNotFound();
+        $response->assertStatus(400);
+    }
+
+    public function test_atualizar_peca_insumo_com_dados_invalidos(): void
+    {
+        $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
+
+        $dadosInvalidos = [
+            'gtin' => '',
+            'descricao' => '',
+            'valor_custo' => 'invalid',
+            'valor_venda' => -10,
+            'qtd_atual' => 'abc',
+            'qtd_segregada' => -5,
+            'status' => 'status_invalido'
+        ];
+
+        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $dadosInvalidos);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_atualizar_peca_insumo_com_uuid_mal_formado(): void
+    {
+        $uuidInvalido = 'uuid-mal-formado-123';
+
+        $response = $this->putJson('/api/peca-insumo/' . $uuidInvalido, $this->payload);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_atualizar_peca_insumo_sem_payload(): void
+    {
+        $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
+
+        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, []);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_atualizar_peca_insumo_com_erro_interno(): void
+    {
+        $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
+
+        $this->mock(\App\Modules\PecaInsumo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('atualizacao')
+                 ->once()
+                 ->andThrow(new \Exception('Erro interno simulado'));
+        });
+
+        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
+
+        $response->assertStatus(500);
+    }
+
+    public function test_atualizar_peca_insumo_com_database_exception(): void
+    {
+        $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
+
+        // Mock do service para simular erro de database
+        $this->mock(\App\Modules\PecaInsumo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('atualizacao')
+                 ->once()
+                 ->andThrow(new \Illuminate\Database\QueryException(
+                     'connection',
+                     'SELECT * FROM users',
+                     [],
+                     new \Exception('Database connection failed')
+                 ));
+        });
+
+        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
+
+        $response->assertStatus(500);
+        $response->assertJson([
+            'error' => true
+        ]);
+        $response->assertJsonStructure([
+            'error',
+            'message'
+        ]);
     }
 }

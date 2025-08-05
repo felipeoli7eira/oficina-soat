@@ -31,4 +31,17 @@ class PecaInsumoListagemTest extends TestCase
         $response = $this->getJson('/api/peca-insumo/' . $uuid);
         $response->assertNotFound();
     }
+
+    public function test_listar_peca_insumos_com_erro_interno(): void
+    {
+        $this->mock(\App\Modules\PecaInsumo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('listagem')
+                ->once()
+                ->andThrow(new \Exception('Erro interno na listagem'));
+        });
+
+        $response = $this->getJson('/api/peca-insumo');
+
+        $response->assertStatus(500);
+    }
 }

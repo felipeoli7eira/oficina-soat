@@ -20,13 +20,25 @@ class CadastroRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gtin' => ['required', 'string', 'max:50'],
+            'gtin' => [
+                'required',
+                'string',
+                'max:50',
+                'unique:peca_insumo,gtin,NULL,id,excluido,0'
+            ],
             'descricao' => ['required', 'string', 'min:3', 'max:255'],
             'valor_custo' => ['required', 'numeric', 'min:0'],
             'valor_venda' => ['required', 'numeric', 'min:0'],
             'qtd_atual' => ['required', 'integer', 'min:0'],
             'qtd_segregada' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'string', 'min:3', 'max:30']
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'gtin.unique'   => 'Este GTIN já está sendo utilizado por outra peça/insumo',
         ];
     }
 

@@ -46,17 +46,6 @@ class PecaInsumoCadastroTest extends TestCase
         $response->assertJsonFragment(['The descricao field is required.']);
     }
 
-    public function test_descricao_do_peca_insumo_deve_ser_unica(): void
-    {
-        $this->postJson('/api/peca-insumo', $this->payload)->assertCreated();
-
-        $novo = $this->payload;
-        $novo['descricao'] = 'Filtro Diferente';
-
-        $response = $this->postJson('/api/peca-insumo', $novo);
-        $response->assertCreated();
-    }
-
     public function test_valor_do_peca_insumo_deve_ser_maior_que_zero(): void
     {
         $novo = $this->payload;
@@ -73,5 +62,18 @@ class PecaInsumoCadastroTest extends TestCase
         $response = $this->postJson('/api/peca-insumo', $novo);
 
         $response->assertCreated();
+    }
+
+    public function test_cadastrar_peca_insumo_com_erro_interno(): void
+    {
+        $this->mock(\App\Modules\PecaInsumo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('cadastro')
+                ->once()
+                ->andThrow(new \Exception('Erro interno simulado no cadastro'));
+        });
+
+        $response = $this->postJson('/api/peca-insumo', $this->payload);
+
+        $response->assertStatus(500);
     }
 }

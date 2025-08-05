@@ -19,18 +19,8 @@ class AtualizacaoRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'uuid' => [
-                'required',
-                'uuid',
-                function ($attribute, $value, $fail) {
-                    $exists = \DB::table('peca_insumo')->where('uuid', $value)->exists();
-                    if (!$exists) {
-                        $fail('O uuid informado não existe');
-                    }
-                }
-            ],
-            'gtin' => ['required', 'string', 'max:50'],
+            $rules = [
+            'uuid' => ['required', 'uuid', 'exists:peca_insumo,uuid'],
             'descricao' => ['required', 'string', 'min:3', 'max:255'],
             'valor_custo' => ['required', 'numeric', 'min:0'],
             'valor_venda' => ['required', 'numeric', 'min:0'],
@@ -38,6 +28,23 @@ class AtualizacaoRequest extends FormRequest
             'qtd_segregada' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'string', 'min:3', 'max:30']
         ];
+
+        if ($this->route('uuid') && \Illuminate\Support\Str::isUuid($this->route('uuid'))) {
+            $rules['gtin'] = [
+                'required',
+                'string',
+                'max:50',
+                'unique:peca_insumo,gtin,' . $this->route('uuid') . ',uuid'
+            ];
+        } else {
+            $rules['gtin'] = [
+                'required',
+                'string',
+                'max:50'
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -46,6 +53,7 @@ class AtualizacaoRequest extends FormRequest
             'uuid.required' => 'O campo uuid é obrigatório',
             'uuid.uuid'     => 'O campo uuid deve ser um uuid válido',
             'uuid.exists'   => 'O uuid informado não existe',
+            'gtin.unique'   => 'Este GTIN já está sendo utilizado por outra peça/insumo',
         ];
     }
 
@@ -79,6 +87,10 @@ class AtualizacaoRequest extends FormRequest
         }
 
         foreach ($uuidErrors as $message) {
+            if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
+                return Response::HTTP_UNPROCESSABLE_ENTITY;
+            }
+
             if (str_contains($message, 'obrigatório') ||
                 str_contains($message, 'required') ||
                 str_contains($message, 'não existe') ||
@@ -86,9 +98,6 @@ class AtualizacaoRequest extends FormRequest
                 return Response::HTTP_NOT_FOUND;
             }
 
-            if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
-                return Response::HTTP_UNPROCESSABLE_ENTITY;
-            }
         }
 
         return Response::HTTP_BAD_REQUEST;
