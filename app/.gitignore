@@ -24,4 +24,5 @@ Homestead.yaml
 Thumbs.db
 coverage-clover.xml
 coverage-text.txt
-coverage-html
+/coverage-html
+/storage/api-docs
