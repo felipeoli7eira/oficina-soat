@@ -31,7 +31,8 @@ echo "🆙 Preparando banco de dados"
 php artisan migrate:fresh --seed
 
 echo "📚 Gerando api docs"
-php artisan l5-swagger:generate
+# php artisan l5-swagger:generate
+su -s /bin/sh -c "php artisan l5-swagger:generate" www-data
 
 echo "🚀 Iniciando o container"
 
