@@ -16,7 +16,7 @@ class CadastroDto
         public float $valor_total,
         public string $usuario_uuid_atendente,
         public string $usuario_uuid_mecanico,
-        public int $prazo_validate
+        public int $prazo_validade
     ) {}
 
     public function asArray(): array
@@ -29,7 +29,7 @@ class CadastroDto
             'valor_total'              => $this->valor_total,
             'usuario_uuid_atendente'   => $this->usuario_uuid_atendente,
             'usuario_uuid_mecanico'    => $this->usuario_uuid_mecanico,
-            'prazo_validate'           => $this->prazo_validate
+            'prazo_validade'           => $this->prazo_validade
         ];
     }
 

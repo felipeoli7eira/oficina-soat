@@ -41,7 +41,7 @@ return new class extends Migration
             $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->nullable()->useCurrentOnUpdate();
         });
     }
 

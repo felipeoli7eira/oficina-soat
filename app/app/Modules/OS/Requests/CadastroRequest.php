@@ -27,7 +27,7 @@ class CadastroRequest extends FormRequest
             'valor_total'              => ['required', 'numeric', 'min:0.01'],
             'usuario_uuid_atendente'   => ['required', 'uuid', 'exists:usuario,uuid'],
             'usuario_uuid_mecanico'    => ['required', 'uuid', 'exists:usuario,uuid'],
-            'prazo_validate'           => ['required', 'integer', 'min:1'],
+            'prazo_validade'           => ['required', 'integer', 'min:1'],
         ];
     }
 

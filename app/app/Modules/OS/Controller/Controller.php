@@ -11,6 +11,7 @@ use App\Modules\OS\Requests\CadastroRequest;
 use App\Modules\OS\Requests\ObterUmPorUuidRequest;
 
 use App\Modules\OS\Service\Service as OSService;
+use DomainException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -38,17 +39,21 @@ class Controller extends BaseController
     public function cadastro(CadastroRequest $request)
     {
         try {
-            dd(
-                $request->toDto()
-            );
-
-            $dto = $request->toDto();
-            $response = $this->service->cadastro($dto);
-        } catch (Throwable $th) {
-            return Response::json([
+            $response = $this->service->cadastro($request->toDto());
+        } catch (DomainException $error) {
+            $response = [
                 'error'   => true,
-                'message' => $th->getMessage()
-            ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $error->getMessage()
+            ];
+
+            return Response::json($response, $error->getCode());
+        } catch (Throwable $error) {
+            $response = [
+                'error'   => true,
+                'message' => $error->getMessage()
+            ];
+
+            return Response::json($response, HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return Response::json($response, HttpResponse::HTTP_CREATED);
@@ -58,13 +63,12 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->obterUmPorUuid($request->uuid);
-        } catch(ModelNotFoundException $th) {
+        } catch (ModelNotFoundException $th) {
             return Response::json([
                 'error'   => true,
                 'message' => 'Nenhum registro correspondente ao informado'
             ], HttpResponse::HTTP_NOT_FOUND);
-        }
-        catch (Throwable $th) {
+        } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
@@ -78,7 +82,7 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->remocao($request->uuid);
-        } catch(ModelNotFoundException $th) {
+        } catch (ModelNotFoundException $th) {
             return Response::json([
                 'error'   => true,
                 'message' => 'Nenhum registro correspondente ao informado'
@@ -97,7 +101,7 @@ class Controller extends BaseController
     {
         try {
             $response = $this->service->atualizacao($request->uuid(), $request->toDto());
-        } catch(ModelNotFoundException $th) {
+        } catch (ModelNotFoundException $th) {
             return Response::json([
                 'error'   => true,
                 'message' => 'Nenhum registro correspondente ao informado'

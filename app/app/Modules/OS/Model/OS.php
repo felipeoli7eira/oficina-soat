@@ -14,7 +14,19 @@ class OS extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'data_finalizacao',
+        'prazo_validade',
+        'cliente_id',
+        'veiculo_id',
+        'descricao',
+        'valor_desconto',
+        'valor_total',
+        'usuario_id_atendente',
+        'usuario_id_mecanico',
+        'excluido',
+        'data_exclusao',
+    ];
 
     protected $hidden = [];
 
