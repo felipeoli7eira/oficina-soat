@@ -30,14 +30,11 @@ class Service
 
     public function remocao(string $uuid)
     {
-        dd('Remoção lógica de PecaInsumo por UUID: ' . $uuid);
         return $this->obterUmPorUuid($uuid)->delete();
     }
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        dd('Atualização de PecaInsumo por UUID: ' . $uuid);
-
         $dados = $dto->asArray();
         unset($dados['uuid']);
 
