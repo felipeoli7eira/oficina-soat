@@ -9,4 +9,5 @@ Route::get('/os', [OSController::class, 'listagem']);
 Route::get('/os/{uuid}', [OSController::class, 'obterUmPorUuid']);
 Route::post('/os', [OSController::class, 'cadastro']);
 Route::put('/os/{uuid}', [OSController::class, 'atualizacao']);
+Route::put('/os/{uuid}/finalizar', [OSController::class, 'finaluzar']);
 Route::delete('/os/{uuid}', [OSController::class, 'remocao']);

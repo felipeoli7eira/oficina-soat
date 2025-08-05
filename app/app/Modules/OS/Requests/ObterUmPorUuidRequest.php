@@ -23,13 +23,13 @@ class ObterUmPorUuidRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:usuario,uuid']];
+        return ['uuid' => ['required', 'uuid', 'exists:os,uuid']];
     }
 
     public function failedValidation(Validator $validator): void
     {
         throw new HttpResponseException(response()->json([
-            'message'   => 'Erros de validação',
+            'message'   => 'Erros encontrados',
             'errors'    => $validator->errors()->all(),
         ], Response::HTTP_BAD_REQUEST));
     }

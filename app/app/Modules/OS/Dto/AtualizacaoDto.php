@@ -12,12 +12,6 @@ class AtualizacaoDto
 
     public function __construct(array $dados = [])
     {
-        if (array_key_exists('papel', $dados)) {
-            $dados['role_id'] = Role::findByName($dados['papel'])->id;
-
-            unset($dados['papel']);
-        }
-
         $this->dados = $dados;
     }
 
@@ -25,8 +19,8 @@ class AtualizacaoDto
     {
         $safe = $this->dados;
 
-        if (array_key_exists('nome', $safe)) {
-            $safe['nome'] = strtolower(trim($safe['nome']));
+        if (array_key_exists('uuid', $safe)) {
+            unset($safe['uuid']);
         }
 
         return $safe;

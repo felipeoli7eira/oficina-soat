@@ -34,11 +34,17 @@ class Cliente extends Model
         'data_atualizacao',
 ]   ;
 
-    protected $hidden = [];
+    protected $hidden = [
+        'id'
+    ];
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'data_exclusao'    => 'datetime:d/m/Y H:i',
+            'data_atualizacao' => 'datetime:d/m/Y H:i',
+            'data_cadastro'    => 'datetime:d/m/Y H:i',
+        ];
     }
 
     protected static function newFactory(): ClienteFactory

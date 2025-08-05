@@ -2,6 +2,7 @@
 
 namespace App\Modules\OS\Requests;
 
+use App\Modules\OS\Dto\AtualizacaoDto;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
@@ -14,26 +15,25 @@ class AtualizacaoRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $this->merge(['uuid' => $this->route('uuid')]);
-
-        if ($this->papel) {
-            $this->merge([
-                'papel' => strtolower(trim($this->papel)),
-            ]);
-        }
     }
 
     public function uuid(): string
     {
-        return (string) $this->route('uuid');
+        return $this->route('uuid', '');
     }
 
     public function rules(): array
     {
         return [
-            'uuid' => ['required', 'uuid', 'exists:usuario,uuid'],
-            'nome' => ['sometimes', 'string', 'max:255', 'min:3'],
-            'papel' => ['sometimes', 'string', 'max:255', 'min:3', 'exists:roles,name'],
-            'status' => ['sometimes', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
+            'uuid'                     => ['required', 'uuid', 'exists:os,uuid'],
+            'cliente_uuid'             => ['sometimes', 'uuid', 'exists:cliente,uuid'],
+            'veiculo_uuid'             => ['sometimes', 'uuid', 'exists:veiculo,uuid'],
+            'descricao'                => ['sometimes', 'string', 'min:10', 'max:1000'],
+            'valor_desconto'           => ['sometimes', 'numeric', 'min:0.01', 'lte:valor_total'],
+            'valor_total'              => ['sometimes', 'numeric', 'min:0.01'],
+            'usuario_uuid_atendente'   => ['sometimes', 'uuid', 'exists:usuario,uuid'],
+            'usuario_uuid_mecanico'    => ['sometimes', 'uuid', 'exists:usuario,uuid'],
+            'prazo_validade'           => ['sometimes', 'integer', 'min:1'],
         ];
     }
 
@@ -56,8 +56,8 @@ class AtualizacaoRequest extends FormRequest
         }
     }
 
-    public function toDto(): \App\Modules\OS\Dto\AtualizacaoDto
+    public function toDto(): AtualizacaoDto
     {
-        return new \App\Modules\OS\Dto\AtualizacaoDto($this->validated());
+        return new AtualizacaoDto($this->validated());
     }
 }
