@@ -52,7 +52,7 @@ class PecaInsumoCadastroTest extends TestCase
         $novo['valor_custo'] = 0;
         $response = $this->postJson('/api/peca-insumo', $novo);
 
-        $response->assertCreated();
+        $response->assertBadRequest();
     }
 
     public function test_status_do_peca_insumo_deve_ser_ativo_ou_inativo(): void

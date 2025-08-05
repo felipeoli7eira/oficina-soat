@@ -22,10 +22,10 @@ class AtualizacaoRequest extends FormRequest
             $rules = [
             'uuid' => ['required', 'uuid', 'exists:peca_insumo,uuid'],
             'descricao' => ['required', 'string', 'min:3', 'max:255'],
-            'valor_custo' => ['required', 'numeric', 'min:0'],
-            'valor_venda' => ['required', 'numeric', 'min:0'],
-            'qtd_atual' => ['required', 'integer', 'min:0'],
-            'qtd_segregada' => ['required', 'integer', 'min:0'],
+            'valor_custo' => ['required', 'numeric', 'min:0.01'],
+            'valor_venda' => ['required', 'numeric', 'min:0.01'],
+            'qtd_atual' => ['required', 'integer', 'min:1'],
+            'qtd_segregada' => ['required', 'integer', 'min:1'],
             'status' => ['required', 'string', 'min:3', 'max:30']
         ];
 
@@ -33,14 +33,9 @@ class AtualizacaoRequest extends FormRequest
             $rules['gtin'] = [
                 'required',
                 'string',
-                'max:50',
+                'min:7',
+                'max:20',
                 'unique:peca_insumo,gtin,' . $this->route('uuid') . ',uuid'
-            ];
-        } else {
-            $rules['gtin'] = [
-                'required',
-                'string',
-                'max:50'
             ];
         }
 
@@ -87,10 +82,6 @@ class AtualizacaoRequest extends FormRequest
         }
 
         foreach ($uuidErrors as $message) {
-            if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
-                return Response::HTTP_UNPROCESSABLE_ENTITY;
-            }
-
             if (str_contains($message, 'obrigatório') ||
                 str_contains($message, 'required') ||
                 str_contains($message, 'não existe') ||

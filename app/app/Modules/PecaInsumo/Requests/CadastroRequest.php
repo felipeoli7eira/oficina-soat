@@ -23,14 +23,15 @@ class CadastroRequest extends FormRequest
             'gtin' => [
                 'required',
                 'string',
-                'max:50',
+                'min:7',
+                'max:20',
                 'unique:peca_insumo,gtin,NULL,id,excluido,0'
             ],
             'descricao' => ['required', 'string', 'min:3', 'max:255'],
-            'valor_custo' => ['required', 'numeric', 'min:0'],
-            'valor_venda' => ['required', 'numeric', 'min:0'],
-            'qtd_atual' => ['required', 'integer', 'min:0'],
-            'qtd_segregada' => ['required', 'integer', 'min:0'],
+            'valor_custo' => ['required', 'numeric', 'min:0.01'],
+            'valor_venda' => ['required', 'numeric', 'min:0.01'],
+            'qtd_atual' => ['required', 'integer', 'min:1'],
+            'qtd_segregada' => ['required', 'integer', 'min:1'],
             'status' => ['required', 'string', 'min:3', 'max:30']
         ];
     }
@@ -67,7 +68,7 @@ class CadastroRequest extends FormRequest
                 'error' => true,
                 'message' => 'Dados de entrada inválidos',
                 'errors' => $validator->errors()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY)
+            ], Response::HTTP_BAD_REQUEST)
         );
     }
 }
