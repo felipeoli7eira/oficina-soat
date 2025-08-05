@@ -12,7 +12,8 @@ class CadastroDto
         public int $ano,
         public string $placa,
         public ?string $cor,
-        public string $chassi
+        public string $chassi,
+        public ?string $clienteUuid = null,
     ) {}
 
     public function asArray(): array
@@ -24,6 +25,7 @@ class CadastroDto
             'placa' => $this->placa,
             'cor' => $this->cor,
             'chassi' => $this->chassi,
+            'cliente_uuid' => $this->clienteUuid ?? null,
         ];
     }
 

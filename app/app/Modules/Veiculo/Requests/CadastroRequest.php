@@ -26,6 +26,7 @@ class CadastroRequest extends FormRequest
             'placa' => ['required', 'string', 'regex:/^[A-Z]{3}-[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$/'],
             'cor' => ['nullable', 'string', 'max:30'],
             'chassi' => ['required', 'string', 'min:17', 'max:17'],
+            'cliente_uuid' => ['nullable', 'uuid', 'exists:clientes,uuid']
         ];
     }
 
@@ -42,7 +43,8 @@ class CadastroRequest extends FormRequest
             ano: $this->ano,
             placa: $this->placa,
             cor: $this->cor,
-            chassi: $this->chassi
+            chassi: $this->chassi,
+            clienteUuid: $this->cliente_uuid
         );
     }
 

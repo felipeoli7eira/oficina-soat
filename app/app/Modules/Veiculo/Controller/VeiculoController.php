@@ -120,6 +120,7 @@ class VeiculoController extends Controller
      *              @OA\Property(property="placa", type="string", example="ABC-1234"),
      *              @OA\Property(property="cor", type="string", example="Prata"),
      *              @OA\Property(property="chassi", type="string", example="1234567890ABCDEFG"),
+     *              @OA\Property(property="cliente_uuid", type="string", example="123e4567-e89b-12d3-a456-426614174000"),
      *          )
      *      ),
      *      @OA\Response(
@@ -252,6 +253,7 @@ class VeiculoController extends Controller
      *              @OA\Property(property="placa", type="string", example="DEF-5678"),
      *              @OA\Property(property="cor", type="string", example="Azul"),
      *              @OA\Property(property="chassi", type="string", example="0987654321ZYXWVUT"),
+     *              @OA\Property(property="cliente_uuid", type="string", example="123e4567-e89b-12d3-a456-426614174000"),
      *          )
      *      ),
      *      @OA\Response(
