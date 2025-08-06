@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('peca_insumo', function (Blueprint $table) {
             $table->id();
-
+            $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->string('gtin', 20);
             $table->string('descricao', 100);
             $table->decimal('valor_custo', 15, 2);
@@ -24,10 +24,10 @@ return new class extends Migration
             $table->string('status', 30);
 
             $table->boolean('excluido')->default(false);
-            $table->timestamp('data_exclusao');
+            $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->useCurrentOnUpdate()->nullable();
         });
     }
 
