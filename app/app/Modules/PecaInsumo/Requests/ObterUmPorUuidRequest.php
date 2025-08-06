@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Servico\Requests;
+namespace App\Modules\PecaInsumo\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ class ObterUmPorUuidRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:servicos,uuid']];
+        return ['uuid' => ['required', 'uuid', 'exists:peca_insumo,uuid']];
     }
 
     public function failedValidation(Validator $validator): void
@@ -34,14 +34,14 @@ class ObterUmPorUuidRequest extends FormRequest
 
         if (!empty($uuidErrors)) {
             foreach ($uuidErrors as $message) {
+                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
+                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+                }
                 if (str_contains($message, 'inválido') || str_contains($message, 'invalid')  ) {
                     $status = Response::HTTP_NOT_FOUND;
                     break;
                 }
 
-                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
-                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                }
             }
         }
 
