@@ -22,7 +22,25 @@ class Service
 
     public function listagem(ListagemDto $dto)
     {
-        return $this->repo->read();
+        $query = $this->repo->model();
+
+        // Filtrar por cliente se fornecido
+        if ($dto->clienteUuid) {
+            // Buscar cliente pelo UUID
+            $cliente = $this->clienteService->obterUmPorUuid($dto->clienteUuid);
+
+            // Filtrar veículos que pertencem ao cliente
+            $query = $query->whereHas('clienteVeiculos', function ($q) use ($cliente) {
+                $q->where('cliente_id', $cliente->id);
+            });
+        }
+
+        // Aplicar paginação se fornecida
+        if ($dto->page && $dto->perPage) {
+            return $query->paginate($dto->perPage, ['*'], 'page', $dto->page);
+        }
+
+        return $query->get();
     }
 
     public function cadastro(CadastroDto $dto)

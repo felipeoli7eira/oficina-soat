@@ -30,7 +30,14 @@ class VeiculoController extends Controller
      *      path="/api/veiculo",
      *      tags={"Veiculo"},
      *      summary="Listar veículos",
-     *      description="Faz a listagem paginada de todos os veículos cadastrados",
+     *      description="Faz a listagem paginada de todos os veículos cadastrados, com filtro opcional por cliente",
+     *      @OA\Parameter(
+     *          name="cliente_uuid",
+     *          in="query",
+     *          required=false,
+     *          description="UUID do cliente para filtrar apenas os veículos dele",
+     *          @OA\Schema(type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000")
+     *      ),
      *      @OA\Parameter(
      *          name="page",
      *          in="query",
@@ -92,7 +99,7 @@ class VeiculoController extends Controller
     public function listagem(ListagemRequest $request)
     {
         try {
-            $dto = new ListagemDto();
+            $dto = $request->toDto();
             $response = $this->service->listagem($dto);
         } catch (Throwable $th) {
             return Response::json([

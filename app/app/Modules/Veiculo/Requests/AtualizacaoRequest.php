@@ -16,7 +16,7 @@ class AtualizacaoRequest extends FormRequest
             'placa' => ['nullable', 'string', 'regex:/^[A-Z]{3}-[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$/'],
             'cor' => ['nullable', 'string', 'max:30'],
             'chassi' => ['nullable', 'string', 'min:17', 'max:17'],
-            'cliente_uuid' => ['nullable', 'uuid', 'exists:clientes,uuid']
+            'cliente_uuid' => ['nullable', 'uuid', 'exists:cliente,uuid']
         ];
     }
 
