@@ -76,6 +76,262 @@ class OrdemServicoAtualizacaoTest extends TestCase
         $updateResponse->assertOk();
     }
 
+    public function test_veiculo_na_ordem_de_servico_pode_ser_corrigido(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $veiculoParaUpdate = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'veiculo_uuid' => $veiculoParaUpdate->uuid,
+        ]);
+
+        $updateResponse->assertOk();
+    }
+
+    public function test_cliente_na_ordem_de_servico_pode_ser_corrigido(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $clienteParaUpdate = Cliente::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'cliente_uuid' => $clienteParaUpdate->uuid,
+        ]);
+
+        $updateResponse->assertOk();
+    }
+
+    public function test_atendente_na_ordem_de_servico_pode_ser_corrigido(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $atendenteParaUpdate = Usuario::factory()->create()->fresh();
+        $atendenteParaUpdate->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'usuario_uuid_atendente' => $atendenteParaUpdate->uuid,
+        ]);
+
+        $updateResponse->assertOk();
+    }
+
+    public function test_mecanico_na_ordem_de_servico_pode_ser_corrigido(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $mecanicoParaUpdate = Usuario::factory()->create()->fresh();
+        $mecanicoParaUpdate->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'usuario_uuid_mecanico' => $mecanicoParaUpdate->uuid,
+        ]);
+
+        $updateResponse->assertOk();
+    }
+
+    public function test_usuario_nao_mecanico_nao_pode_ser_associado_como_mecanico_da_os(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'usuario_uuid_mecanico' => $atendente->uuid,
+        ]);
+
+        $updateResponse->assertBadRequest();
+    }
+
+    public function test_usuario_nao_atendente_nao_pode_ser_associado_como_atendente_da_os(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertCreated();
+
+        // Assert
+
+        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+            'usuario_uuid_atendente' => $mecanico->uuid,
+        ]);
+
+        $updateResponse->assertBadRequest();
+    }
+
     public function test_atualizacao_os_nao_encontrada_lanca_model_not_found_exception(): void
     {
         $uuidFake = 'uuid-inexistente-1234';

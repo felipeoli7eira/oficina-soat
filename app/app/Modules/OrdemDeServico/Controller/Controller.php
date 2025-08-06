@@ -487,6 +487,13 @@ class Controller extends BaseController
                 'error'   => true,
                 'message' => 'Nenhum registro correspondente ao informado'
             ], HttpResponse::HTTP_NOT_FOUND);
+        } catch (DomainException $error) {
+            $response = [
+                'error'   => true,
+                'message' => $error->getMessage()
+            ];
+
+            return Response::json($response, $error->getCode());
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,

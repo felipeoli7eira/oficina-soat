@@ -76,6 +76,72 @@ class OrdemServicoCadastroTest extends TestCase
         $response->assertCreated();
     }
 
+    public function test_ordem_de_servico_nao_pode_ser_cadastrada_quando_um_atendente_eh_informado_incorretamente(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::COMERCIAL->value); // erro proposital de regra de negocio aqui
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::MECANICO->value);
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertBadRequest();
+    }
+
+    public function test_ordem_de_servico_nao_pode_ser_cadastrada_quando_um_mecanico_eh_informado_incorretamente(): void
+    {
+        // Arrange
+
+        $cliente = Cliente::factory()->create()->fresh();
+        $veiculo = Veiculo::factory()->create()->fresh();
+
+        $atendente = Usuario::factory()->create()->fresh();
+        $atendente->assignRole(Papel::ATENDENTE->value);
+
+        $mecanico = Usuario::factory()->create()->fresh();
+        $mecanico->assignRole(Papel::COMERCIAL->value); // erro proposital de regra de negocio aqui
+
+        $payload = [
+            'cliente_uuid'           => $cliente->uuid,
+            'veiculo_uuid'           => $veiculo->uuid,
+            'usuario_uuid_atendente' => $atendente->uuid,
+            'usuario_uuid_mecanico'  => $mecanico->uuid,
+            'descricao'              => 'Motor batendo em baixa rotação',
+            'valor_total'            => 1000,
+            'valor_desconto'         => 50,
+            'prazo_validade'         => 7,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os', $payload);
+
+        // Assert
+
+        $response->assertBadRequest();
+    }
+
     public function test_ordem_de_servico_nao_pode_ser_cadastrada_sem_um_ou_mais_dados_obrigatorios(): void
     {
         // Arrange
