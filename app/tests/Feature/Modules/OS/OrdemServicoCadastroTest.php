@@ -4,19 +4,34 @@ namespace Tests\Feature\Modules\Cliente;
 
 use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
+use App\Modules\OrdemDeServico\Requests\CadastroRequest;
+
+use App\Modules\OrdemDeServico\Service\Service as OSService;
+
+use App\Modules\OrdemDeServico\Controller\Controller;
+
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
+
 use Database\Seeders\DatabaseSeeder;
+use DomainException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 use Tests\TestCase;
 
 class OrdemServicoCadastroTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $serviceMock;
+    private $controller;
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->serviceMock = Mockery::mock(OSService::class);
+        $this->controller = new Controller($this->serviceMock);
 
         $this->assertDatabaseEmpty('os');
         $this->assertDatabaseEmpty('veiculo');

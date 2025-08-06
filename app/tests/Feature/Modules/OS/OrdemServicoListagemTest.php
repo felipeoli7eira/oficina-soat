@@ -6,17 +6,30 @@ use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
+
+use App\Modules\OrdemDeServico\Service\Service as OSService;
+
+use App\Modules\OrdemDeServico\Controller\Controller;
+
 use Database\Seeders\DatabaseSeeder;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 use Tests\TestCase;
 
 class OrdemServicoListagemTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $serviceMock;
+    private $controller;
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->serviceMock = Mockery::mock(OSService::class);
+        $this->controller = new Controller($this->serviceMock);
 
         $this->assertDatabaseEmpty('os');
         $this->assertDatabaseEmpty('veiculo');
@@ -26,6 +39,29 @@ class OrdemServicoListagemTest extends TestCase
 
         $this->seed(DatabaseSeeder::class);
     }
+
+    public function test_listagem_deve_retornar_erro_500_quando_service_lanca_excecao()
+    {
+        // Arrange
+
+        $this->serviceMock
+            ->shouldReceive('listagem')
+            ->once()
+            ->andThrow(new Exception('Erro'));
+
+        // Act
+
+        $response = $this->controller->listagem();
+
+        // Assert
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertTrue($responseData['error']);
+        $this->assertEquals('Erro', $responseData['message']);
+    }
+
 
     public function test_ordens_de_servico_cadastradas_podem_ser_listadas(): void
     {
@@ -84,4 +120,6 @@ class OrdemServicoListagemTest extends TestCase
         $responseOs = $this->getJson('/api/os/' . $uuidOs);
         $responseOs->assertOk();
     }
+
+
 }
