@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\OS\Repository;
+namespace App\Modules\OrdemDeServico\Repository;
 
 use App\AbstractRepository;
 use App\Interfaces\RepositoryInterface;
-use App\Modules\OS\Model\OS;
+use App\Modules\OrdemDeServico\Model\OrdemDeServico;
 
 class Repository extends AbstractRepository implements RepositoryInterface
 {
-    protected static string $model = OS::class;
+    protected static string $model = OrdemDeServico::class;
 }

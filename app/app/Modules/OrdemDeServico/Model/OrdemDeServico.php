@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Modules\OS\Model;
+namespace App\Modules\OrdemDeServico\Model;
 
 use App\Modules\Cliente\Model\Cliente;
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
+
 use App\Traits\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class OS extends Model
+class OrdemDeServico extends Model
 {
     use SoftDeletes;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\OS\Dto;
+namespace App\Modules\OrdemDeServico\Dto;
 
 class ListagemDto
 {

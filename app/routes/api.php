@@ -19,4 +19,4 @@ require __DIR__ . '/../app/Modules/Servico/Routes/api.php';
 require __DIR__ . '/../app/Modules/Usuario/Routes/api.php';
 
 // * endpoints de ordem de servico (OS)
-require __DIR__ . '/../app/Modules/OS/Routes/api.php';
+require __DIR__ . '/../app/Modules/OrdemDeServico/Routes/api.php';

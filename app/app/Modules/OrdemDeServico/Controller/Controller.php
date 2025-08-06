@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\OS\Controller;
+namespace App\Modules\OrdemDeServico\Controller;
 
 use App\Http\Controllers\Controller as BaseController;
 
-use App\Modules\OS\Requests\AtualizacaoRequest;
-use App\Modules\OS\Requests\CadastroRequest;
-use App\Modules\OS\Requests\ObterUmPorUuidRequest;
+use App\Modules\OrdemDeServico\Requests\AtualizacaoRequest;
+use App\Modules\OrdemDeServico\Requests\CadastroRequest;
+use App\Modules\OrdemDeServico\Requests\ObterUmPorUuidRequest;
 
-use App\Modules\OS\Service\Service as OSService;
-use DomainException;
+use App\Modules\OrdemDeServico\Service\Service as OSService;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use OpenApi\Annotations as OA;
+
 use Throwable;
+use DomainException;
 
 class Controller extends BaseController
 {

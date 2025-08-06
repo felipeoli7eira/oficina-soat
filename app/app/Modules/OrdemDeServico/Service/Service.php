@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\OS\Service;
+namespace App\Modules\OrdemDeServico\Service;
 
 use App\Enums\Papel;
-use App\Modules\Cliente\Repository\ClienteRepository;
-use App\Modules\OS\Dto\AtualizacaoDto;
-use App\Modules\OS\Dto\CadastroDto;
 
-use App\Modules\OS\Repository\Repository as OSRepository;
+use App\Modules\Cliente\Repository\ClienteRepository;
 use App\Modules\Usuario\Repository\UsuarioRepository;
 use App\Modules\Veiculo\Repository\VeiculoRepository;
-use DomainException;
+use App\Modules\OrdemDeServico\Repository\Repository as OSRepository;
+
+use App\Modules\OrdemDeServico\Dto\AtualizacaoDto;
+use App\Modules\OrdemDeServico\Dto\CadastroDto;
+
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
+use DomainException;
 
 class Service
 {

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\OS\Dto;
-
-use Spatie\Permission\Models\Role;
+namespace App\Modules\OrdemDeServico\Dto;
 
 class AtualizacaoDto
 {

@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Modules\OS\Requests;
+namespace App\Modules\OrdemDeServico\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ObterUmPorUuidRequest extends FormRequest
+class ListagemRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
-    public function uuid(): string
-    {
-        return (string) $this->route('uuid');
-    }
-
     public function prepareForValidation(): void
     {
-        $this->merge(['uuid' => $this->route('uuid')]);
+        $this->merge([]);
     }
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:os,uuid']];
+        return [];
+    }
+
+    public function messages(): array
+    {
+        return [];
     }
 
     public function failedValidation(Validator $validator): void
     {
         throw new HttpResponseException(response()->json([
-            'message'   => 'Erros encontrados',
+            'message'   => 'Erros de validação',
             'errors'    => $validator->errors()->all(),
         ], Response::HTTP_BAD_REQUEST));
     }

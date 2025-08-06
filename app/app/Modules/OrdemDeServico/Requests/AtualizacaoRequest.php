@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\OS\Requests;
+namespace App\Modules\OrdemDeServico\Requests;
 
-use App\Modules\OS\Dto\AtualizacaoDto;
+use App\Modules\OrdemDeServico\Dto\AtualizacaoDto;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
