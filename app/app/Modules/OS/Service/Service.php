@@ -97,117 +97,73 @@ class Service
         $os = $this->obterUmPorUuid($uuid);
 
         $osArray = $os->toArray();
-            // dd($osArray);
-
-        $dadosParaUpdate = [];
 
         $payload = $dto->asArray();
 
-        if (array_key_exists('valor_desconto', $payload)) {
-            $dadosParaUpdate['valor_desconto'] = $payload['valor_desconto'];
-        }
+        if (array_key_exists('veiculo_uuid', $payload)) {
+            if ($payload['veiculo_uuid'] !== $osArray['veiculo']['uuid']) {
+                $novoVeiculo = $this->veiculo()->where('uuid', $payload['veiculo_uuid'])->first();
 
-        if (array_key_exists('prazo_validade', $payload)) {
-            $dadosParaUpdate['prazo_validade'] = $payload['prazo_validade'];
-        }
-
-        if (array_key_exists('valor_total', $payload)) {
-            $dadosParaUpdate['valor_total'] = $payload['valor_total'];
-        }
-
-
-        // if (
-        //     array_key_exists('cliente_uuid', $dadosParaAtualizacao)
-        //     &&
-        //     $dadosParaAtualizacao['cliente_uuid'] !== $osArray['cliente']['uuid']
-        // ) {
-        //     $novoCliente = $this->cliente()->where('uuid', $dadosParaAtualizacao['cliente_uuid'])->first();
-
-        //     $dadosParaUpdate['cliente_id'] = $novoCliente->id;
-
-        //     unset($dadosParaAtualizacao['cliente_uuid']);
-        // }
-
-        // if (
-        //     array_key_exists('veiculo_uuid', $dadosParaAtualizacao)
-        //     &&
-        //     $dadosParaAtualizacao['veiculo_uuid'] !== $osArray['veiculo']['uuid']
-        // ) {
-        //     $novoVeiculo = $this->veiculo()->where('uuid', $dadosParaAtualizacao['veiculo_uuid'])->first();
-
-        //     $dadosParaUpdate['veiculo_id'] = $novoVeiculo->id;
-
-        //     unset($dadosParaAtualizacao['veiculo_uuid']);
-        // }
-
-
-        // dd($dadosParaUpdate, $dadosParaAtualizacao);
-        dd($dadosParaUpdate);
-
-        if (
-            array_key_exists('usuario_uuid_atendente', $dadosParaAtualizacao)
-            &&
-            $dadosParaAtualizacao['usuario_uuid_atendente'] !== $osArray['atendente']['uuid']
-        ) {
-            $novoPossivelAtendente = $this->usuario()->where('uuid', $dadosParaAtualizacao['usuario_uuid_atendente'])->first();
-
-            if (! $novoPossivelAtendente->hasRole(Papel::ATENDENTE->value)) {
-                throw new DomainException('Usuário informado como novo atendente, não tem esse papel', Response::HTTP_BAD_REQUEST);
+                $payload['veiculo_id'] = $novoVeiculo->id;
             }
 
-        //     dd($novoPossivelAtendente);
-
-        //     $atendenteAtualDaOs = $this->usuario()->where('uuid', $osArray['cliente']['uuid'])->first();
-
-            // if ($atendenteAtualDaOs->uuid === $dadosParaAtualizacao['cliente_uuid']) {
-            //     unset($dadosParaAtualizacao['cliente_uuid']);
-            // }
+            unset($payload['veiculo_uuid']);
         }
 
-        // if (array_key_exists('usuario_uuid_mecanico', $dadosParaAtualizacao)) {
-        //     $veiculoAtualDaOs = $this->veiculo()->where('uuid', $osArray['veiculo']['uuid'])->first();
+        if (array_key_exists('cliente_uuid', $payload)) {
+            if ($payload['cliente_uuid'] !== $osArray['cliente']['uuid']) {
 
-        //     if ($veiculoAtualDaOs->uuid === $dadosParaAtualizacao['veiculo_uuid']) {
-        //         unset($dadosParaAtualizacao['veiculo_uuid']);
-        //     }
-        // }
+                $novoCliente = $this->cliente()->where('uuid', $payload['cliente_uuid'])->first();
 
-        dd($dadosParaAtualizacao);
+                $payload['cliente_id'] = $novoCliente->id;
+            }
 
-        // $osArrayDadosAntigos = [
-        //     'cliente_uuid'             => $this->cliente_uuid,
-        //     'veiculo_uuid'             => $this->veiculo_uuid,
-        //     'descricao'                => $this->descricao,
-        //     'valor_desconto'           => $this->valor_desconto,
-        //     'valor_total'              => $this->valor_total,
-        //     'usuario_uuid_atendente'   => $this->usuario_uuid_atendente,
-        //     'usuario_uuid_mecanico'    => $this->usuario_uuid_mecanico,
-        //     'prazo_validade'           => $this->prazo_validade
-        // ];
+            unset($payload['cliente_uuid']);
+        }
 
-        // $novosDados = $dto->merge($osArrayDadosAntigos);
+        if (array_key_exists('usuario_uuid_atendente', $payload)) {
+            if ($payload['usuario_uuid_atendente'] !== $osArray['atendente']['uuid']) {
 
-        // dd($novosDados);
+                $novoPossivelAtendente = $this->usuario()->where('uuid', $payload['usuario_uuid_atendente'])->first();
 
+                if (! $novoPossivelAtendente->hasRole(Papel::ATENDENTE->value)) {
+                    throw new DomainException('Usuário informado como novo atendente não tem esse papel', Response::HTTP_BAD_REQUEST);
+                }
 
+                $payload['usuario_id_atendente'] = $novoPossivelAtendente->id;
+            }
 
-        // $usuario->update($novosDados);
+            unset($payload['usuario_uuid_atendente']);
+        }
 
-        // return $usuario->refresh();
+        if (array_key_exists('usuario_uuid_mecanico', $payload)) {
+            if ($payload['usuario_uuid_mecanico'] !== $osArray['mecanico']['uuid']) {
+
+                $novoPossivelMecanico = $this->usuario()->where('uuid', $payload['usuario_uuid_mecanico'])->first();
+
+                if (! $novoPossivelMecanico->hasRole(Papel::MECANICO->value)) {
+                    throw new DomainException('Usuário informado como novo mecânico não tem esse papel', Response::HTTP_BAD_REQUEST);
+                }
+
+                $payload['usuario_id_mecanico'] = $novoPossivelMecanico->id;
+            }
+
+            unset($payload['usuario_uuid_mecanico']);
+        }
+
+        $os->update($payload);
+
+        return $os->refresh(['cliente', 'veiculo']);
     }
 
-    public function finalizar(string $uuid, AtualizacaoDto $dto)
+    public function encerrar(string $uuid)
     {
         $os = $this->obterUmPorUuid($uuid);
 
-        $novosDados = $dto->merge($os->toArray());
+        $os->update([
+            'data_finalizacao' => now()->format('Y-m-d H:i:s')
+        ]);
 
-        dd($novosDados);
-
-
-
-        // $usuario->update($novosDados);
-
-        // return $usuario->refresh();
+        return $os->refresh(['cliente', 'veiculo']);
     }
 }

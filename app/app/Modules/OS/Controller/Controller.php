@@ -386,6 +386,96 @@ class Controller extends BaseController
         return Response::json($response, HttpResponse::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/os/{uuid}",
+     *     summary="Atualiza uma ordem de serviço",
+     *     description="Atualiza uma ordem de serviço existente com base no UUID informado. É possível atualizar campos como cliente, veículo, descrição, valores, atendente, mecânico e prazo de validade.",
+     *     tags={"OS"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID da ordem de serviço a ser atualizada",
+     *         required=true,
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"uuid"},
+     *             @OA\Property(property="cliente_uuid", type="string", format="uuid", example="3d17aa66-d72f-4861-9ef6-5bcbc5d2b5ba"),
+     *             @OA\Property(property="veiculo_uuid", type="string", format="uuid", example="17dcbf4f-5c3b-4b69-8d6b-76b592cb47d5"),
+     *             @OA\Property(property="descricao", type="string", example="descricao qualquer atualizada..."),
+     *             @OA\Property(property="valor_desconto", type="number", format="float", example=200),
+     *             @OA\Property(property="valor_total", type="number", format="float", example=700),
+     *             @OA\Property(property="usuario_uuid_atendente", type="string", format="uuid", example="4a0a1310-cefd-4e02-935a-1d97017f7ec3"),
+     *             @OA\Property(property="usuario_uuid_mecanico", type="string", format="uuid", example="742e08be-e5a0-4704-b9a1-cf4085d931fc"),
+     *             @OA\Property(property="prazo_validade", type="integer", example=7)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ordem de serviço atualizada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="uuid", type="string", format="uuid", example="4046dd88-642b-4208-a715-08466a28acda"),
+     *             @OA\Property(property="data_abertura", type="string", example="05/08/2025 18:29"),
+     *             @OA\Property(property="prazo_validade", type="integer", example=7),
+     *             @OA\Property(property="descricao", type="string", example="descricao qualquer atualizada..."),
+     *             @OA\Property(property="valor_desconto", type="number", format="float", example=200),
+     *             @OA\Property(property="valor_total", type="number", format="float", example=700),
+     *             @OA\Property(property="cliente", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="3d17aa66-d72f-4861-9ef6-5bcbc5d2b5ba"),
+     *                 @OA\Property(property="nome", type="string", example="Thiago Ortega Velasques"),
+     *                 @OA\Property(property="cpf", type="string", example="66371900552"),
+     *                 @OA\Property(property="telefone_movel", type="string", example="3533716392"),
+     *                 @OA\Property(property="cidade", type="string", example="Pérola do Norte"),
+     *                 @OA\Property(property="uf", type="string", example="TO")
+     *             ),
+     *             @OA\Property(property="veiculo", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="17dcbf4f-5c3b-4b69-8d6b-76b592cb47d5"),
+     *                 @OA\Property(property="placa", type="string", example="BEY-6629"),
+     *                 @OA\Property(property="modelo", type="string", example="Onix"),
+     *                 @OA\Property(property="marca", type="string", example="Chevrolet"),
+     *                 @OA\Property(property="ano_fabricacao", type="integer", example=2024),
+     *                 @OA\Property(property="cor", type="string", example="Cinza")
+     *             ),
+     *             @OA\Property(property="atendente", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="4a0a1310-cefd-4e02-935a-1d97017f7ec3"),
+     *                 @OA\Property(property="nome", type="string", example="Atendente")
+     *             ),
+     *             @OA\Property(property="mecanico", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="742e08be-e5a0-4704-b9a1-cf4085d931fc"),
+     *                 @OA\Property(property="nome", type="string", example="Mecanico")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dados inválidos ou nenhum campo enviado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Dados enviados incorretamente"),
+     *             @OA\Property(property="data", type="array", @OA\Items(type="string", example="O campo valor_total é obrigatório quando valor_desconto está presente."))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ordem de serviço não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Ordem de serviço não encontrada"),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno não tratado"
+     *     )
+     * )
+     */
     public function atualizacao(AtualizacaoRequest $request)
     {
         try {
@@ -405,22 +495,90 @@ class Controller extends BaseController
         return Response::json($response);
     }
 
-    // public function finaluzar(ObterUmPorUuidRequest $request)
-    // {
-    //     try {
-    //         $response = $this->service->finalizar($request->uuid());
-    //     } catch (ModelNotFoundException $th) {
-    //         return Response::json([
-    //             'error'   => true,
-    //             'message' => 'Nenhum registro correspondente ao informado'
-    //         ], HttpResponse::HTTP_NOT_FOUND);
-    //     } catch (Throwable $th) {
-    //         return Response::json([
-    //             'error'   => true,
-    //             'message' => $th->getMessage()
-    //         ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
+    /**
+     * @OA\Put(
+     *     path="/api/os/encerrar/{uuid}",
+     *     summary="Encerra uma ordem de serviço",
+     *     description="Marca a ordem de serviço como encerrada, preenchendo o campo 'data_finalizacao' com a data e hora atual. Nenhum payload é necessário.",
+     *     tags={"OS"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID da ordem de serviço a ser encerrada",
+     *         required=true,
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ordem de serviço encerrada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="uuid", type="string", example="4046dd88-642b-4208-a715-08466a28acda"),
+     *             @OA\Property(property="data_abertura", type="string", example="05/08/2025 18:29"),
+     *             @OA\Property(property="data_finalizacao", type="string", example="06/08/2025 13:20"),
+     *             @OA\Property(property="prazo_validade", type="integer", example=7),
+     *             @OA\Property(property="descricao", type="string", example="descricao qualquer atualizada 777..."),
+     *             @OA\Property(property="valor_desconto", type="number", format="float", example=250),
+     *             @OA\Property(property="valor_total", type="number", format="float", example=7003),
+     *             @OA\Property(property="cliente", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="3d17aa66-d72f-4861-9ef6-5bcbc5d2b5ba"),
+     *                 @OA\Property(property="nome", type="string", example="Thiago Ortega Velasques"),
+     *                 @OA\Property(property="cpf", type="string", example="66371900552"),
+     *                 @OA\Property(property="telefone_movel", type="string", example="3533716392"),
+     *                 @OA\Property(property="cidade", type="string", example="Pérola do Norte"),
+     *                 @OA\Property(property="uf", type="string", example="TO")
+     *             ),
+     *             @OA\Property(property="veiculo", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="17dcbf4f-5c3b-4b69-8d6b-76b592cb47d5"),
+     *                 @OA\Property(property="placa", type="string", example="BEY-6629"),
+     *                 @OA\Property(property="modelo", type="string", example="Onix"),
+     *                 @OA\Property(property="marca", type="string", example="Chevrolet"),
+     *                 @OA\Property(property="ano_fabricacao", type="integer", example=2024),
+     *                 @OA\Property(property="cor", type="string", example="Cinza")
+     *             ),
+     *             @OA\Property(property="atendente", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="4a0a1310-cefd-4e02-935a-1d97017f7ec3"),
+     *                 @OA\Property(property="nome", type="string", example="Atendente")
+     *             ),
+     *             @OA\Property(property="mecanico", type="object",
+     *                 @OA\Property(property="uuid", type="string", example="742e08be-e5a0-4704-b9a1-cf4085d931fc"),
+     *                 @OA\Property(property="nome", type="string", example="Mecanico")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ordem de serviço não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Ordem de serviço não encontrada"),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno não tratado"
+     *     )
+     * )
+     */
+    public function encerrar(ObterUmPorUuidRequest $request)
+    {
+        try {
+            $response = $this->service->encerrar($request->uuid());
+        } catch (ModelNotFoundException $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => 'Nenhum registro correspondente ao informado'
+            ], HttpResponse::HTTP_NOT_FOUND);
+        } catch (Throwable $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-    //     return Response::json($response);
-    // }
+        return Response::json($response, HttpResponse::HTTP_OK);
+    }
 }
