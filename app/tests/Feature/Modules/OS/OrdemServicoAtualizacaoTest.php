@@ -6,8 +6,16 @@ use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
+
+use App\Modules\OrdemDeServico\Controller\Controller as OSController;
+use App\Modules\OrdemDeServico\Service\Service as OSService;
+
 use Database\Seeders\DatabaseSeeder;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class OrdemServicoAtualizacaoTest extends TestCase
@@ -66,5 +74,68 @@ class OrdemServicoAtualizacaoTest extends TestCase
         ]);
 
         $updateResponse->assertOk();
+    }
+
+    public function test_atualizacao_os_nao_encontrada_lanca_model_not_found_exception(): void
+    {
+        $uuidFake = 'uuid-inexistente-1234';
+
+        $mockDto = Mockery::mock(\App\Modules\OrdemDeServico\Dto\AtualizacaoDto::class);
+
+        $mockRequest = Mockery::mock(\App\Modules\OrdemDeServico\Requests\AtualizacaoRequest::class);
+        $mockRequest->shouldIgnoreMissing(); // ignora outros métodos que não forem stubados
+        $mockRequest->shouldReceive('uuid')->once()->andReturn($uuidFake);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
+
+        $mockService = Mockery::mock(OSService::class);
+        $mockService->shouldReceive('atualizacao')
+            ->with($uuidFake, $mockDto)
+            ->once()
+            ->andThrow(ModelNotFoundException::class);
+
+        $controller = new OSController($mockService);
+
+        // Act
+
+        $response = $controller->atualizacao($mockRequest);
+
+        // Assert
+
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $responseData = $response->getData(true);
+
+        $this->assertTrue($responseData['error']);
+        $this->assertEquals('Nenhum registro correspondente ao informado', $responseData['message']);
+    }
+
+    public function test_atualizacao_os_lanca_exception_generica(): void
+    {
+        $uuidFake = 'uuid-inexistente-1234';
+
+        $mockDto = Mockery::mock(\App\Modules\OrdemDeServico\Dto\AtualizacaoDto::class);
+
+        $mockRequest = Mockery::mock(\App\Modules\OrdemDeServico\Requests\AtualizacaoRequest::class);
+        $mockRequest->shouldIgnoreMissing(); // ignora outros métodos que não forem stubados
+        $mockRequest->shouldReceive('uuid')->once()->andReturn($uuidFake);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
+
+        $mockService = Mockery::mock(OSService::class);
+        $mockService->shouldReceive('atualizacao')
+            ->with($uuidFake, $mockDto)
+            ->once()
+            ->andThrow(Exception::class);
+
+        $controller = new OSController($mockService);
+
+        // Act
+
+        $response = $controller->atualizacao($mockRequest);
+
+        // Assert
+
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $responseData = $response->getData(true);
+
+        $this->assertTrue($responseData['error']);
     }
 }

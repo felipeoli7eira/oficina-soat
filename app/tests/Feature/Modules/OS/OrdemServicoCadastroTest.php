@@ -15,6 +15,7 @@ use App\Modules\Veiculo\Model\Veiculo;
 
 use Database\Seeders\DatabaseSeeder;
 use DomainException;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
@@ -106,5 +107,51 @@ class OrdemServicoCadastroTest extends TestCase
         // Assert
 
         $response->assertBadRequest();
+    }
+
+    public function test_cadastro_de_os_retorna_erro_de_regra_de_negocio(): void
+    {
+        $mockRequest = Mockery::mock(CadastroRequest::class);
+        $mockRequest->shouldIgnoreMissing();
+
+        $dtoFake = Mockery::mock(\App\Modules\OrdemDeServico\Dto\CadastroDto::class);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($dtoFake);
+
+        $domainException = new DomainException('Erro de regra de negócio', 400);
+
+        $this->serviceMock->shouldReceive('cadastro')
+            ->with($dtoFake)
+            ->once()
+            ->andThrow($domainException);
+
+        $response = $this->controller->cadastro($mockRequest);
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data = $response->getData(true);
+        $this->assertTrue($data['error']);
+    }
+
+    public function test_cadastro_de_os_retorna_erro_interno_em_excecao_generica(): void
+    {
+        $mockRequest = Mockery::mock(CadastroRequest::class);
+        $mockRequest->shouldIgnoreMissing();
+
+        $dtoFake = Mockery::mock(\App\Modules\OrdemDeServico\Dto\CadastroDto::class);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($dtoFake);
+
+        $erroGenerico = new Exception('Erro');
+
+        $this->serviceMock->shouldReceive('cadastro')
+            ->with($dtoFake)
+            ->once()
+            ->andThrow($erroGenerico);
+
+        $response = $this->controller->cadastro($mockRequest);
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $data = $response->getData(true);
+        $this->assertTrue($data['error']);
+        $this->assertEquals('Erro', $data['message']);
     }
 }

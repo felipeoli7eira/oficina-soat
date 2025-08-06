@@ -12,5 +12,4 @@ Route::post('/os', [OSController::class, 'cadastro']);
 Route::put('/os/{uuid}', [OSController::class, 'atualizacao']);
 Route::put('/os/encerrar/{uuid}', [OSController::class, 'encerrar']);
 
-Route::put('/os/{uuid}/finalizar', [OSController::class, 'finaluzar']);
 Route::delete('/os/{uuid}', [OSController::class, 'remocao']);
