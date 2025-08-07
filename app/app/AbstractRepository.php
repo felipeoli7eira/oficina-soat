@@ -16,16 +16,42 @@ abstract class AbstractRepository implements RepositoryInterface
         return app(static::$model);
     }
 
-    public static function read(int $perPage = 10, array $columns = ['*'], array $relations = []): ResourceCollection|LengthAwarePaginator
-    {
-        return self::model()::query()->with($relations)
-                                     ->where('excluido', false)
-                                     ->paginate($perPage, $columns);
+    public static function read(
+        int $perPage = 10,
+        array $columns = ['*'],
+        array $relations = [],
+        bool $includeDeletedRecords = false
+    ): ResourceCollection|LengthAwarePaginator {
+        /** @var Illuminate\Database\Eloquent\Model $model */
+        $model = self::model()::query();
+
+        if ($includeDeletedRecords) {
+            $model = $model->withoutGlobalScope('nao_excluidos');
+        }
+
+        return $model->with($relations)->paginate($perPage, $columns);
     }
 
     public static function findOne(int $identifier, array $columns = ['*'], array $relations = []): ?Model
     {
         return self::model()::query()->with($relations)->find($identifier, $columns);
+    }
+
+    public static function findUuid(
+        string $uuid,
+        bool $EvenIfItIsExcluded = false,
+        string|null $identifier = 'uuid',
+        array $columns = ['*'],
+        array $relations = []
+    ): ?Model {
+        /** @var Illuminate\Database\Eloquent\Model $model */
+        $model = self::model()::query();
+
+        if ($EvenIfItIsExcluded) {
+            $model = $model->withoutGlobalScope('nao_excluidos');
+        }
+
+        return $model->where($identifier, $uuid)->with($relations)->firstOrFail($columns);
     }
 
     public static function create(array $attributes): Model
