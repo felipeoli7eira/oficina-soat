@@ -6,9 +6,12 @@ use Database\Factories\VeiculoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Traits\SoftDeletes;
 
 class Veiculo extends Model
 {
+    use SoftDeletes;
+
     /** @use HasFactory<\Database\Factories\VeiculoFactory> */
     use HasFactory;
 
