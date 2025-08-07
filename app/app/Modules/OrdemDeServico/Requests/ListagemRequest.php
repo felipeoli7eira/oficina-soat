@@ -1,21 +1,29 @@
 <?php
 
-namespace App\Modules\PecaInsumo\Requests;
+namespace App\Modules\OrdemDeServico\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class ListagemRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = true;
+
+    public function prepareForValidation(): void
+    {
+        $this->merge([]);
+    }
+
     public function rules(): array
     {
         return [];
     }
 
-    public function authorize(): bool
+    public function messages(): array
     {
-        return true;
+        return [];
     }
 
     public function failedValidation(Validator $validator): void
