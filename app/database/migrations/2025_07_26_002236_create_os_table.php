@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('os', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->unique();
+            $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
 
             $table->timestamp('data_abertura')->useCurrent();
             $table->timestamp('data_finalizacao')->nullable();
@@ -40,7 +41,7 @@ return new class extends Migration
             $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->nullable()->useCurrentOnUpdate();
         });
     }
 

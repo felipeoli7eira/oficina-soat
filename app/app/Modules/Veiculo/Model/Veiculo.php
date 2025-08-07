@@ -52,4 +52,20 @@ class Veiculo extends Model
     {
         return VeiculoFactory::new();
     }
+
+    /**
+     * Relacionamento com ClienteVeiculo
+     */
+    public function clienteVeiculos()
+    {
+        return $this->hasMany(\App\Modules\ClienteVeiculo\Model\ClienteVeiculo::class, 'veiculo_id');
+    }
+
+    /**
+     * Relacionamento com Cliente através de ClienteVeiculo
+     */
+    public function clientes()
+    {
+        return $this->belongsToMany(\App\Modules\Cliente\Model\Cliente::class, 'cliente_veiculo', 'veiculo_id', 'cliente_id');
+    }
 }

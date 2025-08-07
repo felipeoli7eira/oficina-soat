@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AtualizacaoRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = true;
+
     public function prepareForValidation(): void
     {
         $this->merge([
@@ -19,14 +21,14 @@ class AtualizacaoRequest extends FormRequest
 
     public function rules(): array
     {
-            $rules = [
+        $rules = [
             'uuid' => ['required', 'uuid', 'exists:peca_insumo,uuid'],
             'descricao' => ['required', 'string', 'min:3', 'max:255'],
             'valor_custo' => ['required', 'numeric', 'min:0.01'],
             'valor_venda' => ['required', 'numeric', 'min:0.01'],
             'qtd_atual' => ['required', 'integer', 'min:1'],
             'qtd_segregada' => ['required', 'integer', 'min:1'],
-            'status' => ['required', 'string', 'min:3', 'max:30']
+            'status' => ['required', 'string', 'in:ativo,inativo']
         ];
 
         if ($this->route('uuid') && \Illuminate\Support\Str::isUuid($this->route('uuid'))) {
@@ -65,32 +67,24 @@ class AtualizacaoRequest extends FormRequest
     public function failedValidation(Validator $validator): void
     {
         $errors = $validator->errors();
-        $status = $this->determineHttpStatus($errors);
+        $uuidErrors = $errors->get('uuid');
+        $status = Response::HTTP_BAD_REQUEST;
+
+        if (!empty($uuidErrors)) {
+            foreach ($uuidErrors as $message) {
+                if (str_contains($message, 'obrigatório') ||
+                    str_contains($message, 'required') ||
+                    str_contains($message, 'não existe') ||
+                    str_contains($message, 'not exist')) {
+                    $status = Response::HTTP_NOT_FOUND;
+                    break;
+                }
+            }
+        }
 
         throw new HttpResponseException(response()->json([
             'message' => 'Dados enviados incorretamente',
             'errors'  => $errors->all(),
         ], $status));
-    }
-
-    private function determineHttpStatus($errors): int
-    {
-        $uuidErrors = $errors->get('uuid');
-
-        if (empty($uuidErrors)) {
-            return Response::HTTP_BAD_REQUEST;
-        }
-
-        foreach ($uuidErrors as $message) {
-            if (str_contains($message, 'obrigatório') ||
-                str_contains($message, 'required') ||
-                str_contains($message, 'não existe') ||
-                str_contains($message, 'not exist')) {
-                return Response::HTTP_NOT_FOUND;
-            }
-
-        }
-
-        return Response::HTTP_BAD_REQUEST;
     }
 }
