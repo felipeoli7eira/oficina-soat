@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('health', fn() => response()->json(['healthy' => true]));
 
+Route::get('login', fn() => response()->json([
+    'error'   => true,
+    'message' => 'É necessário autenticação para acessar os dados',
+]))->name('login');
+
 // * endpoints de cliente
 require __DIR__ . '/../app/Modules/Cliente/Routes/api.php';
 

@@ -36,9 +36,9 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'usuario',
         ],
     ],
 
@@ -60,15 +60,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'usuario' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Modules\Usuario\Model\Usuario::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'cliente' => [
+            'driver' => 'eloquent',
+            'model' => App\Modules\Cliente\Model\Cliente::class,
+        ],
     ],
 
     /*
