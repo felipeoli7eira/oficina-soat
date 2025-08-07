@@ -60,4 +60,12 @@ class Service
 
         return $usuario->fresh(['roles']);
     }
+
+    public function login(string $email, string $senha)
+    {
+        return [
+            $email,
+            $senha,
+        ];
+    }
 }

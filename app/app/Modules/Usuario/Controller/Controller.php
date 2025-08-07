@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller as BaseController;
 
 use App\Modules\Usuario\Requests\AtualizacaoRequest;
 use App\Modules\Usuario\Requests\CadastroRequest;
+use App\Modules\Usuario\Requests\LogInRequest;
 use App\Modules\Usuario\Requests\ObterUmPorUuidRequest;
 
 use App\Modules\Usuario\Service\Service as UsuarioService;
@@ -341,6 +342,28 @@ class Controller extends BaseController
             return Response::json([
                 'error'   => true,
                 'message' => $th->getMessage()
+            ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return Response::json($response);
+    }
+
+    public function login(LogInRequest $request)
+    {
+        try {
+            $response = $this->service->login(
+                $request->validated('email'),
+                $request->validated('senha'),
+            );
+        } catch(ModelNotFoundException $error) {
+            return Response::json([
+                'error'   => true,
+                'message' => 'Nenhum registro correspondente ao informado'
+            ], HttpResponse::HTTP_NOT_FOUND);
+        } catch (Throwable $error) {
+            return Response::json([
+                'error'   => true,
+                'message' => $error->getMessage()
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 

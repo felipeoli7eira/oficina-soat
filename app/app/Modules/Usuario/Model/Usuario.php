@@ -28,6 +28,8 @@ class Usuario extends Model
 
     protected $fillable = [
         'nome',
+        'email',
+        'senha',
         'status',
         'excluido',
         'data_exclusao',
@@ -36,7 +38,8 @@ class Usuario extends Model
     ];
 
     protected $hidden = [
-        'id'
+        'id',
+        'senha',
     ];
 
     protected function casts(): array
