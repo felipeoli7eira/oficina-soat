@@ -24,14 +24,14 @@ class PecaInsumoRemocaoTest extends TestCase
         $response->assertStatus(204);
 
         $response = $this->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
-        $response->assertNotFound();
+        $response->assertStatus(400);
     }
 
     public function test_remocao_logica_do_peca_insumo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
         $response = $this->deleteJson('/api/peca-insumo/' . $uuid);
-        $response->assertNotFound();
+        $response->assertStatus(400);
     }
 
     public function test_remocao_peca_insumo_com_erro_interno(): void
