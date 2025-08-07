@@ -23,7 +23,7 @@ abstract class AbstractRepository implements RepositoryInterface
                                      ->paginate($perPage, $columns);
     }
 
-    public static function findOne(int $identifier, array $columns = ['*'], array $relations = []): Model
+    public static function findOne(int $identifier, array $columns = ['*'], array $relations = []): ?Model
     {
         return self::model()::query()->with($relations)->find($identifier, $columns);
     }
