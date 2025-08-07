@@ -28,26 +28,9 @@ class ObterUmPorUuidRequest extends FormRequest
 
     public function failedValidation(Validator $validator): void
     {
-        $errors = $validator->errors();
-        $uuidErrors = $errors->get('uuid');
-        $status = Response::HTTP_BAD_REQUEST;
-
-        if (!empty($uuidErrors)) {
-            foreach ($uuidErrors as $message) {
-                if (str_contains($message, 'válido') || str_contains($message, 'valid')) {
-                    $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                }
-                if (str_contains($message, 'inválido') || str_contains($message, 'invalid')  ) {
-                    $status = Response::HTTP_NOT_FOUND;
-                    break;
-                }
-
-            }
-        }
-
         throw new HttpResponseException(response()->json([
-            'message' => 'Erro de validação',
-            'errors'  => $errors->all(),
-        ], $status));
+            'message'   => 'Erros de validação',
+            'errors'    => $validator->errors()->all(),
+        ], Response::HTTP_BAD_REQUEST));
     }
 }

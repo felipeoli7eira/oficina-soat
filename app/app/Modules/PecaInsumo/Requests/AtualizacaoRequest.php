@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AtualizacaoRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = true;
+
     public function prepareForValidation(): void
     {
         $this->merge([
@@ -26,7 +28,7 @@ class AtualizacaoRequest extends FormRequest
             'valor_venda' => ['required', 'numeric', 'min:0.01'],
             'qtd_atual' => ['required', 'integer', 'min:1'],
             'qtd_segregada' => ['required', 'integer', 'min:1'],
-            'status' => ['required', 'string', 'min:3', 'max:30']
+            'status' => ['required', 'string', 'in:ativo,inativo']
         ];
 
         if ($this->route('uuid') && \Illuminate\Support\Str::isUuid($this->route('uuid'))) {

@@ -2,7 +2,7 @@
 
 
 namespace App\Modules\ClienteVeiculo\Model;
-use Database\Factories\ClienteVeiculoVeiculoFactory;
+use Database\Factories\ClienteVeiculoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

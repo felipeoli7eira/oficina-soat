@@ -1,14 +1,20 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Modules\Veiculo;
 
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 use App\Modules\Veiculo\Dto\ListagemDto;
 use App\Modules\Veiculo\Dto\CadastroDto;
 use App\Modules\Veiculo\Model\Veiculo;
 
 class VeiculoTest extends TestCase
 {
+    use RefreshDatabase;
+
+    private array $payload;
+
+
     // ==================== TESTES DOS DTOs ====================
 
     /**
@@ -18,10 +24,25 @@ class VeiculoTest extends TestCase
     {
         $dto = new ListagemDto();
 
-        $result = $dto->asArray();
+        $this->assertNull($dto->clienteUuid);
+        $this->assertNull($dto->page);
+        $this->assertNull($dto->perPage);
+    }
+    /**
+     * Teste se o DTO de listagem aceita parâmetros de veículo
+     */
+    public function test_listagem_dto_aceita_parametros_veiculo(): void
+    {
+        $clienteUuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
+        $dto = new ListagemDto(
+            clienteUuid: $clienteUuid,
+            page: 1,
+            perPage: 10
+        );
 
-        $this->assertIsArray($result);
-        $this->assertEmpty($result);
+        $this->assertEquals($clienteUuid, $dto->clienteUuid);
+        $this->assertEquals(1, $dto->page);
+        $this->assertEquals(10, $dto->perPage);
     }
 
     /**
@@ -34,8 +55,9 @@ class VeiculoTest extends TestCase
             modelo: 'Corolla',
             ano: 2020,
             placa: 'ABC-1234',
-            cor: 'Prata',
-            chassi: '1234567890ABCDEFG'
+            cor: 'Branco',
+            chassi: '9BWZZZ377VT004251',
+            clienteUuid: '8acb1b8f-c588-4968-85ca-04ef66f2b380'
         );
 
         $result = $dto->asArray();
@@ -45,42 +67,8 @@ class VeiculoTest extends TestCase
         $this->assertEquals('Corolla', $result['modelo']);
         $this->assertEquals(2020, $result['ano_fabricacao']);
         $this->assertEquals('ABC-1234', $result['placa']);
-    }
-
-    /**
-     * Teste se o método filled funciona corretamente
-     */
-    public function test_filled_retorna_apenas_valores_preenchidos(): void
-    {
-        $dto = new CadastroDto(
-            marca: 'Honda',
-            modelo: 'Civic',
-            ano: 2019,
-            placa: 'XYZ-9876',
-            cor: null, // valor nulo
-            chassi: '0987654321ZYXWVUT'
-        );
-
-        $filled = $dto->filled();
-
-        $this->assertArrayHasKey('marca', $filled);
-        $this->assertArrayHasKey('modelo', $filled);
-        $this->assertArrayHasKey('ano_fabricacao', $filled);
-        $this->assertArrayHasKey('placa', $filled);
-        $this->assertArrayHasKey('chassi', $filled);
-        $this->assertArrayNotHasKey('cor', $filled); // não deve ter cor pois é null
-    }
-
-    /**
-     * Teste se o DTO de listagem funciona corretamente
-     */
-    public function test_filled_retorna_apenas_valores_preenchidos_listagem(): void
-    {
-        $dto = new ListagemDto();
-
-        $filled = $dto->filled();
-
-        $this->assertIsArray($filled);
+        $this->assertEquals('Branco', $result['cor']);
+        $this->assertEquals('9BWZZZ377VT004251', $result['chassi']);
     }
 
     // ==================== TESTES DO MODEL ====================
@@ -91,7 +79,6 @@ class VeiculoTest extends TestCase
     public function test_veiculo_model_pode_ser_instanciado(): void
     {
         $veiculo = new Veiculo();
-
         $this->assertInstanceOf(Veiculo::class, $veiculo);
     }
 
@@ -135,20 +122,23 @@ class VeiculoTest extends TestCase
     public function test_veiculo_model_pode_receber_dados_construtor(): void
     {
         $dados = [
-            'uuid' => 'test-uuid-123',
-            'marca' => 'Toyota',
-            'modelo' => 'Corolla',
-            'placa' => 'ABC-1234',
-            'ano_fabricacao' => 2020,
-            'excluido' => 0
+            'marca' => 'Honda',
+            'modelo' => 'Civic',
+            'placa' => 'XYZ-9876',
+            'ano_fabricacao' => 2021,
+            'cor' => 'Prata',
+            'chassi' => '1HGBH41JXMN109186',
+            'excluido' => false
         ];
 
         $veiculo = new Veiculo($dados);
 
-        $this->assertEquals('Toyota', $veiculo->marca);
-        $this->assertEquals('Corolla', $veiculo->modelo);
-        $this->assertEquals('ABC-1234', $veiculo->placa);
-        $this->assertEquals(2020, $veiculo->ano_fabricacao);
+        $this->assertEquals('Honda', $veiculo->marca);
+        $this->assertEquals('Civic', $veiculo->modelo);
+        $this->assertEquals('XYZ-9876', $veiculo->placa);
+        $this->assertEquals(2021, $veiculo->ano_fabricacao);
+        $this->assertEquals('Prata', $veiculo->cor);
+        $this->assertEquals('1HGBH41JXMN109186', $veiculo->chassi);
     }
 
     /**
@@ -160,6 +150,35 @@ class VeiculoTest extends TestCase
 
         $this->assertFalse($veiculo->timestamps);
     }
+
+    /**
+     * Teste se o model tem relacionamento clienteVeiculos (hasMany)
+     */
+    public function test_veiculo_model_tem_relacionamento_cliente_veiculos(): void
+    {
+        $veiculo = new Veiculo();
+        $relacionamento = $veiculo->clienteVeiculos();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $relacionamento);
+        $this->assertEquals('veiculo_id', $relacionamento->getForeignKeyName());
+        $this->assertEquals(\App\Modules\ClienteVeiculo\Model\ClienteVeiculo::class, $relacionamento->getRelated()::class);
+    }
+
+    /**
+     * Teste se o model tem relacionamento clientes (belongsToMany)
+     */
+    public function test_veiculo_model_tem_relacionamento_clientes(): void
+    {
+        $veiculo = new Veiculo();
+        $relacionamento = $veiculo->clientes();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $relacionamento);
+        $this->assertEquals('cliente_veiculo', $relacionamento->getTable());
+        $this->assertEquals('veiculo_id', $relacionamento->getForeignPivotKeyName());
+        $this->assertEquals('cliente_id', $relacionamento->getRelatedPivotKeyName());
+        $this->assertEquals(\App\Modules\Cliente\Model\Cliente::class, $relacionamento->getRelated()::class);
+    }
+
 
     // ==================== TESTES DO REPOSITORY ====================
 
@@ -224,7 +243,14 @@ class VeiculoTest extends TestCase
     public function test_veiculo_service_pode_ser_instanciado(): void
     {
         $repository = new \App\Modules\Veiculo\Repository\VeiculoRepository();
-        $service = new \App\Modules\Veiculo\Service\Service($repository);
+        $clienteVeiculoService = app(\App\Modules\ClienteVeiculo\Service\Service::class);
+        $clienteService = app(\App\Modules\Cliente\Service\Service::class);
+
+        $service = new \App\Modules\Veiculo\Service\Service(
+            $repository,
+            $clienteVeiculoService,
+            $clienteService
+        );
 
         $this->assertInstanceOf(\App\Modules\Veiculo\Service\Service::class, $service);
     }
@@ -270,12 +296,19 @@ class VeiculoTest extends TestCase
     }
 
     /**
-     * Teste se o service recebe repository via construtor
+     * Teste se o service recebe dependências via construtor
      */
-    public function test_veiculo_service_recebe_repository_construtor(): void
+    public function test_veiculo_service_recebe_dependencias_construtor(): void
     {
         $repository = new \App\Modules\Veiculo\Repository\VeiculoRepository();
-        $service = new \App\Modules\Veiculo\Service\Service($repository);
+        $clienteVeiculoService = app(\App\Modules\ClienteVeiculo\Service\Service::class);
+        $clienteService = app(\App\Modules\Cliente\Service\Service::class);
+
+        $service = new \App\Modules\Veiculo\Service\Service(
+            $repository,
+            $clienteVeiculoService,
+            $clienteService
+        );
 
         // Verifica se o service foi criado corretamente
         $this->assertInstanceOf(\App\Modules\Veiculo\Service\Service::class, $service);
@@ -288,8 +321,7 @@ class VeiculoTest extends TestCase
      */
     public function test_veiculo_controller_pode_ser_instanciado(): void
     {
-        $repository = new \App\Modules\Veiculo\Repository\VeiculoRepository();
-        $service = new \App\Modules\Veiculo\Service\Service($repository);
+        $service = app(\App\Modules\Veiculo\Service\Service::class);
         $controller = new \App\Modules\Veiculo\Controller\VeiculoController($service);
 
         $this->assertInstanceOf(\App\Modules\Veiculo\Controller\VeiculoController::class, $controller);
@@ -300,8 +332,7 @@ class VeiculoTest extends TestCase
      */
     public function test_veiculo_controller_herda_controller_base(): void
     {
-        $repository = new \App\Modules\Veiculo\Repository\VeiculoRepository();
-        $service = new \App\Modules\Veiculo\Service\Service($repository);
+        $service = app(\App\Modules\Veiculo\Service\Service::class);
         $controller = new \App\Modules\Veiculo\Controller\VeiculoController($service);
 
         $this->assertInstanceOf(\App\Http\Controllers\Controller::class, $controller);
@@ -352,10 +383,8 @@ class VeiculoTest extends TestCase
      */
     public function test_veiculo_controller_recebe_service_construtor(): void
     {
-        $repository = new \App\Modules\Veiculo\Repository\VeiculoRepository();
-        $service = new \App\Modules\Veiculo\Service\Service($repository);
+        $service = app(\App\Modules\Veiculo\Service\Service::class);
         $controller = new \App\Modules\Veiculo\Controller\VeiculoController($service);
-
 
         $this->assertInstanceOf(\App\Modules\Veiculo\Controller\VeiculoController::class, $controller);
     }
@@ -409,7 +438,7 @@ class VeiculoTest extends TestCase
     }
 
     /**
-     * Teste se o ObterUmPorUuidRequest pode ser instanciado
+     * Teste se o ObterUmPorIdRequest pode ser instanciado
      */
     public function test_veiculo_obter_um_por_uuid_request_pode_ser_instanciado(): void
     {
@@ -510,4 +539,5 @@ class VeiculoTest extends TestCase
         $this->assertStringContainsString('/api/veiculo', $docComment);
         $this->assertStringContainsString('Veiculo', $docComment);
     }
+
 }

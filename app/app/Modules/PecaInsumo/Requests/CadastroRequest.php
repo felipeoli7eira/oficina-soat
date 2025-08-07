@@ -32,7 +32,7 @@ class CadastroRequest extends FormRequest
             'valor_venda' => ['required', 'numeric', 'min:0.01'],
             'qtd_atual' => ['required', 'integer', 'min:1'],
             'qtd_segregada' => ['required', 'integer', 'min:1'],
-            'status' => ['required', 'string', 'min:3', 'max:30']
+            'status' => ['required', 'string', 'in:ativo,inativo']
         ];
     }
 

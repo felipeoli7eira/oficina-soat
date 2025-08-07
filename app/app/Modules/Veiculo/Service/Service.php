@@ -24,18 +24,14 @@ class Service
     {
         $query = $this->repo->model();
 
-        // Filtrar por cliente se fornecido
         if ($dto->clienteUuid) {
-            // Buscar cliente pelo UUID
             $cliente = $this->clienteService->obterUmPorUuid($dto->clienteUuid);
 
-            // Filtrar veículos que pertencem ao cliente
             $query = $query->whereHas('clienteVeiculos', function ($q) use ($cliente) {
                 $q->where('cliente_id', $cliente->id);
             });
         }
 
-        // Aplicar paginação se fornecida
         if ($dto->page && $dto->perPage) {
             return $query->paginate($dto->perPage, ['*'], 'page', $dto->page);
         }
@@ -45,9 +41,11 @@ class Service
 
     public function cadastro(CadastroDto $dto)
     {
+        $clienteUuid = $dto->clienteUuid;
+        unset($dto->clienteUuid);
         $veiculo = $this->repo->createOrFirst($dto->asArray())->fresh();
 
-        $this->anexarCliente($dto->clienteUuid, $veiculo->id);
+        $this->anexarCliente($clienteUuid, $veiculo->id);
 
         return $veiculo;
     }
