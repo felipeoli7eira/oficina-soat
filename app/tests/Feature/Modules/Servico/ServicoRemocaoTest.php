@@ -4,6 +4,7 @@ namespace Tests\Feature\Modules\Servico;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -65,7 +66,8 @@ class ServicoRemocaoTest extends TestCase
 
         $mock = \Mockery::mock(\App\Modules\Servico\Service\Service::class);
         $mock->shouldReceive('remocao')
-            ->with($uuid);
+            ->with($uuid)
+            ->andThrow(new ModelNotFoundException('Regisrtro não encontrado'));
 
         $this->app->instance(\App\Modules\Servico\Service\Service::class, $mock);
 

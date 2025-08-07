@@ -5,6 +5,7 @@ namespace Tests\Feature\Modules\Servico;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Tests\TestCase;
 
 class ServicoAtualizacaoTest extends TestCase
@@ -99,16 +100,16 @@ class ServicoAtualizacaoTest extends TestCase
 
      public function test_atualizar_servico_usando_mock_com_erro_404_interno(): void
     {
-       $uuid = fake()->uuid();
+        $uuid = fake()->uuid();
 
         $mock = \Mockery::mock(\App\Modules\Servico\Service\Service::class);
         $mock->shouldReceive('atualizacao')
             ->with($uuid)
-            ->andThrow(new \Exception('Erro inesperado'));
+            ->andThrow(new ModelNotFoundException('Registro não encontrado'));
 
         $this->app->instance(\App\Modules\Servico\Service\Service::class, $mock);
 
-        $response = $this->deleteJson("/api/servico/{$uuid}");
+        $response = $this->putJson("/api/servico/{$uuid}", $this->payload);
 
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
