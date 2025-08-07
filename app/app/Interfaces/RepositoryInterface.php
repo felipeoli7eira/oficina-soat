@@ -14,7 +14,7 @@ interface RepositoryInterface
 
     public static function createOrFirst(array $attributes): Model;
 
-    public static function findOne(int $identifier, array $columns = ['*']): Model;
+    public static function findOne(int $identifier, array $columns = ['*']): ?Model;
 
     public static function delete(int $identifier): int;
 
