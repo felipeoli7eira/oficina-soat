@@ -12,22 +12,22 @@ class PapelSeed extends Seeder
     {
         Role::create([
             'name'       => 'atendente',
-            'guard_name' => 'web',
+            'guard_name' => 'api',
         ]);
 
         Role::create([
             'name'       => 'comercial',
-            'guard_name' => 'web',
+            'guard_name' => 'api',
         ]);
 
         Role::create([
             'name'       => 'mecanico',
-            'guard_name' => 'web',
+            'guard_name' => 'api',
         ]);
 
         Role::create([
             'name'       => 'gestor_estoque',
-            'guard_name' => 'web',
+            'guard_name' => 'api',
         ]);
     }
 }

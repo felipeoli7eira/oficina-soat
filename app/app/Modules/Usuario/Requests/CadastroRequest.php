@@ -25,8 +25,10 @@ class CadastroRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255', 'min:3'],
-            'papel' => ['required', 'string', 'max:255', 'min:3', 'exists:roles,name'],
+            'nome'   => ['required', 'string', 'max:255', 'min:3'],
+            'email'  => ['required', 'email', 'min:6', 'max:255', 'unique:usuario,email'],
+            'senha'  => ['required', 'string', 'min:8', 'max:255'],
+            'papel'  => ['required', 'string', 'max:255', 'min:3', 'exists:roles,name'],
             'status' => ['required', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
         ];
     }

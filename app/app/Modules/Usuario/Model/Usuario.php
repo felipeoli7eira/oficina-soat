@@ -22,7 +22,7 @@ class Usuario extends Authenticatable implements JWTSubject
 
     public $timestamps = false;
 
-    protected $guard_name = 'web';
+    protected $guard_name = 'api';
 
     protected $fillable = [
         'nome',

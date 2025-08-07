@@ -9,6 +9,7 @@ use App\Modules\Usuario\Dto\CadastroDto;
 use App\Modules\Usuario\Repository\UsuarioRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Hash;
 
 class Service
 {
@@ -25,6 +26,8 @@ class Service
         $role = $data['role'];
 
         unset($data['role']);
+
+        $data['senha'] = Hash::make($data['senha']);
 
         $usuario = $this->repo->createOrFirst($data);
 
