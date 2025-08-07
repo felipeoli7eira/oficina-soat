@@ -50,7 +50,7 @@ class Service
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        $usuario = $this->obterUmPorUuid($uuid);
+        $usuario = $this->repo->findUuid($uuid);
 
         $dadosAntigos = $usuario->toArray();
         $novosDados = $dto->merge($dadosAntigos);

@@ -280,8 +280,10 @@ class Controller extends BaseController
      *         required=true,
      *         description="Dados que devem ser atualizados",
      *         @OA\JsonContent(
-     *             required={"nome", "role_id", "status"},
+     *             required={"nome", "role_id", "status", "email", "senha", "papel"},
      *             @OA\Property(property="nome", type="string", example="Novo nome"),
+     *             @OA\Property(property="email", type="string", example="novo@email.com.br"),
+     *             @OA\Property(property="senha", type="string", example="novasenha"),
      *             @OA\Property(property="papel", type="string", example="mecanico || atendente || comercial || gestor_estoque"),
      *             @OA\Property(property="status", type="string", example="inativo || ativo")
      *         )
