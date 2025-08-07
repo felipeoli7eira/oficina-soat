@@ -48,7 +48,7 @@ class PecaInsumoFactory extends Factory
             'Coxim do Motor'
         ];
 
-        $statusDisponiveis = ['ativo', 'inativo', 'descontinuado', 'em_falta'];
+        $statusDisponiveis = ['ativo', 'inativo'];
 
         $gtin = $faker->numerify('789#########');
 
@@ -57,8 +57,8 @@ class PecaInsumoFactory extends Factory
         $valorCusto = $faker->randomFloat(2, 5.00, 500.00);
         $valorVenda = $valorCusto * $faker->randomFloat(2, 1.3, 2.5);
 
-        $qtdAtual = $faker->numberBetween(0, 200);
-        $qtdSegregada = $faker->numberBetween(0, min(10, $qtdAtual));
+        $qtdAtual = $faker->numberBetween(10, 200);
+        $qtdSegregada = $faker->numberBetween(9, min(10, $qtdAtual));
 
         $data = [
             'gtin'             => $gtin,
@@ -68,7 +68,7 @@ class PecaInsumoFactory extends Factory
             'qtd_atual'        => $qtdAtual,
             'qtd_segregada'    => $qtdSegregada,
             'status'           => $faker->randomElement($statusDisponiveis),
-            'excluido'         => $faker->boolean(20), // 20% de chance de estar excluído
+            'excluido'         => false,
             'data_cadastro'    => $faker->dateTimeBetween('-2 years', 'now'),
             'data_atualizacao' => null,
         ];

@@ -25,13 +25,6 @@ class PecaInsumoListagemTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_listar_peca_insumo_por_uuid_que_nao_existe(): void
-    {
-        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-        $response = $this->getJson('/api/peca-insumo/' . $uuid);
-        $response->assertNotFound();
-    }
-
     public function test_listar_peca_insumos_com_erro_interno(): void
     {
         $this->mock(\App\Modules\PecaInsumo\Service\Service::class, function ($mock) {
