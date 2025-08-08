@@ -11,7 +11,7 @@ class ObterUmPorUuidRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
-    protected function uuid(): string
+    public function uuid(): string
     {
         return (string) $this->route('uuid');
     }

@@ -58,7 +58,7 @@ class Service
         $usuario->update($novosDados);
 
         if ($novoPapel = $novosDados['role'] ?? null) {
-            $usuario->syncRoles($novoPapel);
+            $usuario->syncRoles($novoPapel)->guard(['api']);
         }
 
         return $usuario->fresh(['roles']);

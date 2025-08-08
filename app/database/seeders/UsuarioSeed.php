@@ -17,27 +17,27 @@ class UsuarioSeed extends Seeder
             'email'    => 'atendente@example.com',
             'senha'    => Hash::make('senha'),
             'status'   => StatusUsuario::ATIVO->value,
-        ])->assignRole(Papel::ATENDENTE->value);
+        ])->assignRole(Papel::ATENDENTE->value)->guard(['api']);
 
         $usuarioComercial = Usuario::factory()->create([
             'nome'     => 'Comercial',
             'email'    => 'comercial@example.com',
             'senha'    => Hash::make('senha'),
             'status'   => StatusUsuario::ATIVO->value,
-        ])->assignRole(Papel::COMERCIAL->value);
+        ])->assignRole(Papel::COMERCIAL->value)->guard(['api']);
 
         $usuarioMecanico = Usuario::factory()->create([
             'nome'     => 'Mecanico',
             'email'    => 'mecanico@example.com',
             'senha'    => Hash::make('senha'),
             'status'   => StatusUsuario::ATIVO->value,
-        ])->assignRole(Papel::MECANICO->value);
+        ])->assignRole(Papel::MECANICO->value)->guard(['api']);
 
         $usuarioGestorEstoque = Usuario::factory()->create([
             'nome'     => 'Gestor Estoque',
             'email'    => 'gestor_estoque@example.com',
             'senha'    => Hash::make('senha'),
             'status'   => StatusUsuario::ATIVO->value,
-        ])->assignRole(Papel::GESTOR_ESTOQUE->value);
+        ])->assignRole(Papel::GESTOR_ESTOQUE->value)->guard(['api']);
     }
 }
