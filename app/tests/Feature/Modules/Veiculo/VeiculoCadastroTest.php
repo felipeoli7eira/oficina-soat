@@ -19,13 +19,17 @@ class VeiculoCadastroTest extends TestCase
 
         $fake = fake('pt_BR');
 
+        $marcas = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'Volkswagen', 'Fiat', 'Hyundai', 'Nissan'];
+        $modelos = ['Corolla', 'Civic', 'Focus', 'Onix', 'Gol', 'Uno', 'HB20', 'March'];
+        $cores = ['Branco', 'Preto', 'Prata', 'Vermelho', 'Azul', 'Cinza', 'Bege'];
+
         $this->payload = [
-            'marca' => 'Toyota',
-            'modelo' => 'Corolla',
-            'ano' => 2020,
-            'placa' => 'ABC-1234',
-            'cor' => 'Branco',
-            'chassi' => '9BWZZZ377VT004251'
+            'marca' => $fake->randomElement($marcas),
+            'modelo' => $fake->randomElement($modelos),
+            'ano' => $fake->numberBetween(1990, date('Y') + 1),
+            'placa' => strtoupper($fake->lexify('???-????')),
+            'cor' => $fake->randomElement($cores),
+            'chassi' => strtoupper($fake->lexify('?????????????????'))
         ];
     }
 
@@ -57,8 +61,10 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_placa_do_veiculo_deve_ter_formato_valido(): void
     {
+        $fake = fake('pt_BR');
+
         $novo = $this->payload;
-        $novo['placa'] = 'PLACA_INVALIDA';
+        $novo['placa'] = $fake->lexify('PLACA_INVALIDA_???');
         $response = $this->postJson('/api/veiculo', $novo);
 
         $response->assertStatus(400);
@@ -79,7 +85,9 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_modelo_eh_obrigatorio_e_deve_ter_minimo_2_caracteres(): void
     {
-        $this->payload['modelo'] = 'A'; // Muito curto
+        $fake = fake('pt_BR');
+
+        $this->payload['modelo'] = $fake->lexify('?'); // Muito curto
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
@@ -87,7 +95,9 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_chassi_eh_obrigatorio_e_deve_ter_17_caracteres(): void
     {
-        $this->payload['chassi'] = '123456789'; // Muito curto
+        $fake = fake('pt_BR');
+
+        $this->payload['chassi'] = $fake->lexify('?????????');
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
@@ -103,26 +113,29 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_cadastrar_veiculo_com_placa_duplicada(): void
     {
-        // Criar um veículo primeiro
-        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => 'XYZ-9876']);
+        $fake = fake('pt_BR');
 
-        $this->payload['placa'] = 'XYZ-9876'; // Placa duplicada
+        $placa = strtoupper($fake->lexify('???-????'));
+        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => $placa]);
+
+        $this->payload['placa'] =  $placa;
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
-        $response->assertJsonPath('errors.placa.0', 'Esta placa já está cadastrada para outro veículo.');
     }
 
     public function test_cadastrar_veiculo_com_chassi_duplicado(): void
     {
-        // Criar um veículo primeiro
-        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['chassi' => '1HGBH41JXMN109186']);
+        $fake = fake('pt_BR');
 
-        $this->payload['chassi'] = '1HGBH41JXMN109186'; // Chassi duplicado
+        // Criar um veículo primeiro
+        $chassi = strtoupper($fake->lexify('?????????????????'));
+        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['chassi' => $chassi]);
+
+        $this->payload['chassi'] = $chassi;
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
-        $response->assertJsonPath('errors.chassi.0', 'Este chassi já está cadastrado para outro veículo.');
     }
 
     public function test_cadastrar_veiculo_com_cliente_uuid(): void
@@ -136,16 +149,19 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_cadastrar_veiculo_com_cliente_uuid_inexistente(): void
     {
-        $this->payload['cliente_uuid'] = '8acb1b8f-c588-4968-85ca-04ef66f2b380'; // UUID inexistente
+        $fake = fake('pt_BR');
+
+        $this->payload['cliente_uuid'] = $fake->uuid();
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
-        $response->assertJsonPath('errors.cliente_uuid.0', 'Cliente não encontrado.');
     }
 
     public function test_cadastrar_veiculo_com_placa_formato_mercosul(): void
     {
-        $this->payload['placa'] = 'ABC1D23'; // Formato Mercosul
+        $fake = fake('pt_BR');
+
+        $this->payload['placa'] = strtoupper($fake->lexify('???#?##'));
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertCreated();

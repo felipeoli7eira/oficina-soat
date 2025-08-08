@@ -137,8 +137,10 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_com_placa_duplicada(): void
     {
-        $veiculo1 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => 'ABC-1234'])->fresh();
-        $veiculo2 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => 'XYZ-9876'])->fresh();
+        $fake = fake('pt_BR');
+
+        $veiculo1 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
+        $veiculo2 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
 
         $dadosAtualizacao = [
             'placa' => $veiculo2->placa,
