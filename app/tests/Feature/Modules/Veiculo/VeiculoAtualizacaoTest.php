@@ -31,7 +31,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_por_uuid(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $dadosAtualizacao = [
             'placa' => $veiculo->placa,
@@ -55,7 +55,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_com_dados_invalidos(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $dadosInvalidos = [
             'placa' => 'PLACA_INVALIDA_123',
@@ -79,7 +79,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_sem_payload(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, []);
 
@@ -88,7 +88,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_com_erro_interno(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
             $mock->shouldReceive('route')->andReturn('veiculo.atualizar');
@@ -104,7 +104,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_com_database_exception(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         // Mock do service para simular erro de database
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
@@ -126,8 +126,8 @@ class VeiculoAtualizacaoTest extends TestCase
 
     public function test_atualizar_veiculo_com_cliente_uuid(): void
     {
-        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->createOne()->fresh();
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->create()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $dadosAtualizacao = [
             'placa' => $veiculo->placa,
@@ -144,8 +144,8 @@ class VeiculoAtualizacaoTest extends TestCase
     {
         $fake = fake('pt_BR');
 
-        $veiculo1 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
-        $veiculo2 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
+        $veiculo1 = \App\Modules\Veiculo\Model\Veiculo::factory()->create(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
+        $veiculo2 = \App\Modules\Veiculo\Model\Veiculo::factory()->create(['placa' => strtoupper($fake->lexify('???-????'))])->fresh();
 
         $dadosAtualizacao = [
             'placa' => $veiculo2->placa,

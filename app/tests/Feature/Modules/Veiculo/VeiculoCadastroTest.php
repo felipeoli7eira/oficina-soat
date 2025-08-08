@@ -126,7 +126,7 @@ class VeiculoCadastroTest extends TestCase
 
         // Gerar placa no formato válido
         $placa = strtoupper($fake->lexify('???-') . $fake->numerify('####'));
-        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => $placa]);
+        \App\Modules\Veiculo\Model\Veiculo::factory()->create(['placa' => $placa])->fresh();
 
         $this->payload['placa'] =  $placa;
 
@@ -140,7 +140,7 @@ class VeiculoCadastroTest extends TestCase
 
         // Criar um veículo primeiro
         $chassi = strtoupper($fake->lexify('?????????????????'));
-        \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['chassi' => $chassi]);
+        \App\Modules\Veiculo\Model\Veiculo::factory()->create(['chassi' => $chassi]);
 
         $this->payload['chassi'] = $chassi;
 
@@ -150,7 +150,7 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_cadastrar_veiculo_com_cliente_uuid(): void
     {
-        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->createOne();
+        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->create();
         $this->payload['cliente_uuid'] = $cliente->uuid;
 
         $response = $this->postJson('/api/veiculo', $this->payload);
