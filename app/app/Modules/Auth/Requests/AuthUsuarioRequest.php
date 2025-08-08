@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Requests;
 
+use App\Modules\Usuario\Enums\StatusUsuario;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
@@ -18,7 +19,7 @@ class AuthUsuarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:usuario,email'],
+            'email' => ['required', 'email', 'exists:usuario,email,excluido,0,status,' . StatusUsuario::ATIVO->value],
             'senha' => ['required', 'string', 'min:6', 'max:255'],
         ];
     }

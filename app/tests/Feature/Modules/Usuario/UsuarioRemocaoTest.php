@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\Usuario;
 
 use App\Enums\Papel;
 use App\Modules\Usuario\Enums\StatusUsuario;

@@ -14,8 +14,9 @@ class AuthUsuarioService
 
     public function autenticarComEmailESenha(string $email, string $senha): array
     {
-        if (! $token = JWTAuth::attempt(['email' => $email, 'password' => $senha])) {
-            throw new DomainException('Credenciais inválidas', Response::HTTP_UNAUTHORIZED);
+        $credenciais = ['email' => $email, 'password' => $senha];
+        if (! $token = JWTAuth::attempt($credenciais)) {
+            throw new DomainException('Credenciais inválidas', Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -26,7 +27,7 @@ class AuthUsuarioService
         return [
             'access_token' => $token,
             'token_type'   => 'bearer',
-            'expires_in'   =>  JWTAuth::factory()->getTTL() * 60,
+            'expires_in'   =>  ((int) JWTAuth::factory()->getTTL()) * 60,
         ];
     }
 

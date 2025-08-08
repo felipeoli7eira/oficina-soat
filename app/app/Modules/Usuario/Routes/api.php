@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/usuario', [UsuarioController::class, 'listagem']);
 Route::get('/usuario/{uuid}', [UsuarioController::class, 'obterUmPorUuid']);
 
-Route::post('/usuario/auth/autenticar', [AuthUsuarioController::class, 'autenticarComEmailESenha']);
-Route::get('/usuario/auth/identidade', [AuthUsuarioController::class, 'identidade'])->middleware('auth:api');
-Route::get('/usuario/auth/logout', [AuthUsuarioController::class, 'logout'])->middleware('auth:api');
+Route::post('/usuario/auth/autenticar', [AuthUsuarioController::class, 'autenticarComEmailESenha'])->withoutMiddleware('auth:api');
+Route::get('/usuario/auth/identidade', [AuthUsuarioController::class, 'identidade']);
+Route::get('/usuario/auth/logout', [AuthUsuarioController::class, 'logout']);
 
 Route::post('/usuario', [UsuarioController::class, 'cadastro']);
 

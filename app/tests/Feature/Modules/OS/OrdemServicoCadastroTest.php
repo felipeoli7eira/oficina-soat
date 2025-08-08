@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\OS;
 
 use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;

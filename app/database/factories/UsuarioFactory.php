@@ -17,7 +17,7 @@ class UsuarioFactory extends Factory
         return [
             'nome'    => fake()->name(),
             'email'   => fake()->email(),
-            'senha' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'senha' => '$2y$10$d2GrxVxwPWlHREG7iW5o/eS2eAr4Viz8gOXo.YcXmSMmzM5Y9LMSG', // password
             'status'  => StatusUsuario::ATIVO->value,
         ];
     }
