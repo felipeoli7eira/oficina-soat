@@ -62,7 +62,7 @@ class OrdemServicoEncerramentoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -70,7 +70,10 @@ class OrdemServicoEncerramentoTest extends TestCase
 
         // Act
 
-        $putResponse = $this->put('/api/os/encerrar/' . $response->json('uuid'));
+        $putResponse = $this->withAuth()->put('/api/os/encerrar/' . $response->json('uuid'));
+
+        // Assert
+
         $putResponse->assertOk();
     }
 

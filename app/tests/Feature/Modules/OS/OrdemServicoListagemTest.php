@@ -70,7 +70,7 @@ class OrdemServicoListagemTest extends TestCase
 
         // Act
 
-        $response = $this->getJson('/api/os');
+        $response = $this->withAuth()->getJson('/api/os');
 
         // Assert
 
@@ -106,7 +106,7 @@ class OrdemServicoListagemTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -118,7 +118,7 @@ class OrdemServicoListagemTest extends TestCase
 
         $uuidOs = $response->json('uuid');
 
-        $responseOs = $this->getJson('/api/os/' . $uuidOs);
+        $responseOs = $this->withAuth()->getJson('/api/os/' . $uuidOs);
         $responseOs->assertOk();
     }
 

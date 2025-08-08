@@ -36,7 +36,7 @@ class CadastroClienteTest extends TestCase
 
     public function test_cliente_pode_ser_cadastrado(): void
     {
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
 
         $response->assertCreated();
         $this->assertDatabaseCount('cliente', 1);
@@ -46,7 +46,7 @@ class CadastroClienteTest extends TestCase
     {
         $this->payload['nome'] = '';
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertBadRequest()->assertJsonFragment(['Dados enviados incorretamente']);
     }
 
@@ -55,20 +55,20 @@ class CadastroClienteTest extends TestCase
         $this->payload['cpf'] = null;
         $this->payload['cnpj'] = null;
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertBadRequest();
     }
 
     public function test_email_deve_ser_valido_e_unico(): void
     {
         // Primeiro cadastro
-        $this->postJson('/api/cliente', $this->payload)->assertCreated();
+        $this->withAuth()->postJson('/api/cliente', $this->payload)->assertCreated();
 
         // Segundo com mesmo e-mail
         $novo = $this->payload;
         $novo['cpf'] = fake('pt_BR')->cpf(false); // pra não dar erro de CPF duplicado
 
-        $response = $this->postJson('/api/cliente', $novo);
+        $response = $this->withAuth()->postJson('/api/cliente', $novo);
 
         $response->assertBadRequest()->assertJson([
             'error' => true,
@@ -80,7 +80,7 @@ class CadastroClienteTest extends TestCase
     {
         $this->payload['telefone_movel'] = '11999999999'; // sem máscara
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertBadRequest()->assertJson([
             'error' => true,
             'message' => 'Dados enviados incorretamente',
@@ -91,7 +91,7 @@ class CadastroClienteTest extends TestCase
     {
         $this->payload['cep'] = '1234567';
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertBadRequest()->assertJson([
             'error' => true,
             'message' => 'Dados enviados incorretamente',
@@ -102,7 +102,7 @@ class CadastroClienteTest extends TestCase
     {
         $this->payload['uf'] = 'ZZ';
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertBadRequest()->assertJson([
             'error' => true,
             'message' => 'Dados enviados incorretamente',
@@ -114,13 +114,13 @@ class CadastroClienteTest extends TestCase
         $this->payload['numero'] = null;
         $this->payload['complemento'] = null;
 
-        $response = $this->postJson('/api/cliente', $this->payload);
+        $response = $this->withAuth()->postJson('/api/cliente', $this->payload);
         $response->assertCreated();
     }
 
     public function test_cpf_e_cnpj_devem_ser_unicos(): void
     {
-        $this->postJson('/api/cliente', $this->payload)->assertCreated();
+        $this->withAuth()->postJson('/api/cliente', $this->payload)->assertCreated();
 
         $novo = $this->payload;
         $novo['email'] = fake('pt_BR')->unique()->email(); // evitar conflito com email
