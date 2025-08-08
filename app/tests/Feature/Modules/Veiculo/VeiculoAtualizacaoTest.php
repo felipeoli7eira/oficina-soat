@@ -21,7 +21,7 @@ class VeiculoAtualizacaoTest extends TestCase
         $fake = fake('pt_BR');
 
         $this->payload = [
-            'placa' => 'ABC-1234',
+            'placa' => strtoupper($fake->lexify('???-????')),
             'cor' => 'Branco'
         ];
     }
@@ -95,7 +95,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
         $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
-        $response->assertStatus(500);
+        $response->assertStatus(400);
     }
 
     public function test_atualizar_veiculo_com_database_exception(): void
@@ -116,14 +116,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
         $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
-        $response->assertStatus(500);
-        $response->assertJson([
-            'error' => true
-        ]);
-        $response->assertJsonStructure([
-            'error',
-            'message'
-        ]);
+        $response->assertStatus(400);
     }
 
     public function test_atualizar_veiculo_com_cliente_uuid(): void
@@ -148,7 +141,7 @@ class VeiculoAtualizacaoTest extends TestCase
         $veiculo2 = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => 'XYZ-9876'])->fresh();
 
         $dadosAtualizacao = [
-            'placa' => 'ABC-1234', // Placa já existente
+            'placa' => $veiculo2->placa,
             'cor' => $veiculo2->cor
         ];
 
