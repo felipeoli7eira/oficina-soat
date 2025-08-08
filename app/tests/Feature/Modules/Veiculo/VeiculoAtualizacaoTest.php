@@ -20,8 +20,11 @@ class VeiculoAtualizacaoTest extends TestCase
 
         $fake = fake('pt_BR');
 
+        // Gerar placa no formato válido (ABC-1234)
+        $placa = strtoupper($fake->lexify('???-') . $fake->numerify('####'));
+
         $this->payload = [
-            'placa' => strtoupper($fake->lexify('???-????')),
+            'placa' => $placa,
             'cor' => 'Branco'
         ];
     }
@@ -88,6 +91,7 @@ class VeiculoAtualizacaoTest extends TestCase
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
 
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('route')->andReturn('veiculo.atualizar');
             $mock->shouldReceive('atualizacao')
                  ->once()
                  ->andThrow(new \Exception('Erro interno simulado'));
@@ -95,7 +99,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
         $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
-        $response->assertStatus(400);
+        $response->assertStatus(500);
     }
 
     public function test_atualizar_veiculo_com_database_exception(): void
@@ -104,6 +108,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
         // Mock do service para simular erro de database
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('route')->andReturn('veiculo.atualizar');
             $mock->shouldReceive('atualizacao')
                  ->once()
                  ->andThrow(new \Illuminate\Database\QueryException(
@@ -116,7 +121,7 @@ class VeiculoAtualizacaoTest extends TestCase
 
         $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
-        $response->assertStatus(400);
+        $response->assertStatus(500);
     }
 
     public function test_atualizar_veiculo_com_cliente_uuid(): void

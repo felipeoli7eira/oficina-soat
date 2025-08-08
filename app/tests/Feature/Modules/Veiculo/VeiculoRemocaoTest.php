@@ -104,12 +104,13 @@ class VeiculoRemocaoTest extends TestCase
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
 
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('route')->andReturn('veiculo.remover');
             $mock->shouldReceive('remocao')
                 ->once()
                 ->andThrow(new \Illuminate\Database\QueryException(
                     'connection',
                     'DELETE FROM veiculo WHERE uuid = ?',
-                    [$mock],
+                    [],
                     new \Exception('Database connection failed')
                 ));
         });

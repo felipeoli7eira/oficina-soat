@@ -23,11 +23,19 @@ class VeiculoCadastroTest extends TestCase
         $modelos = ['Corolla', 'Civic', 'Focus', 'Onix', 'Gol', 'Uno', 'HB20', 'March'];
         $cores = ['Branco', 'Preto', 'Prata', 'Vermelho', 'Azul', 'Cinza', 'Bege'];
 
+        // Gerar placa no formato válido (ABC-1234 ou ABC1D23)
+        $formatoPlaca = $fake->randomElement(['antigo', 'mercosul']);
+        if ($formatoPlaca === 'antigo') {
+            $placa = strtoupper($fake->lexify('???-') . $fake->numerify('####'));
+        } else {
+            $placa = strtoupper($fake->lexify('???') . $fake->numerify('#') . $fake->lexify('?') . $fake->numerify('##'));
+        }
+
         $this->payload = [
             'marca' => $fake->randomElement($marcas),
             'modelo' => $fake->randomElement($modelos),
             'ano' => $fake->numberBetween(1990, date('Y') + 1),
-            'placa' => strtoupper($fake->lexify('???-????')),
+            'placa' => $placa,
             'cor' => $fake->randomElement($cores),
             'chassi' => strtoupper($fake->lexify('?????????????????'))
         ];
@@ -73,6 +81,7 @@ class VeiculoCadastroTest extends TestCase
     public function test_cadastrar_veiculo_com_erro_interno(): void
     {
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('route')->andReturn('veiculo.cadastrar');
             $mock->shouldReceive('cadastro')
                 ->once()
                 ->andThrow(new \Exception('Erro interno simulado no cadastro'));
@@ -115,7 +124,8 @@ class VeiculoCadastroTest extends TestCase
     {
         $fake = fake('pt_BR');
 
-        $placa = strtoupper($fake->lexify('???-????'));
+        // Gerar placa no formato válido
+        $placa = strtoupper($fake->lexify('???-') . $fake->numerify('####'));
         \App\Modules\Veiculo\Model\Veiculo::factory()->createOne(['placa' => $placa]);
 
         $this->payload['placa'] =  $placa;
@@ -161,7 +171,7 @@ class VeiculoCadastroTest extends TestCase
     {
         $fake = fake('pt_BR');
 
-        $this->payload['placa'] = strtoupper($fake->lexify('???#?##'));
+        $this->payload['placa'] = strtoupper($fake->lexify('???') . $fake->numerify('#') . $fake->lexify('?') . $fake->numerify('##'));
 
         $response = $this->postJson('/api/veiculo', $this->payload);
         $response->assertCreated();
