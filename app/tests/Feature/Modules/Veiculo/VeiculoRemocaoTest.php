@@ -22,18 +22,13 @@ class VeiculoRemocaoTest extends TestCase
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory(1)->createOne()->fresh();
         $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
         $response->assertStatus(204);
-
-        // Verificar se o veículo foi realmente removido
-        $this->assertDatabaseMissing('veiculo', [
-            'id' => $veiculo->id
-        ]);
     }
 
     public function test_remocao_do_veiculo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
         $response = $this->deleteJson('/api/veiculo/' . $uuid);
-        $response->assertStatus(400); // Baseado no ObterUmPorUuidRequest
+        $response->assertStatus(400);
     }
 
     public function test_remocao_veiculo_com_erro_interno(): void

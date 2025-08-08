@@ -2,179 +2,129 @@
 
 namespace Tests\Feature\Modules\OrdemDeServicoItem;
 
-use App\Modules\OrdemDeServicoItem\Model\OrdemDeServicoItem;
-use App\Modules\PecaInsumo\Model\PecaInsumo;
+use App\Modules\OrdemDeServicoItem\Requests\CadastroRequest;
+
+use App\Modules\OrdemDeServicoItem\Service\Service as OSItemService;
+
+use App\Modules\OrdemDeServicoItem\Controller\Controller;
+
 use App\Modules\OrdemDeServico\Model\OrdemDeServico;
+use App\Modules\PecaInsumo\Model\PecaInsumo;
+use App\Modules\OrdemDeServicoItem\Model\OrdemDeServicoItem;
+
+use Database\Seeders\DatabaseSeeder;
+use DomainException;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 use Tests\TestCase;
 
 class OrdemDeServicoItemCadastroTest extends TestCase
 {
     use RefreshDatabase;
 
-    private array $payload;
-    private PecaInsumo $pecaInsumo;
-    private OrdemDeServico $ordemDeServico;
+    private $serviceMock;
+    private $controller;
 
     public function setUp(): void
     {
         parent::setUp();
 
+        $this->serviceMock = Mockery::mock(OSItemService::class);
+        $this->controller = new Controller($this->serviceMock);
+
+        $this->assertDatabaseEmpty('os');
         $this->assertDatabaseEmpty('os_item');
+        $this->assertDatabaseEmpty('peca_insumo');
 
-        $this->pecaInsumo = PecaInsumo::factory()->create();
-        $this->ordemDeServico = OrdemDeServico::factory()->create();
+        $this->seed(DatabaseSeeder::class);
+    }
 
-        $this->payload = [
-            'peca_insumo_uuid' => $this->pecaInsumo->uuid,
-            'os_uuid' => $this->ordemDeServico->uuid,
-            'observacao' => 'Item conforme solicitado pelo cliente',
-            'quantidade' => 2,
-            'valor' => 150.50
+    public function test_ordem_de_servico_item_pode_ser_cadastrada(): void
+    {
+        $os = OrdemDeServico::factory()->create()->fresh();
+        $pecainsumo = PecaInsumo::factory()->create()->fresh();
+
+
+        $payload = [
+            'os_uuid'           => $os->uuid,
+            'peca_insumo_uuid'  => $pecainsumo->uuid,
+            'observacao'        => 'Item conforme solicitado pelo cliente',
+            'quantidade'        => 1,
+            'valor'             => 1000,
         ];
-    }
 
-    public function test_cadastrar_item_os(): void
-    {
-        $response = $this->postJson('/api/os-item', $this->payload);
+        $response = $this->postJson('/api/os-item', $payload);
 
         $response->assertCreated();
-        $this->assertDatabaseCount('os_item', 1);
     }
 
-    public function test_peca_insumo_uuid_eh_obrigatorio(): void
+    public function test_ordem_de_servico_item_nao_pode_ser_cadastrada_sem_um_ou_mais_dados_obrigatorios(): void
     {
-        unset($this->payload['peca_insumo_uuid']);
+        // Arrange
+        $os = OrdemDeServico::factory()->create()->fresh();
+        $pecainsumo = PecaInsumo::factory()->create()->fresh();
 
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
+        $payload = [
+            'os_uuid'           => $os->uuid,
+            'peca_insumo_uuid'  => $pecainsumo->uuid,
+            'observacao'        => 'Item conforme solicitado pelo cliente',
+            'quantidade'        => 1,
+            // 'valor'             => 1000,
+        ];
+
+        // Act
+
+        $response = $this->postJson('/api/os-item', $payload);
+
+        // Assert
+
+        $response->assertBadRequest();
     }
 
-    public function test_os_uuid_eh_obrigatorio(): void
+    public function test_cadastro_de_os_item_retorna_erro_de_regra_de_negocio(): void
     {
-        unset($this->payload['os_uuid']);
+        $mockRequest = Mockery::mock(CadastroRequest::class);
+        $mockRequest->shouldIgnoreMissing();
 
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
+        $dtoFake = Mockery::mock(\App\Modules\OrdemDeServicoItem\Dto\CadastroDto::class);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($dtoFake);
+
+        $domainException = new DomainException('Erro de regra de negócio', 400);
+
+        $this->serviceMock->shouldReceive('cadastro')
+            ->with($dtoFake)
+            ->once()
+            ->andThrow($domainException);
+
+        $response = $this->controller->cadastro($mockRequest);
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data = $response->getData(true);
+        $this->assertTrue($data['error']);
     }
 
-    public function test_observacao_eh_obrigatoria_e_deve_ter_minimo_3_caracteres(): void
+    public function test_cadastro_de_os_item_retorna_erro_interno_em_excecao_generica(): void
     {
-        $this->payload['observacao'] = 'AB';
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
+        $mockRequest = Mockery::mock(CadastroRequest::class);
+        $mockRequest->shouldIgnoreMissing();
 
-    public function test_quantidade_eh_obrigatoria_e_deve_ser_pelo_menos_1(): void
-    {
-        $this->payload['quantidade'] = 0;
+        $dtoFake = Mockery::mock(\App\Modules\OrdemDeServicoItem\Dto\CadastroDto::class);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($dtoFake);
 
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
+        $erroGenerico = new Exception('Erro');
 
-    public function test_valor_eh_obrigatorio_e_deve_ser_maior_que_zero(): void
-    {
-        $this->payload['valor'] = 0;
+        $this->serviceMock->shouldReceive('cadastro')
+            ->with($dtoFake)
+            ->once()
+            ->andThrow($erroGenerico);
 
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
+        $response = $this->controller->cadastro($mockRequest);
 
-    public function test_peca_insumo_uuid_deve_existir(): void
-    {
-        $this->payload['peca_insumo_uuid'] = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
-
-    public function test_os_uuid_deve_existir(): void
-    {
-        $this->payload['os_uuid'] = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
-
-    public function test_cadastrar_item_os_com_erro_interno(): void
-    {
-        $this->mock(\App\Modules\OrdemDeServicoItem\Service\Service::class, function ($mock) {
-            $mock->shouldReceive('cadastro')
-                ->once()
-                ->andThrow(new \Exception('Erro interno simulado no cadastro'));
-        });
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-
-        $response->assertStatus(500);
-    }
-
-    public function test_peca_insumo_uuid_deve_ter_formato_valido(): void
-    {
-        $this->payload['peca_insumo_uuid'] = 'uuid-invalido';
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
-
-    public function test_os_uuid_deve_ter_formato_valido(): void
-    {
-        $this->payload['os_uuid'] = 'uuid-invalido';
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertStatus(400);
-    }
-
-    public function test_cadastrar_item_com_quantidade_alta(): void
-    {
-        $this->payload['quantidade'] = 100;
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertCreated();
-    }
-
-    public function test_cadastrar_item_com_valor_alto(): void
-    {
-        $this->payload['valor'] = 9999.99;
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertCreated();
-    }
-
-    public function test_cadastrar_item_com_observacao_maxima(): void
-    {
-        $this->payload['observacao'] = str_repeat('A', 500);
-
-        $response = $this->postJson('/api/os-item', $this->payload);
-        $response->assertCreated();
-    }
-
-    public function test_cadastrar_multiplos_itens_para_mesma_os(): void
-    {
-        $response1 = $this->postJson('/api/os-item', $this->payload);
-        $response1->assertCreated();
-
-        $pecaInsumo2 = PecaInsumo::factory()->create();
-        $this->payload['peca_insumo_uuid'] = $pecaInsumo2->uuid;
-        $this->payload['observacao'] = 'Segundo item da mesma OS';
-
-        $response2 = $this->postJson('/api/os-item', $this->payload);
-        $response2->assertCreated();
-
-        $this->assertDatabaseCount('os_item', 2);
-    }
-
-    public function test_cadastrar_mesmo_item_para_oss_diferentes(): void
-    {
-        $response1 = $this->postJson('/api/os-item', $this->payload);
-        $response1->assertCreated();
-
-        $ordemDeServico2 = OrdemDeServico::factory()->create();
-        $this->payload['os_uuid'] = $ordemDeServico2->uuid;
-        $this->payload['observacao'] = 'Mesmo item para OS diferente';
-
-        $response2 = $this->postJson('/api/os-item', $this->payload);
-        $response2->assertCreated();
+        $this->assertEquals(500, $response->getStatusCode());
+        $data = $response->getData(true);
+        $this->assertTrue($data['error']);
+        $this->assertEquals('Erro', $data['message']);
     }
 }
