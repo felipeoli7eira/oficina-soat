@@ -24,7 +24,7 @@ class AtualizacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uuid' => ['required', 'uuid', 'exists:servicos,uuid'],
+            'uuid' => ['required', 'uuid'],
             'descricao' => ['sometimes', 'string', 'min:3', 'max:100'],
             'valor' => ['required', 'numeric', 'gt:0'],
             'status' => ['required', 'string', 'min:3', 'max:30'],

@@ -27,16 +27,12 @@ class Service
     {
         return $this->repo->model()
                           ->where('uuid', $uuid)
-                          ->where('excluido', false)
                           ->firstOrFail();
     }
 
     public function remocao(string $uuid)
     {
-        $this->repo->model()->where('uuid', $uuid)->update([
-            'excluido' => true,
-            'data_exclusao' => now(),
-        ]);
+        return $this->obterUmPorUuid($uuid)->delete();
     }
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)

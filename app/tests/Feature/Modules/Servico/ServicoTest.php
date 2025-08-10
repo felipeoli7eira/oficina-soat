@@ -38,6 +38,8 @@ class ServicoTest extends TestCase
         $this->assertEquals('ATIVO', $result['status']);
     }
 
+    // // ==================== TESTES DO MODEL ====================
+
     public function test_servico_model_pode_ser_instanciado(): void
     {
         $servico = new Servico();
@@ -67,7 +69,6 @@ class ServicoTest extends TestCase
 
         $this->assertEquals($expectedFillable, $servico->getFillable());
     }
-
 
     public function test_servico_model_pode_receber_dados_construtor(): void
     {
