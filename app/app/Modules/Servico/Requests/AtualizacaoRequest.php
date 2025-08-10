@@ -38,9 +38,9 @@ class AtualizacaoRequest extends FormRequest
         $status = Response::HTTP_BAD_REQUEST;
 
         if (!empty($uuidErrors)) {
-            foreach ($uuidErrors as $message) {  
+            foreach ($uuidErrors as $message) {
                 if (str_contains($message, 'inválido') || str_contains($message, 'invalid')  ) {
-                    $status = Response::HTTP_NOT_FOUND; 
+                    $status = Response::HTTP_NOT_FOUND;
                     break;
                 }
 

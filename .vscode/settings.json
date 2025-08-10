@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "api-oficina-soat",
+        "projectKey": "api-oficina-soat"
+    }
+}

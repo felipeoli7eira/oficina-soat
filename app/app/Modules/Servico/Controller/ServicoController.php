@@ -35,7 +35,7 @@ class ServicoController extends Controller
      *       ),
      *     )
      */
-    public function listagem(ListagemRequest $request)
+    public function listagem()
     {
         try {
             $dto = new ListagemDto();
