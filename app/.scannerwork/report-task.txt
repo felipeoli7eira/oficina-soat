@@ -2,5 +2,5 @@ projectKey=api-oficina-soat
 serverUrl=http://localhost:9999
 serverVersion=25.8.0.112029
 dashboardUrl=http://localhost:9999/dashboard?id=api-oficina-soat
-ceTaskId=6c52a66a-3c0c-4b27-8eb4-61a63e0eda94
-ceTaskUrl=http://localhost:9999/api/ce/task?id=6c52a66a-3c0c-4b27-8eb4-61a63e0eda94
+ceTaskId=2d6950ca-7504-490a-bceb-d1fa73acd4f3
+ceTaskUrl=http://localhost:9999/api/ce/task?id=2d6950ca-7504-490a-bceb-d1fa73acd4f3

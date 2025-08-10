@@ -13,7 +13,7 @@ class Service
 {
     public function __construct(private readonly ServicoRepository $repo) {}
 
-    public function listagem(ListagemDto $dto)
+    public function listagem()
     {
         return $this->repo->read();
     }
