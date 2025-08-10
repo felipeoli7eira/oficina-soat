@@ -8,8 +8,8 @@ class CadastroDto
 {
     public function __construct(
         public string $descricao,
-        public ?string $valor,
-        public ?string $status
+        public string $valor,
+        public string $status
     ) {}
 
     public function asArray(): array

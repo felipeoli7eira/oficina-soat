@@ -3,6 +3,7 @@
 namespace Tests\Feature\Modules\Servico;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Tests\TestCase;
 
 class ServicoCadastroTest extends TestCase
@@ -75,5 +76,18 @@ class ServicoCadastroTest extends TestCase
         $response = $this->postJson('/api/servico', $novo);
 
          $response->assertBadRequest()->assertJsonFragment(['Dados enviados incorretamente']);
+    }
+
+    public function test_cadastro_servico_usando_mock_com_erro_500_interno(): void
+    {
+        $mock = \Mockery::mock(\App\Modules\Servico\Service\Service::class);
+        $mock->shouldReceive('cadastro')
+             ->andThrow(new \Exception('Erro inesperado'));
+
+        $this->app->instance(\App\Modules\Servico\Service\Service::class, $mock);
+
+        $response = $this->postJson('/api/servico/', $this->payload);
+
+        $response->assertStatus(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
