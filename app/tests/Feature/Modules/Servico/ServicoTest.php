@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Modules\Servico\Dto\ListagemDto;
 use App\Modules\Servico\Dto\CadastroDto;
+use App\Modules\Servico\Dto\AtualizacaoDto;
 use App\Modules\Servico\Model\Servico;
 
 class ServicoTest extends TestCase
@@ -29,6 +30,25 @@ class ServicoTest extends TestCase
             valor: 25.50,
             status: 'ATIVO'
         );
+
+        $result = $dto->asArray();
+
+        $this->assertIsArray($result);
+        $this->assertEquals('Troca de Óleo', $result['descricao']);
+        $this->assertEquals(25.50, $result['valor']);
+        $this->assertEquals('ATIVO', $result['status']);
+    }
+
+    public function test_atualizacao_dto_aceita_dados_servico(): void
+    {
+        $servico = [
+            'uuid' => 'b53b68c6-bc87-4553-b72a-8b2d6dbad7d6',
+            'descricao' => 'Troca de Óleo',
+            'valor' => 25.50,
+            'status' => 'ATIVO'
+        ];
+
+        $dto = new AtualizacaoDto($servico);
 
         $result = $dto->asArray();
 
