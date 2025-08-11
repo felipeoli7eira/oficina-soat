@@ -1,29 +1,27 @@
 <?php
 
-namespace App\Modules\Usuario\Requests;
+namespace App\Modules\Auth\Requests;
 
+use App\Modules\Usuario\Enums\StatusUsuario;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ObterUmPorUuidRequest extends FormRequest
+class AuthUsuarioRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
-    public function uuid(): string
-    {
-        return (string) $this->route('uuid');
-    }
-
     public function prepareForValidation(): void
     {
-        $this->merge(['uuid' => $this->route('uuid')]);
     }
 
     public function rules(): array
     {
-        return ['uuid' => ['required', 'uuid', 'exists:usuario,uuid']];
+        return [
+            'email' => ['required', 'email', 'exists:usuario,email,excluido,0,status,' . StatusUsuario::ATIVO->value],
+            'senha' => ['required', 'string', 'min:6', 'max:255'],
+        ];
     }
 
     public function failedValidation(Validator $validator): void

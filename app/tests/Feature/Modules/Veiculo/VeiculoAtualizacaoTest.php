@@ -38,7 +38,7 @@ class VeiculoAtualizacaoTest extends TestCase
             'cor' => 'Azul'
         ];
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $dadosAtualizacao);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, $dadosAtualizacao);
 
         $response->assertOk();
     }
@@ -48,7 +48,7 @@ class VeiculoAtualizacaoTest extends TestCase
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
         $this->payload['cor'] = 'Veículo com UUID que não existe';
 
-        $response = $this->putJson('/api/veiculo/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $uuid, $this->payload);
 
         $response->assertStatus(400);
     }
@@ -63,7 +63,7 @@ class VeiculoAtualizacaoTest extends TestCase
             'cliente_uuid' => 'uuid_invalido'
         ];
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $dadosInvalidos);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, $dadosInvalidos);
 
         $response->assertStatus(400);
     }
@@ -72,7 +72,7 @@ class VeiculoAtualizacaoTest extends TestCase
     {
         $uuidInvalido = 'uuid-mal-formado-123';
 
-        $response = $this->putJson('/api/veiculo/' . $uuidInvalido, $this->payload);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $uuidInvalido, $this->payload);
 
         $response->assertStatus(400);
     }
@@ -81,7 +81,7 @@ class VeiculoAtualizacaoTest extends TestCase
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, []);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, []);
 
         $response->assertStatus(400);
     }
@@ -97,7 +97,7 @@ class VeiculoAtualizacaoTest extends TestCase
                  ->andThrow(new \Exception('Erro interno simulado'));
         });
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
         $response->assertStatus(500);
     }
@@ -119,7 +119,7 @@ class VeiculoAtualizacaoTest extends TestCase
                  ));
         });
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, $this->payload);
 
         $response->assertStatus(500);
     }
@@ -135,7 +135,7 @@ class VeiculoAtualizacaoTest extends TestCase
             'cliente_uuid' => $cliente->uuid
         ];
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo->uuid, $dadosAtualizacao);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo->uuid, $dadosAtualizacao);
 
         $response->assertOk();
     }
@@ -152,7 +152,7 @@ class VeiculoAtualizacaoTest extends TestCase
             'cor' => $veiculo2->cor
         ];
 
-        $response = $this->putJson('/api/veiculo/' . $veiculo2->uuid, $dadosAtualizacao);
+        $response = $this->withAuth()->putJson('/api/veiculo/' . $veiculo2->uuid, $dadosAtualizacao);
 
         $response->assertStatus(400);
     }

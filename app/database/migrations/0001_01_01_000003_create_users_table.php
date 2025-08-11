@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->string('nome');
+            $table->string('email')->unique();
+            $table->timestamp('email_verificado_em')->nullable();
+            $table->string('senha');
 
             $table->string('status');
 

@@ -27,6 +27,7 @@ class Controller extends BaseController
      *     tags={"Usuario"},
      *     summary="Faz a listagem dos usuários cadastrados",
      *     description="Retorna uma lista paginada de usuários cadastrados no sistema.",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Para quando a requisição for bem-sucedida. Pode ou não retornar usuários.",
@@ -71,6 +72,10 @@ class Controller extends BaseController
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="Token ausente ou inválido"
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Erro inesperado no servidor"
      *     )
@@ -96,13 +101,16 @@ class Controller extends BaseController
      *      tags={"Usuario"},
      *      summary="Cadastra um usuário",
      *      description="Cadastra um usuário",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
-     *              required={"nome", "papel", "status", "cep"},
-     *              @OA\Property(property="nome", type="string", example="Jhon Doe"),
-     *              @OA\Property(property="papel", type="string", example="mecanico,comercial,gestor_estoque,atendente"),
-     *              @OA\Property(property="status", type="string", example="ativo,inativo"),
+     *              required={"nome","email","senha","papel","status"},
+     *              @OA\Property(property="nome", type="string", minLength=3, maxLength=255, example="John Doe"),
+     *              @OA\Property(property="email", type="string", format="email", minLength=6, maxLength=255, example="john.doe@email.com"),
+     *              @OA\Property(property="senha", type="string", minLength=8, maxLength=255, example="minhaSenhaForte123"),
+     *              @OA\Property(property="papel", type="string", minLength=3, maxLength=255, example="mecanico"),
+     *              @OA\Property(property="status", type="string", enum={"ativo","inativo"}, example="ativo")
      *          )
      *      ),
      *      @OA\Response(
@@ -111,7 +119,16 @@ class Controller extends BaseController
      *      ),
      *      @OA\Response(
      *          response=400,
-     *          description="Para quando a requisição falhar por erros nos dados.",
+     *          description="Dados enviados incorretamente",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="error", type="boolean", example=true),
+     *              @OA\Property(property="message", type="string", example="Dados enviados incorretamente"),
+     *              @OA\Property(property="data", type="array", @OA\Items(type="string", example="O campo email já está em uso."))
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Token ausente ou inválido"
      *      ),
      *      @OA\Response(
      *          response=500,
@@ -139,6 +156,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Obtém os dados de um usuário pelo uuid",
      *     description="Retorna os dados completos de um usuário específico com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
@@ -171,18 +189,26 @@ class Controller extends BaseController
      *             )
      *         )
      *     ),
-    *     @OA\Response(
-    *         response=404,
-    *         description="Usuário não encontrado",
-    *         @OA\JsonContent(
-    *             @OA\Property(property="message", type="string", example="Erros de validação"),
-    *             @OA\Property(
-    *                 property="errors",
-    *                 type="array",
-    *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
-    *             )
-    *         )
-    *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erros de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erros de validação"),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="string", example="O campo uuid selecionado é inválido."))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token ausente ou inválido"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Nenhum registro correspondente ao informado")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Erro não mapeado na aplicação ou no endpoint"
@@ -214,6 +240,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Remove um usuário",
      *     description="Remove um usuário com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
@@ -227,15 +254,23 @@ class Controller extends BaseController
      *         description="Usuário removido com sucesso"
      *     ),
      *     @OA\Response(
+     *         response=400,
+     *         description="Erros de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erros de validação"),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="string", example="O campo uuid selecionado é inválido."))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token ausente ou inválido"
+     *     ),
+     *     @OA\Response(
      *         response=404,
      *         description="Usuário não encontrado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Erros de validação"),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="array",
-     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
-     *             )
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Nenhum registro correspondente ao informado")
      *         )
      *     ),
      *     @OA\Response(
@@ -268,6 +303,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Atualiza os dados de um usuário",
      *     description="Atualiza os dados de um usuário específico com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
@@ -278,12 +314,13 @@ class Controller extends BaseController
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Dados que devem ser atualizados",
+     *         description="Envie pelo menos um campo para atualização",
      *         @OA\JsonContent(
-     *             required={"nome", "role_id", "status"},
-     *             @OA\Property(property="nome", type="string", example="Novo nome"),
-     *             @OA\Property(property="papel", type="string", example="mecanico || atendente || comercial || gestor_estoque"),
-     *             @OA\Property(property="status", type="string", example="inativo || ativo")
+     *             @OA\Property(property="nome", type="string", minLength=3, maxLength=255, example="Novo nome"),
+     *             @OA\Property(property="email", type="string", format="email", minLength=6, maxLength=255, example="novo@email.com"),
+     *             @OA\Property(property="senha", type="string", minLength=8, maxLength=255, example="NovaSenha123"),
+     *             @OA\Property(property="papel", type="string", minLength=3, maxLength=255, example="atendente"),
+     *             @OA\Property(property="status", type="string", enum={"ativo","inativo"}, example="inativo")
      *         )
      *     ),
      *     @OA\Response(
@@ -312,14 +349,22 @@ class Controller extends BaseController
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Dados inválidos ou campos obrigatórios ausentes",
+     *         description="Erros de validação ou corpo vazio",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Erros de validação"),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="array",
-     *                 @OA\Items(type="string", example="O campo uuid selecionado é inválido.")
-     *             )
+     *             @OA\Property(property="message", type="string", example="Dados enviados incorretamente"),
+     *             @OA\Property(property="data", type="array", @OA\Items(type="string", example="O campo email deve ser um endereço de e-mail válido."))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token ausente ou inválido"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Nenhum registro correspondente ao informado")
      *         )
      *     ),
      *     @OA\Response(

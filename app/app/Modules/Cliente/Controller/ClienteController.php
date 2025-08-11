@@ -28,6 +28,7 @@ class ClienteController extends Controller
      *      tags={"Cliente"},
      *      summary="Faz a listagem dos clientes cadastrados",
      *      description="Faz a listagem de clientes",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Response(
      *          response=200,
      *          description="Para quando a requisição for bem-sucedida. Pode ou não retornar clientes.",
@@ -55,6 +56,7 @@ class ClienteController extends Controller
      *      tags={"Cliente"},
      *      summary="Cadastra um cliente",
      *      description="Cadastra um cliente",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
@@ -101,6 +103,9 @@ class ClienteController extends Controller
      *     summary="Obtém os dados de um cliente",
      *     description="Retorna os dados completos de um cliente específico com base no UUID informado.",
      *     tags={"Cliente"},
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -153,6 +158,9 @@ class ClienteController extends Controller
      *     summary="Remove um cliente",
      *     description="Remove um cliente com base no UUID informado.",
      *     tags={"Cliente"},
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -198,6 +206,9 @@ class ClienteController extends Controller
      *     summary="Atualiza os dados de um cliente",
      *     description="Atualiza os dados de um cliente já existente, identificado pelo UUID.",
      *     tags={"Cliente"},
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",

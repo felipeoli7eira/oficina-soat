@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\OS;
 
 use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
@@ -69,7 +69,7 @@ class OrdemServicoCadastroTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -102,7 +102,7 @@ class OrdemServicoCadastroTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -135,7 +135,7 @@ class OrdemServicoCadastroTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -168,7 +168,7 @@ class OrdemServicoCadastroTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 

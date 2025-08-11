@@ -43,7 +43,7 @@ class VeiculoCadastroTest extends TestCase
 
     public function test_cadastrar_veiculo(): void
     {
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
 
         $response->assertCreated();
         $this->assertDatabaseCount('veiculo', 1);
@@ -53,7 +53,7 @@ class VeiculoCadastroTest extends TestCase
     {
         $this->payload['marca'] = '';
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
         $response->assertJsonStructure(['error', 'message', 'errors']);
     }
@@ -62,7 +62,7 @@ class VeiculoCadastroTest extends TestCase
     {
         $novo = $this->payload;
         $novo['ano'] = 1800; // Ano anterior ao permitido
-        $response = $this->postJson('/api/veiculo', $novo);
+        $response = $this->withAuth()->postJson('/api/veiculo', $novo);
 
         $response->assertStatus(400);
     }
@@ -73,7 +73,7 @@ class VeiculoCadastroTest extends TestCase
 
         $novo = $this->payload;
         $novo['placa'] = $fake->lexify('PLACA_INVALIDA_???');
-        $response = $this->postJson('/api/veiculo', $novo);
+        $response = $this->withAuth()->postJson('/api/veiculo', $novo);
 
         $response->assertStatus(400);
     }
@@ -87,7 +87,7 @@ class VeiculoCadastroTest extends TestCase
                 ->andThrow(new \Exception('Erro interno simulado no cadastro'));
         });
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
 
         $response->assertStatus(500);
     }
@@ -98,7 +98,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['modelo'] = $fake->lexify('?'); // Muito curto
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -108,7 +108,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['chassi'] = $fake->lexify('?????????');
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -116,7 +116,7 @@ class VeiculoCadastroTest extends TestCase
     {
         unset($this->payload['cor']);
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -130,7 +130,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['placa'] =  $placa;
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -144,7 +144,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['chassi'] = $chassi;
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -153,7 +153,7 @@ class VeiculoCadastroTest extends TestCase
         $cliente = \App\Modules\Cliente\Model\Cliente::factory()->create();
         $this->payload['cliente_uuid'] = $cliente->uuid;
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertCreated();
     }
 
@@ -163,7 +163,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['cliente_uuid'] = $fake->uuid();
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 
@@ -173,7 +173,7 @@ class VeiculoCadastroTest extends TestCase
 
         $this->payload['placa'] = strtoupper($fake->lexify('???') . $fake->numerify('#') . $fake->lexify('?') . $fake->numerify('##'));
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertCreated();
     }
 
@@ -182,7 +182,7 @@ class VeiculoCadastroTest extends TestCase
         $anoFuturo = date('Y') + 1;
         $this->payload['ano'] = $anoFuturo;
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertCreated();
     }
 
@@ -191,7 +191,7 @@ class VeiculoCadastroTest extends TestCase
         $anoMuitoFuturo = date('Y') + 2;
         $this->payload['ano'] = $anoMuitoFuturo;
 
-        $response = $this->postJson('/api/veiculo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/veiculo', $this->payload);
         $response->assertStatus(400);
     }
 }

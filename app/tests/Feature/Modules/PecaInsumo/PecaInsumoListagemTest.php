@@ -20,7 +20,7 @@ class PecaInsumoListagemTest extends TestCase
     public function test_listar_todos_peca_insumos(): void
     {
         $pecaInsumos = \App\Modules\PecaInsumo\Model\PecaInsumo::factory(3)->create();
-        $response = $this->getJson('/api/peca-insumo');
+        $response = $this->withAuth()->getJson('/api/peca-insumo');
 
         $response->assertOk();
     }
@@ -33,7 +33,7 @@ class PecaInsumoListagemTest extends TestCase
                 ->andThrow(new \Exception('Erro interno na listagem'));
         });
 
-        $response = $this->getJson('/api/peca-insumo');
+        $response = $this->withAuth()->getJson('/api/peca-insumo');
 
         $response->assertStatus(500);
     }

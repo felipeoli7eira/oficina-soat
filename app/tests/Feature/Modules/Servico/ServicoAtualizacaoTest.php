@@ -38,7 +38,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['valor'] = 200;
         $this->payload['status'] = 'ATIVO';
 
-        $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $servico->uuid, $this->payload);
 
         $response->assertOk();
 
@@ -62,7 +62,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Serviço com UUID que não existe';
         $this->payload['valor'] = 200.00;
         $this->payload['status'] = 'ATIVO';
-        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $uuid, $this->payload);
 
         $response->assertNotFound();
     }
@@ -73,7 +73,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Serviço com UUID inválido';
         $this->payload['valor'] = 200.00;
         $this->payload['status'] = 'ATIVO';
-        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $uuid, $this->payload);
 
         $response->assertUnprocessable();
     }
@@ -93,7 +93,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Serviço com erro 500';
         $this->payload['valor'] = 200.00;
         $this->payload['status'] = 'ATIVO';
-        $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $servico->uuid, $this->payload);
 
         $response->assertStatus(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
