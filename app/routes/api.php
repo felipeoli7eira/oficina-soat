@@ -32,7 +32,10 @@ Route::middleware('auth:api')->group(function () {
 
     // * endpoints de ordem de serviço item
     require __DIR__ . '/../app/Modules/OrdemDeServicoItem/Routes/api.php';
-});
 
+    // * endpoints de ordem de serviço serviço
+    require __DIR__ . '/../app/Modules/OrdemDeServicoServico/Routes/api.php';
+
+});
 
 
