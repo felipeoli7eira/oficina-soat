@@ -7,13 +7,17 @@ use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
 
 use App\Traits\SoftDeletes;
-
+use Database\Factories\OrdemDeServicoFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrdemDeServico extends Model
 {
     use SoftDeletes;
+
+    /** @use HasFactory<\Database\Factories\OrdemDeServicoFactory> */
+    use HasFactory;
 
     public $table = 'os';
 
@@ -52,6 +56,11 @@ class OrdemDeServico extends Model
         ];
     }
 
+    protected static function newFactory(): OrdemDeServicoFactory
+    {
+        return OrdemDeServicoFactory::new();
+    }
+
     public function cliente(): HasOne
     {
         return $this->hasOne(Cliente::class, 'id', 'cliente_id');
@@ -70,5 +79,10 @@ class OrdemDeServico extends Model
     public function mecanico(): HasOne
     {
         return $this->hasOne(Usuario::class, 'id', 'usuario_id_mecanico');
+    }
+
+    public function ordemDeServicoItems()
+    {
+        return $this->hasMany(\App\Modules\OrdemDeServicoItem\Model\OrdemDeServicoItem::class, 'os_id');
     }
 }
