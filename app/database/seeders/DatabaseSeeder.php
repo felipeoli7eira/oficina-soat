@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->clienteVeiculos();
         $this->ordemDeServicos();
         $this->ordemDeServicoItems();
+        $this->ordemDeServicoServicos();
     }
 
     public function clientes(): void
@@ -53,5 +54,10 @@ class DatabaseSeeder extends Seeder
     public function ordemDeServicoItems(): void
     {
         \App\Modules\OrdemDeServicoItem\Model\OrdemDeServicoItem::factory()->count(30)->create();
+    }
+
+    public function ordemDeServicoServicos(): void
+    {
+        \App\Modules\OrdemDeServicoServico\Model\OrdemDeServicoServico::factory()->count(30)->create();
     }
 }
