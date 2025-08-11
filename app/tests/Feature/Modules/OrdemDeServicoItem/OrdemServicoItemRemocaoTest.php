@@ -56,18 +56,18 @@ class OrdemServicoItemRemocaoTest extends TestCase
         ];
 
         // Act - Criar o item primeiro
-        $response = $this->postJson('/api/os-item', $payload);
+        $response = $this->withAuth()->postJson('/api/os-item', $payload);
         $response->assertCreated();
 
         // Act - Remover o item
-        $deleteResponse = $this->delete('/api/os-item/' . $response->json('uuid'));
+        $deleteResponse = $this->withAuth()->delete('/api/os-item/' . $response->json('uuid'));
         $deleteResponse->assertNoContent();
     }
 
     public function test_ordem_de_servico_item_nao_pode_ser_removida_sem_um_uuid_valido(): void
     {
         // Act - Tentar remover com UUID inválido
-        $deleteResponse = $this->delete('/api/os-item/qualquer-coisa-nao-sendo-um-uuid-valido');
+        $deleteResponse = $this->withAuth()->delete('/api/os-item/qualquer-coisa-nao-sendo-um-uuid-valido');
 
         // Assert
         $deleteResponse->assertBadRequest();

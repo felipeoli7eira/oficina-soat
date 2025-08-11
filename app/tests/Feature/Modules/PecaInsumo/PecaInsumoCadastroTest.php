@@ -42,7 +42,7 @@ class PecaInsumoCadastroTest extends TestCase
     {
         $this->payload['descricao'] = '';
 
-        $response = $this->postJson('/api/peca-insumo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/peca-insumo', $this->payload);
         $response->assertJsonFragment(['The descricao field is required.']);
     }
 
@@ -50,7 +50,7 @@ class PecaInsumoCadastroTest extends TestCase
     {
         $novo = $this->payload;
         $novo['valor_custo'] = 0;
-        $response = $this->postJson('/api/peca-insumo', $novo);
+        $response = $this->withAuth()->postJson('/api/peca-insumo', $novo);
 
         $response->assertBadRequest();
     }
@@ -59,7 +59,7 @@ class PecaInsumoCadastroTest extends TestCase
     {
         $novo = $this->payload;
         $novo['status'] = 'inativo';
-        $response = $this->postJson('/api/peca-insumo', $novo);
+        $response = $this->withAuth()->postJson('/api/peca-insumo', $novo);
 
         $response->assertCreated();
     }
@@ -72,7 +72,7 @@ class PecaInsumoCadastroTest extends TestCase
                 ->andThrow(new \Exception('Erro interno simulado no cadastro'));
         });
 
-        $response = $this->postJson('/api/peca-insumo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/peca-insumo', $this->payload);
 
         $response->assertStatus(500);
     }

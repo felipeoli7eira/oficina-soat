@@ -20,7 +20,7 @@ class PecaInsumoRemocaoTest extends TestCase
     public function test_remocao_logica_do_peca_insumo_por_uuid(): void
     {
         $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory(1)->createOne()->fresh();
-        $response = $this->deleteJson('/api/peca-insumo/' . $pecaInsumo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/peca-insumo/' . $pecaInsumo->uuid);
         $response->assertStatus(204);
 
         $response = $this->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
@@ -30,7 +30,7 @@ class PecaInsumoRemocaoTest extends TestCase
     public function test_remocao_logica_do_peca_insumo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-        $response = $this->deleteJson('/api/peca-insumo/' . $uuid);
+        $response = $this->withAuth()->deleteJson('/api/peca-insumo/' . $uuid);
         $response->assertStatus(400);
     }
 
@@ -44,7 +44,7 @@ class PecaInsumoRemocaoTest extends TestCase
                 ->andThrow(new \Exception('Erro interno simulado na remocao'));
         });
 
-        $response = $this->deleteJson('/api/peca-insumo/' . $pecaInsumo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/peca-insumo/' . $pecaInsumo->uuid);
 
         $response->assertStatus(500);
     }

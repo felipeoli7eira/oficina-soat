@@ -66,7 +66,7 @@ class OrdemServicoItemListagemTest extends TestCase
     public function test_itens_de_ordem_de_servico_cadastrados_podem_ser_listados(): void
     {
         // Act
-        $response = $this->getJson('/api/os-item');
+        $response = $this->withAuth()->getJson('/api/os-item');
 
         // Assert
         $response->assertOk();
@@ -90,7 +90,7 @@ class OrdemServicoItemListagemTest extends TestCase
         ];
 
         // Act - Criar o item primeiro
-        $response = $this->postJson('/api/os-item', $payload);
+        $response = $this->withAuth()->postJson('/api/os-item', $payload);
         $response->assertCreated();
 
         $response->assertJsonStructure([

@@ -21,7 +21,7 @@ class VeiculoObterPorUuidTest extends TestCase
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertOk();
     }
@@ -39,7 +39,7 @@ class VeiculoObterPorUuidTest extends TestCase
                 ]);
         });
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -48,7 +48,7 @@ class VeiculoObterPorUuidTest extends TestCase
     {
         $uuidInexistente = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
 
-        $response = $this->getJson('/api/veiculo/' . $uuidInexistente);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $uuidInexistente);
 
         $response->assertStatus(400);
     }
@@ -57,14 +57,14 @@ class VeiculoObterPorUuidTest extends TestCase
     {
         $uuidMalformado = 'uuid-malformado-123';
 
-        $response = $this->getJson('/api/veiculo/' . $uuidMalformado);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $uuidMalformado);
 
         $response->assertStatus(400);
     }
 
     public function test_obter_veiculo_com_uuid_vazio(): void
     {
-        $response = $this->getJson('/api/veiculo/');
+        $response = $this->withAuth()->getJson('/api/veiculo/');
 
         // Deve retornar 404 ou redirecionamento para listagem
         $this->assertTrue(
@@ -84,7 +84,7 @@ class VeiculoObterPorUuidTest extends TestCase
                 ->andThrow(new \Exception('Erro interno ao buscar veículo'));
         });
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -104,7 +104,7 @@ class VeiculoObterPorUuidTest extends TestCase
                 ));
         });
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -113,7 +113,7 @@ class VeiculoObterPorUuidTest extends TestCase
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -141,7 +141,7 @@ class VeiculoObterPorUuidTest extends TestCase
             'veiculo_id' => $veiculo->id
         ]);
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertOk();
     }

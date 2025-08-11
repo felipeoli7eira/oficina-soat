@@ -20,7 +20,7 @@ class PecaInsumoObterPorUuidTest extends TestCase
     public function test_obter_peca_insumo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-        $response = $this->getJson('/api/peca-insumo/' . $uuid);
+        $response = $this->withAuth()->getJson('/api/peca-insumo/' . $uuid);
         $response->assertStatus(400);
     }
 
@@ -29,7 +29,7 @@ class PecaInsumoObterPorUuidTest extends TestCase
     public function test_obter_peca_insumo_por_uuid(): void
     {
         $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory(1)->createOne()->fresh();
-        $response = $this->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
+        $response = $this->withAuth()->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
         $response->assertOk();
     }
 
@@ -46,7 +46,7 @@ class PecaInsumoObterPorUuidTest extends TestCase
                 ]);
         });
 
-        $response = $this->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
+        $response = $this->withAuth()->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
 
         $response->assertStatus(500);
     }
@@ -61,7 +61,7 @@ class PecaInsumoObterPorUuidTest extends TestCase
                 ->andThrow(new \Exception('Erro genérico simulado'));
         });
 
-        $response = $this->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
+        $response = $this->withAuth()->getJson('/api/peca-insumo/' . $pecaInsumo->uuid);
 
         $response->assertStatus(404);
     }

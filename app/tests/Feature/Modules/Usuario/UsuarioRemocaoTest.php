@@ -47,7 +47,7 @@ class UsuarioRemocaoTest extends TestCase
 
         // Act
 
-        $response = $this->delete('/api/usuario/' . $usuario->uuid);
+        $response = $this->withAuth()->delete('/api/usuario/' . $usuario->uuid);
 
         // Assert
 

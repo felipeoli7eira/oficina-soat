@@ -42,7 +42,7 @@ class UsuarioListagemTest extends TestCase
 
         // Act
 
-        $response = $this->getJson('/api/usuario');
+        $response = $this->withAuth()->getJson('/api/usuario');
 
         // Assert
 
@@ -62,7 +62,7 @@ class UsuarioListagemTest extends TestCase
 
         // Act
 
-        $response = $this->getJson('/api/usuario/' . $usuario->uuid);
+        $response = $this->withAuth()->getJson('/api/usuario/' . $usuario->uuid);
 
         // Assert
 

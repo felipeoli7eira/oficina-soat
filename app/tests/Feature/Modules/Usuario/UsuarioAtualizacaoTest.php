@@ -48,7 +48,7 @@ class UsuarioAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->putJson('/api/usuario/' . $usuario->uuid, [
+        $response = $this->withAuth()->putJson('/api/usuario/' . $usuario->uuid, [
             'nome' => 'novo',
         ]);
 
@@ -79,7 +79,7 @@ class UsuarioAtualizacaoTest extends TestCase
 
         $papelDeMecanico = Role::findByName(Papel::MECANICO->value)->name;
 
-        $response = $this->putJson('/api/usuario/' . $usuario->uuid, [
+        $response = $this->withAuth()->putJson('/api/usuario/' . $usuario->uuid, [
             'papel' => $papelDeMecanico,
         ]);
 
@@ -104,7 +104,7 @@ class UsuarioAtualizacaoTest extends TestCase
 
         $desativado = StatusUsuario::INATIVO->value;
 
-        $response = $this->putJson('/api/usuario/' . $usuario->uuid, [
+        $response = $this->withAuth()->putJson('/api/usuario/' . $usuario->uuid, [
             'status' => $desativado,
         ]);
 

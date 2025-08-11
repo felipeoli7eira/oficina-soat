@@ -43,7 +43,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::COMERCIAL->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -58,7 +58,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::MECANICO->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -73,7 +73,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::ATENDENTE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -88,7 +88,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -100,7 +100,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::ATENDENTE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -112,7 +112,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::MECANICO->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -124,7 +124,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::COMERCIAL->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -136,7 +136,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -145,7 +145,7 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
