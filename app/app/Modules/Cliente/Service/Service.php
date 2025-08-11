@@ -25,7 +25,7 @@ class Service
 
     public function obterUmPorUuid(string $uuid)
     {
-        return $this->repo->model()->where('uuid', $uuid)->firstOrFail();
+        return $this->repo->model()->where('uuid', $uuid)->with(['veiculos'])->firstOrFail();
     }
 
     public function remocao(string $uuid)
