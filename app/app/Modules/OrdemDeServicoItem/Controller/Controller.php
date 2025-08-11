@@ -29,6 +29,9 @@ class Controller extends BaseController
      *     path="/api/os-item",
      *     tags={"Item da OS"},
      *     summary="Faz a listagem dos itens de ordem de serviço cadastrados no sistema",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     description="Retorna uma lista paginada de itens de ordem de serviço cadastrados no sistema.",
      *     @OA\Parameter(
      *          name="page",
@@ -116,6 +119,7 @@ class Controller extends BaseController
      *      path="/api/os-item",
      *      tags={"Item da OS"},
      *      summary="Cadastra um item de ordem de serviço",
+     *      security={{"bearerAuth":{}}},
      *      description="Cadastra um item de ordem de serviço, dado os dados necessários.",
      *      @OA\RequestBody(
      *          required=true,
@@ -209,6 +213,7 @@ class Controller extends BaseController
      *     summary="Obtém os dados de um item de ordem de serviço pelo uuid fornecido",
      *     description="Retorna as informações completas de um item de ordem de serviço com base no UUID fornecido.",
      *     tags={"Item da OS"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -292,6 +297,7 @@ class Controller extends BaseController
      *     summary="Remove um item de ordem de serviço",
      *     description="Remove um item de ordem de serviço com base no UUID informado.",
      *     tags={"Item da OS"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -346,6 +352,7 @@ class Controller extends BaseController
      *     summary="Atualiza um item de ordem de serviço",
      *     description="Atualiza um item de ordem de serviço existente com base no UUID informado. É possível atualizar campos como peça/insumo, ordem de serviço, observação, quantidade e valor.",
      *     tags={"Item da OS"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",

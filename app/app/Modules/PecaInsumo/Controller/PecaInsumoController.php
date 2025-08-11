@@ -31,6 +31,9 @@ class PecaInsumoController extends Controller
      *      path="/api/peca-insumo",
      *      tags={"PecaInsumo"},
      *      summary="Listar peças e insumos",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *      description="Faz a listagem paginada de todas as peças e insumos cadastrados",
      *      @OA\Parameter(
      *          name="page",
@@ -109,6 +112,7 @@ class PecaInsumoController extends Controller
      * @OA\Post(
      *      path="/api/peca-insumo",
      *      tags={"PecaInsumo"},
+     *      security={{"bearerAuth":{}}},
      *      summary="Cadastrar peça ou insumo",
      *      description="Cadastra uma nova peça ou insumo",
      *      @OA\RequestBody(
@@ -154,6 +158,7 @@ class PecaInsumoController extends Controller
      *      tags={"PecaInsumo"},
      *      summary="Obter peça ou insumo por UUID",
      *      description="Obtém uma peça ou insumo específico pelo seu UUID",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
@@ -189,6 +194,7 @@ class PecaInsumoController extends Controller
      *      path="/api/peca-insumo/{uuid}",
      *      tags={"PecaInsumo"},
      *      summary="Remover peça ou insumo",
+     *      security={{"bearerAuth":{}}},
      *      description="Remove uma peça ou insumo pelo seu UUID",
      *      @OA\Parameter(
      *          name="uuid",
@@ -238,6 +244,7 @@ class PecaInsumoController extends Controller
      *      path="/api/peca-insumo/{uuid}",
      *      tags={"PecaInsumo"},
      *      summary="Atualizar peça ou insumo",
+     *      security={{"bearerAuth":{}}},
      *      description="Atualiza os dados de uma peça ou insumo pelo seu UUID",
      *      @OA\Parameter(
      *          name="uuid",

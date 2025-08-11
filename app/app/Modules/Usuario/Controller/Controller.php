@@ -27,6 +27,7 @@ class Controller extends BaseController
      *     tags={"Usuario"},
      *     summary="Faz a listagem dos usuários cadastrados",
      *     description="Retorna uma lista paginada de usuários cadastrados no sistema.",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Para quando a requisição for bem-sucedida. Pode ou não retornar usuários.",
@@ -96,6 +97,7 @@ class Controller extends BaseController
      *      tags={"Usuario"},
      *      summary="Cadastra um usuário",
      *      description="Cadastra um usuário",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
@@ -139,6 +141,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Obtém os dados de um usuário pelo uuid",
      *     description="Retorna os dados completos de um usuário específico com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
@@ -214,6 +217,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Remove um usuário",
      *     description="Remove um usuário com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
@@ -268,6 +272,7 @@ class Controller extends BaseController
      *     path="/api/usuario/{uuid}",
      *     summary="Atualiza os dados de um usuário",
      *     description="Atualiza os dados de um usuário específico com base no UUID informado.",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Usuario"},
      *     @OA\Parameter(
      *         name="uuid",
