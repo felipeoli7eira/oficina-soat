@@ -1,16 +1,24 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\Usuario;
 
 use App\Enums\Papel;
 use App\Modules\Usuario\Enums\StatusUsuario;
 use Database\Seeders\PapelSeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Modules\Usuario\Controller\Controller as UsuarioController;
+use App\Modules\Usuario\Dto\CadastroDto;
+use App\Modules\Usuario\Requests\CadastroRequest;
+use Exception;
+use Mockery;
 use Tests\TestCase;
 
 class UsuarioCadastroTest extends TestCase
 {
     use RefreshDatabase;
+
+    private $service;
+    private $controller;
 
     public function setUp(): void
     {
@@ -19,6 +27,9 @@ class UsuarioCadastroTest extends TestCase
         $this->assertDatabaseEmpty('usuario');
         $this->assertDatabaseEmpty('roles');
 
+        $this->service = Mockery::mock('App\Modules\Usuario\Service\Service');
+        $this->controller = new UsuarioController($this->service);
+
         $this->seed(PapelSeed::class);
     }
 
@@ -26,11 +37,13 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Comercial',
+            'email'  => 'NpH6g@example.com',
+            'senha'  => 'senha8caracteres',
             'status' => StatusUsuario::ATIVO->value,
             'papel'  => Papel::COMERCIAL->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -39,11 +52,13 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Mecânico',
+            'email'  => 'NpH6g@example.com',
+            'senha'  => 'senha8caracteres',
             'status' => StatusUsuario::ATIVO->value,
             'papel'  => Papel::MECANICO->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -52,11 +67,13 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Atendente',
+            'email'  => 'NpH6g@example.com',
+            'senha'  => 'senha8caracteres',
             'status' => StatusUsuario::ATIVO->value,
             'papel'  => Papel::ATENDENTE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -65,11 +82,13 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [
             'nome'   => 'Gestor de estoque',
+            'email'  => 'NpH6g@example.com',
+            'senha'  => 'senha8caracteres',
             'status' => StatusUsuario::ATIVO->value,
             'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertCreated();
     }
@@ -81,7 +100,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::ATENDENTE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -93,7 +112,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::MECANICO->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -105,7 +124,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::COMERCIAL->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -117,7 +136,7 @@ class UsuarioCadastroTest extends TestCase
             'papel'  => Papel::GESTOR_ESTOQUE->value,
         ];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
     }
@@ -126,8 +145,32 @@ class UsuarioCadastroTest extends TestCase
     {
         $payload = [];
 
-        $response = $this->postJson('/api/usuario', $payload);
+        $response = $this->withAuth()->postJson('/api/usuario', $payload);
 
         $response->assertBadRequest();
+    }
+
+    public function test_cadastro_de_usuario_lanca_exception(): void
+    {
+        // Arrange
+
+        $mockDto = Mockery::mock(CadastroDto::class);
+        $mockRequest = Mockery::mock(CadastroRequest::class);
+        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
+        $mockRequest->shouldIgnoreMissing();
+
+        $this->service
+            ->shouldReceive('cadastro')
+            ->with($mockDto)
+            ->once()
+            ->andThrow(Exception::class);
+
+        // Act
+
+        $response = $this->controller->cadastro($mockRequest);
+
+        // Assert
+
+        $this->assertEquals(500, $response->getStatusCode());
     }
 }

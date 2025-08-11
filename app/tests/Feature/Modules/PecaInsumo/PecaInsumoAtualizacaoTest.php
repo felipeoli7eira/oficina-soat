@@ -45,7 +45,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
             'status' => 'ativo'
         ];
 
-        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $dadosAtualizacao);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $dadosAtualizacao);
 
         $response->assertOk();
 
@@ -67,7 +67,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Peca/Insumo com UUID que não existe';
         $this->payload['valor_custo'] = '200.00';
         $this->payload['status'] = 'ativo';
-        $response = $this->putJson('/api/peca-insumo/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $uuid, $this->payload);
 
         $response->assertStatus(400);
     }
@@ -86,7 +86,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
             'status' => 'status_invalido'
         ];
 
-        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $dadosInvalidos);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $dadosInvalidos);
 
         $response->assertStatus(400);
     }
@@ -95,7 +95,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
     {
         $uuidInvalido = 'uuid-mal-formado-123';
 
-        $response = $this->putJson('/api/peca-insumo/' . $uuidInvalido, $this->payload);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $uuidInvalido, $this->payload);
 
         $response->assertStatus(400);
     }
@@ -104,7 +104,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
     {
         $pecaInsumo = \App\Modules\PecaInsumo\Model\PecaInsumo::factory()->createOne()->fresh();
 
-        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, []);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, []);
 
         $response->assertStatus(400);
     }
@@ -119,7 +119,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
                  ->andThrow(new \Exception('Erro interno simulado'));
         });
 
-        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
 
         $response->assertStatus(500);
     }
@@ -140,7 +140,7 @@ class PecaInsumoAtualizacaoTest extends TestCase
                  ));
         });
 
-        $response = $this->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/peca-insumo/' . $pecaInsumo->uuid, $this->payload);
 
         $response->assertStatus(500);
         $response->assertJson([

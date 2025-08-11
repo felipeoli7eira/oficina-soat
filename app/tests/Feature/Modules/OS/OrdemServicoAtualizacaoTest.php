@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\OS;
 
 use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
@@ -61,7 +61,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -69,7 +69,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'descricao' => 'Motor batendo em alta rotação',
         ]);
 
@@ -104,7 +104,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -112,7 +112,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'veiculo_uuid' => $veiculoParaUpdate->uuid,
         ]);
 
@@ -147,7 +147,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -155,7 +155,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'cliente_uuid' => $clienteParaUpdate->uuid,
         ]);
 
@@ -191,7 +191,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -199,7 +199,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'usuario_uuid_atendente' => $atendenteParaUpdate->uuid,
         ]);
 
@@ -235,7 +235,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -243,7 +243,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'usuario_uuid_mecanico' => $mecanicoParaUpdate->uuid,
         ]);
 
@@ -276,7 +276,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -284,7 +284,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'usuario_uuid_mecanico' => $atendente->uuid,
         ]);
 
@@ -317,7 +317,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -325,7 +325,7 @@ class OrdemServicoAtualizacaoTest extends TestCase
 
         // Assert
 
-        $updateResponse = $this->putJson('/api/os/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os/' . $response->json('uuid'), [
             'usuario_uuid_atendente' => $mecanico->uuid,
         ]);
 

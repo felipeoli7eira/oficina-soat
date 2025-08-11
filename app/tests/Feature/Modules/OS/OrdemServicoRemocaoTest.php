@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Modules\Cliente;
+namespace Tests\Feature\Modules\OS;
 
 use App\Enums\Papel;
 use App\Modules\Cliente\Model\Cliente;
@@ -61,7 +61,7 @@ class OrdemServicoRemocaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -69,7 +69,7 @@ class OrdemServicoRemocaoTest extends TestCase
 
         // Act
 
-        $deleteResponse = $this->delete('/api/os/' . $response->json('uuid'));
+        $deleteResponse = $this->withAuth()->delete('/api/os/' . $response->json('uuid'));
         $deleteResponse->assertNoContent();
     }
 
@@ -99,7 +99,7 @@ class OrdemServicoRemocaoTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os', $payload);
+        $response = $this->withAuth()->postJson('/api/os', $payload);
 
         // Assert
 
@@ -107,7 +107,7 @@ class OrdemServicoRemocaoTest extends TestCase
 
         // Act
 
-        $deleteResponse = $this->delete('/api/os/qualquer-coisa-nao-sendo-um-uuid-valido');
+        $deleteResponse = $this->withAuth()->delete('/api/os/qualquer-coisa-nao-sendo-um-uuid-valido');
         $deleteResponse->assertBadRequest();
     }
 

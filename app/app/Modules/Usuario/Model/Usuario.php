@@ -4,16 +4,14 @@ namespace App\Modules\Usuario\Model;
 
 use App\Traits\SoftDeletes;
 use Database\Factories\UsuarioFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-// use Illuminate\Support\Facades\Schema;
-
-class Usuario extends Model
+class Usuario extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UsuarioFactory> */
     use HasFactory;
@@ -24,10 +22,12 @@ class Usuario extends Model
 
     public $timestamps = false;
 
-    protected $guard_name = 'web';
+    protected $guard_name = 'api';
 
     protected $fillable = [
         'nome',
+        'email',
+        'senha',
         'status',
         'excluido',
         'data_exclusao',
@@ -36,7 +36,8 @@ class Usuario extends Model
     ];
 
     protected $hidden = [
-        'id'
+        'id',
+        'senha',
     ];
 
     protected function casts(): array
@@ -56,5 +57,34 @@ class Usuario extends Model
     protected static function newFactory(): UsuarioFactory
     {
         return UsuarioFactory::new();
+    }
+
+    /**
+     * 🔑 Permite que o JWTAuth use o ID do usuário no token
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [
+            'role' => $this->getRoleNames()->first(), // via Spatie
+            'uuid' => $this->uuid,
+        ];
+    }
+
+    // 🔐 Faz com que o Auth use o campo 'senha' no lugar de 'password'
+    public function getAuthPassword()
+    {
+        return $this->senha;
     }
 }

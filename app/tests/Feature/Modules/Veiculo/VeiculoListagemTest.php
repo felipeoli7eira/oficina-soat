@@ -21,7 +21,7 @@ class VeiculoListagemTest extends TestCase
     public function test_listar_todos_veiculos(): void
     {
         $veiculos = Veiculo::factory(3)->create()->fresh();
-        $response = $this->getJson('/api/veiculo');
+        $response = $this->withAuth()->getJson('/api/veiculo');
 
         $response->assertOk();
     }
@@ -29,7 +29,7 @@ class VeiculoListagemTest extends TestCase
     public function test_listar_veiculo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-        $response = $this->getJson('/api/veiculo/' . $uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $uuid);
         $response->assertStatus(400);
     }
 
@@ -41,7 +41,7 @@ class VeiculoListagemTest extends TestCase
                 ->andThrow(new \Exception('Erro interno na listagem'));
         });
 
-        $response = $this->getJson('/api/veiculo');
+        $response = $this->withAuth()->getJson('/api/veiculo');
 
         $response->assertStatus(500);
     }
@@ -50,14 +50,14 @@ class VeiculoListagemTest extends TestCase
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();;
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertOk();
     }
 
     public function test_listar_veiculos_vazios(): void
     {
-        $response = $this->getJson('/api/veiculo');
+        $response = $this->withAuth()->getJson('/api/veiculo');
 
         $response->assertOk();
         $response->assertJsonCount(0);
@@ -67,7 +67,7 @@ class VeiculoListagemTest extends TestCase
     {
         \App\Modules\Veiculo\Model\Veiculo::factory(15)->create()->fresh();
 
-        $response = $this->getJson('/api/veiculo?page=1&per_page=10');
+        $response = $this->withAuth()->getJson('/api/veiculo?page=1&per_page=10');
 
         $response->assertOk();
     }
@@ -84,7 +84,7 @@ class VeiculoListagemTest extends TestCase
         ]);
 
 
-        $response = $this->getJson('/api/veiculo?cliente_uuid=' . $cliente->uuid . '&page=1&per_page=10');
+        $response = $this->withAuth()->getJson('/api/veiculo?cliente_uuid=' . $cliente->uuid . '&page=1&per_page=10');
 
         $response->assertOk();
     }
@@ -93,14 +93,14 @@ class VeiculoListagemTest extends TestCase
     {
         $uuidInexistente = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
 
-        $response = $this->getJson('/api/veiculo?cliente_uuid=' . $uuidInexistente);
+        $response = $this->withAuth()->getJson('/api/veiculo?cliente_uuid=' . $uuidInexistente);
 
         $response->assertStatus(400);
     }
 
     public function test_listar_veiculos_com_parametros_paginacao_invalidos(): void
     {
-        $response = $this->getJson('/api/veiculo?page=0&per_page=-1');
+        $response = $this->withAuth()->getJson('/api/veiculo?page=0&per_page=-1');
 
         $response->assertStatus(400);
     }
@@ -109,7 +109,7 @@ class VeiculoListagemTest extends TestCase
     {
         $uuidMalformado = 'uuid-malformado-123';
 
-        $response = $this->getJson('/api/veiculo/' . $uuidMalformado);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $uuidMalformado);
 
         $response->assertStatus(400);
     }
@@ -118,7 +118,7 @@ class VeiculoListagemTest extends TestCase
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
-        $response = $this->getJson('/api/veiculo');
+        $response = $this->withAuth()->getJson('/api/veiculo');
 
         $response->assertOk();
     }
@@ -133,7 +133,7 @@ class VeiculoListagemTest extends TestCase
                 ->andThrow(new \Exception('Erro interno ao obter veículo'));
         });
 
-        $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -150,7 +150,7 @@ class VeiculoListagemTest extends TestCase
             'veiculo_id' => $veiculo1->id
         ]);
 
-        $response = $this->getJson('/api/veiculo?cliente_uuid=' . $cliente->uuid);
+        $response = $this->withAuth()->getJson('/api/veiculo?cliente_uuid=' . $cliente->uuid);
 
         $response->assertOk();
     }

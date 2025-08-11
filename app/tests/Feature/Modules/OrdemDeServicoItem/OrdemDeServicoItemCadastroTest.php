@@ -54,7 +54,7 @@ class OrdemDeServicoItemCadastroTest extends TestCase
             'valor'             => 1000,
         ];
 
-        $response = $this->postJson('/api/os-item', $payload);
+        $response = $this->withAuth()->postJson('/api/os-item', $payload);
 
         $response->assertCreated();
     }
@@ -75,7 +75,7 @@ class OrdemDeServicoItemCadastroTest extends TestCase
 
         // Act
 
-        $response = $this->postJson('/api/os-item', $payload);
+        $response = $this->withAuth()->postJson('/api/os-item', $payload);
 
         // Assert
 

@@ -61,4 +61,9 @@ tasks:
       - docker exec -it {{.CONTAINER_LARAVEL}} php artisan migrate:fresh --seed
     desc: "fresh database and seed the db"
 
+  testcover:
+    cmds:
+      - docker exec -it {{.CONTAINER_LARAVEL}} php artisan test --testsuite=Feature --coverage --coverage-html=coverage-html --stop-on-failure --min=80.3
+    desc: "fresh database and seed the db"
+
 silent: true

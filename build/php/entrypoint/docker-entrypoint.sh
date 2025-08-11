@@ -25,6 +25,9 @@ if [ ! -f .env ]; then
 
     echo "🔑 Gerando chave da aplicação"
     php artisan key:generate
+
+    echo "🔑 Gerando chave do JWT"
+    php artisan jwt:secret
 fi
 
 echo "🆙 Preparando banco de dados"

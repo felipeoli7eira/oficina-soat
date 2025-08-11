@@ -20,14 +20,14 @@ class VeiculoRemocaoTest extends TestCase
     public function test_remocao_do_veiculo_por_uuid(): void
     {
         $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
-        $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $veiculo->uuid);
         $response->assertStatus(204);
     }
 
     public function test_remocao_do_veiculo_por_uuid_que_nao_existe(): void
     {
         $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
-        $response = $this->deleteJson('/api/veiculo/' . $uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $uuid);
         $response->assertStatus(400);
     }
 
@@ -41,7 +41,7 @@ class VeiculoRemocaoTest extends TestCase
                 ->andThrow(new \Exception('Erro interno simulado na remocao'));
         });
 
-        $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -50,7 +50,7 @@ class VeiculoRemocaoTest extends TestCase
     {
         $uuidMalformado = 'uuid-malformado-123';
 
-        $response = $this->deleteJson('/api/veiculo/' . $uuidMalformado);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $uuidMalformado);
 
         $response->assertStatus(400);
         $response->assertJsonStructure(['message', 'errors']);
@@ -67,7 +67,7 @@ class VeiculoRemocaoTest extends TestCase
             'veiculo_id' => $veiculo->id
         ]);
 
-        $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(204);
     }
@@ -88,7 +88,7 @@ class VeiculoRemocaoTest extends TestCase
                 ));
         });
 
-        $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }
@@ -109,7 +109,7 @@ class VeiculoRemocaoTest extends TestCase
                 ));
         });
 
-        $response = $this->deleteJson('/api/veiculo/' . $veiculo->uuid);
+        $response = $this->withAuth()->deleteJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertStatus(500);
     }

@@ -30,6 +30,9 @@ class Controller extends BaseController
      *     tags={"OS"},
      *     summary="Faz a listagem das ordens de serviço cadastradas no sistema",
      *     description="Retorna uma lista paginada de ordens de serviço cadastradas no sistema.",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     @OA\Response(
      *         response=200,
      *         description="Para quando a requisição for bem-sucedida. Pode ou não retornar ordens de serviço.",
@@ -108,6 +111,9 @@ class Controller extends BaseController
      *      tags={"OS"},
      *      summary="Cadastra uma ordem de serviço",
      *      description="Cadastra uma ordem de serviço, dado os dados necessários.",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
@@ -228,6 +234,9 @@ class Controller extends BaseController
      * @OA\Get(
      *     path="/api/os/{uuid}",
      *     summary="Obtém os dados de uma ordem de serviço pelo uuid fornecido",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
      *     description="Retorna as informações completas de uma ordem de serviço com base no UUID fornecido.",
      *     tags={"OS"},
      *     @OA\Parameter(
@@ -340,6 +349,7 @@ class Controller extends BaseController
      *     summary="Remove uma ordem de serviço",
      *     description="Remove uma ordem de serviço com base no UUID informado.",
      *     tags={"OS"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -394,6 +404,7 @@ class Controller extends BaseController
      *     summary="Atualiza uma ordem de serviço",
      *     description="Atualiza uma ordem de serviço existente com base no UUID informado. É possível atualizar campos como cliente, veículo, descrição, valores, atendente, mecânico e prazo de validade.",
      *     tags={"OS"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -510,6 +521,7 @@ class Controller extends BaseController
      *     summary="Encerra uma ordem de serviço",
      *     description="Marca a ordem de serviço como encerrada, preenchendo o campo 'data_finalizacao' com a data e hora atual. Nenhum payload é necessário.",
      *     tags={"OS"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",

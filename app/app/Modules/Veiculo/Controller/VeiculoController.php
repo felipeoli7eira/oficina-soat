@@ -31,6 +31,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Listar veículos",
      *      description="Faz a listagem paginada de todos os veículos cadastrados, com filtro opcional por cliente",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="cliente_uuid",
      *          in="query",
@@ -117,6 +118,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Cadastrar veículo",
      *      description="Cadastra um novo veículo",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
@@ -160,6 +162,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Obter veículo por UUID",
      *      description="Obtém um veículo específico pelo seu UUID",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
@@ -196,6 +199,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Remover veículo",
      *      description="Remove um veículo pelo seu UUID",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
@@ -244,6 +248,7 @@ class VeiculoController extends Controller
      *      path="/api/veiculo/{uuid}",
      *      tags={"Veiculo"},
      *      summary="Atualizar veículo",
+     *      security={{"bearerAuth":{}}},
      *      description="Atualiza os dados de um veículo pelo seu UUID",
      *      @OA\Parameter(
      *          name="uuid",
