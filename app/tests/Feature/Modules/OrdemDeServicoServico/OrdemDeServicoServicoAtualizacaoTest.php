@@ -58,11 +58,11 @@ class OrdemDeServicoServicoAtualizacaoTest extends TestCase
         ];
 
         // Act - Criar o serviço primeiro
-        $response = $this->postJson('/api/os-servico', $payload);
+        $response = $this->withAuth()->postJson('/api/os-servico', $payload);
         $response->assertCreated();
 
         // Act - Atualizar o serviço
-        $updateResponse = $this->putJson('/api/os-servico/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os-servico/' . $response->json('uuid'), [
             'observacao' => 'Serviço atualizado conforme nova solicitação',
         ]);
 
@@ -85,11 +85,11 @@ class OrdemDeServicoServicoAtualizacaoTest extends TestCase
         ];
 
         // Act - Criar o serviço primeiro
-        $response = $this->postJson('/api/os-servico', $payload);
+        $response = $this->withAuth()->postJson('/api/os-servico', $payload);
         $response->assertCreated();
 
         // Act - Atualizar quantidade
-        $updateResponse = $this->putJson('/api/os-servico/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os-servico/' . $response->json('uuid'), [
             'quantidade' => 5,
         ]);
 
@@ -112,11 +112,11 @@ class OrdemDeServicoServicoAtualizacaoTest extends TestCase
         ];
 
         // Act - Criar o serviço primeiro
-        $response = $this->postJson('/api/os-servico', $payload);
+        $response = $this->withAuth()->postJson('/api/os-servico', $payload);
         $response->assertCreated();
 
         // Act - Atualizar valor
-        $updateResponse = $this->putJson('/api/os-servico/' . $response->json('uuid'), [
+        $updateResponse = $this->withAuth()->putJson('/api/os-servico/' . $response->json('uuid'), [
             'valor' => 1500,
         ]);
 

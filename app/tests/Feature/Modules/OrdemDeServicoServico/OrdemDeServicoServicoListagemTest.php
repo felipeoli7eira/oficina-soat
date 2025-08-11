@@ -62,7 +62,7 @@ class OrdemDeServicoServicoListagemTest extends TestCase
     public function test_servicos_de_ordem_de_servico_cadastrados_podem_ser_listados(): void
     {
         // Act
-        $response = $this->getJson('/api/os-servico');
+        $response = $this->withAuth()->getJson('/api/os-servico');
 
         // Assert
         $response->assertOk();
@@ -96,7 +96,7 @@ class OrdemDeServicoServicoListagemTest extends TestCase
         $uuidOsServico = $response->json('uuid');
 
         // Act - Buscar o serviço criado
-        $responseOsServico = $this->getJson('/api/os-servico/' . $uuidOsServico);
+        $responseOsServico = $this->withAuth()->getJson('/api/os-servico/' . $uuidOsServico);
         $responseOsServico->assertOk();
     }
 
