@@ -76,7 +76,7 @@ class ClienteListagemTest extends TestCase
         // Arrange
         $payload = [
             'nome' => 'Maria Joaquina',
-            'cpf' => '98192899047',
+            'cpf' => '98192899047', // CPF válido
             'email' => 'maria.joaquina@gmail.com',
             'telefone_movel' => '(11) 99123-4567',
             'cep' => '01153-000',
@@ -108,6 +108,7 @@ class ClienteListagemTest extends TestCase
         $uuidFake = 'uuid-inexistente-1234';
 
         $mockRequest = Mockery::mock(ObterUmPorUuidRequest::class);
+        $mockRequest->shouldAllowMockingProtectedMethods();
         $mockRequest->shouldIgnoreMissing();
         $mockRequest->shouldReceive('uuid')->andReturn($uuidFake);
 
@@ -136,6 +137,7 @@ class ClienteListagemTest extends TestCase
         $uuidFake = 'uuid-inexistente-1234';
 
         $mockRequest = Mockery::mock(ObterUmPorUuidRequest::class);
+        $mockRequest->shouldAllowMockingProtectedMethods();
         $mockRequest->shouldIgnoreMissing();
         $mockRequest->shouldReceive('uuid')->andReturn($uuidFake);
 

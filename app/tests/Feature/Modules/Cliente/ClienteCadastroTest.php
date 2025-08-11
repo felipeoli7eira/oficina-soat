@@ -40,7 +40,7 @@ class ClienteCadastroTest extends TestCase
     {
         $payload = [
             'nome' => 'João da Silva',
-            'cpf' => '12345678901',
+            'cpf' => '11144477735', // CPF válido
             'email' => 'joao.silva@email.com',
             'telefone_movel' => '(11) 99123-4567',
             'cep' => '01153-000',

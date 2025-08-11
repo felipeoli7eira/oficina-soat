@@ -46,6 +46,7 @@ class ClienteAtualizacaoTest extends TestCase
 
         $payloadAtualizacao = [
             'nome' => 'Nome Atualizado',
+            'cpf' => $cliente->cpf,
             'email' => 'email.atualizado@teste.com',
             'telefone_movel' => '(11) 99999-9999',
         ];
@@ -64,6 +65,7 @@ class ClienteAtualizacaoTest extends TestCase
 
         $payloadAtualizacao = [
             'nome' => 'Novo Nome do Cliente',
+            'cpf' => $cliente->cpf,
         ];
 
         // Act
@@ -79,6 +81,7 @@ class ClienteAtualizacaoTest extends TestCase
         $cliente = Cliente::factory()->create()->fresh();
 
         $payloadAtualizacao = [
+            'cpf' => $cliente->cpf,
             'logradouro' => 'Nova Rua Exemplo',
             'numero' => '456',
             'bairro' => 'Novo Bairro',

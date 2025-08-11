@@ -42,7 +42,7 @@ class ClienteRemocaoTest extends TestCase
         // Arrange
         $payload = [
             'nome' => 'João da Silva',
-            'cpf' => '12345678901',
+            'cpf' => '11144477735', // CPF válido
             'email' => 'joao.silva@email.com',
             'telefone_movel' => '(11) 99123-4567',
             'cep' => '01153-000',
@@ -77,6 +77,7 @@ class ClienteRemocaoTest extends TestCase
         $uuidFake = 'inexistente-uuid-1234';
 
         $mockRequest = Mockery::mock(ObterUmPorUuidRequest::class);
+        $mockRequest->shouldAllowMockingProtectedMethods();
         $mockRequest->shouldIgnoreMissing();
         $mockRequest->shouldReceive('uuid')->andReturn($uuidFake);
 
@@ -101,6 +102,7 @@ class ClienteRemocaoTest extends TestCase
         $uuidFake = 'uuid-com-erro-generico';
 
         $mockRequest = Mockery::mock(ObterUmPorUuidRequest::class);
+        $mockRequest->shouldAllowMockingProtectedMethods();
         $mockRequest->shouldIgnoreMissing();
         $mockRequest->shouldReceive('uuid')->andReturn($uuidFake);
 
@@ -126,6 +128,7 @@ class ClienteRemocaoTest extends TestCase
         $expectedResponse = ['message' => 'Removido com sucesso'];
 
         $mockRequest = Mockery::mock(ObterUmPorUuidRequest::class);
+        $mockRequest->shouldAllowMockingProtectedMethods();
         $mockRequest->shouldIgnoreMissing();
         $mockRequest->shouldReceive('uuid')->andReturn($uuidValido);
 
