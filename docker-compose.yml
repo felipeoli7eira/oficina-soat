@@ -4,7 +4,7 @@ services:
         container_name: oficina_soat_postgres
         restart: always
         ports:
-        - "5411:5432"
+        - "5432:5432"
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
