@@ -34,11 +34,17 @@ class Cliente extends Model
         'data_atualizacao',
 ]   ;
 
-    protected $hidden = [];
+    protected $hidden = [
+        'id'
+    ];
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'data_exclusao'    => 'datetime:d/m/Y H:i',
+            'data_atualizacao' => 'datetime:d/m/Y H:i',
+            'data_cadastro'    => 'datetime:d/m/Y H:i',
+        ];
     }
 
     protected static function newFactory(): ClienteFactory
@@ -46,16 +52,20 @@ class Cliente extends Model
         return ClienteFactory::new();
     }
 
-    protected static function boot()
-    {
-        parent::boot();
 
-        static::creating(function ($model) {
-            if (Schema::getConnection()->getDriverName() === 'sqlite') {
-                if (empty($model?->uuid)) {
-                    $model->uuid = (string) \Illuminate\Support\Str::uuid();
-                }
-            }
-        });
+    /**
+     * Relacionamento com ClienteVeiculo
+     */
+    public function clienteVeiculos()
+    {
+        return $this->hasMany(\App\Modules\ClienteVeiculo\Model\ClienteVeiculo::class, 'veiculo_id');
+    }
+
+    /**
+     * Relacionamento com Veiculo através de ClienteVeiculo
+     */
+    public function veiculos()
+    {
+        return $this->belongsToMany(\App\Modules\Veiculo\Model\Veiculo::class, 'cliente_veiculo', 'cliente_id', 'veiculo_id');
     }
 }

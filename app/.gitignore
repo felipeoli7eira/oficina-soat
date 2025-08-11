@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+coverage-clover.xml
+coverage-text.txt
+/coverage-html
+/storage/api-docs

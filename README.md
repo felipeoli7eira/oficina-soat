@@ -14,6 +14,11 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
     - RM: `365973`
     - LinkedIn: [@userName](`https://google.com`)
 
+# Material
+- [Documentação DDD](https://google.com)
+- [Vídeo de apresentação](https://google.com)
+- [Documento de entrega - PDF](https://google.com)
+
 # Sobre o projeto
 Este projeto foi desenvolvido com [Laravel](https://laravel.com), [nginx](https://nginx.org) e [postgresql](https://www.postgresql.org) e por volta dessas 3 tecnologias, está o [docker](https://www.docker.com)/[docker compose](https://docs.docker.com/compose) para containerizar/orquestrar tudo.
 
@@ -46,3 +51,14 @@ Suba os containers
 ```sh
 docker compose up -d --build
 ```
+
+Todos os endpoints estão protegidos por um middleware que exige que um token JWT válido seja informado no header das requisições. Para conseguir um token JWT, é preciso usar o endpoint `POST` `/api/usuario/auth/autenticar` na collection "Autenticação". Ele é o único endpoint que não exige JWT. Siga o exemplo de payload e forneça um usuário e senha válidos.
+
+> Atenção: Quando o build da aplicação Laravel acontece, alguns seeders rodam para criar alguns dados iniciais no banco de dados. Entre esses vários dados, estão alguns usuários que podem ser usados para realizar login e obter um JWT. O usuário `atendente@example.com` com a senha `senha8caracteres` é um exemplo.
+
+Usuários preparados propositalmente que podem gerar um JWT de autenticação:
+
+- Atendente: `atendente@example.com` e `senha8caracteres`
+- Comercial: `comercial@example.com` e `senha8caracteres`
+- Mecânico: `mecanico@example.com` e `senha8caracteres`
+- Gestor de Estoque: `gestor_estoque@example.com` e `senha8caracteres`

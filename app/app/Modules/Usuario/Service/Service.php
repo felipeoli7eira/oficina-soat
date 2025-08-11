@@ -9,6 +9,7 @@ use App\Modules\Usuario\Dto\CadastroDto;
 use App\Modules\Usuario\Repository\UsuarioRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Hash;
 
 class Service
 {
@@ -21,12 +22,25 @@ class Service
 
     public function cadastro(CadastroDto $dto)
     {
-        return $this->repo->createOrFirst($dto->asArray())->fresh(['role']);
+        $data = $dto->asArray();
+        $role = $data['role'];
+
+        unset($data['role']);
+
+        $data['senha'] = Hash::make($data['senha']);
+
+        $usuario = $this->repo->createOrFirst($data);
+
+        if (! $usuario->hasRole($role)) {
+            $usuario->assignRole($role);
+        }
+
+        return $usuario->fresh();
     }
 
     public function obterUmPorUuid(string $uuid)
     {
-        return $this->repo->model()->where('uuid', $uuid)->with(['role'])->firstOrFail();
+        return $this->repo->model()->where('uuid', $uuid)->with(['roles'])->firstOrFail();
     }
 
     public function remocao(string $uuid)
@@ -36,12 +50,17 @@ class Service
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)
     {
-        $usuario = $this->obterUmPorUuid($uuid);
+        $usuario = $this->repo->findUuid($uuid);
 
-        $novosDados = $dto->merge($usuario->toArray());
+        $dadosAntigos = $usuario->toArray();
+        $novosDados = $dto->merge($dadosAntigos);
 
         $usuario->update($novosDados);
 
-        return $usuario->refresh();
+        if ($novoPapel = $novosDados['role'] ?? null) {
+            $usuario->syncRoles($novoPapel)->guard(['api']);
+        }
+
+        return $usuario->fresh(['roles']);
     }
 }

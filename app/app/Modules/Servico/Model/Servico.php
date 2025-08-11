@@ -40,17 +40,4 @@ class Servico extends Model
     {
         return ServicoFactory::new();
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (Schema::getConnection()->getDriverName() === 'sqlite') {
-                if (empty($model?->uuid)) {
-                    $model->uuid = (string) \Illuminate\Support\Str::uuid();
-                }
-            }
-        });
-    }
 }

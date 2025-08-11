@@ -30,7 +30,15 @@ class VeiculoController extends Controller
      *      path="/api/veiculo",
      *      tags={"Veiculo"},
      *      summary="Listar veículos",
-     *      description="Faz a listagem paginada de todos os veículos cadastrados",
+     *      description="Faz a listagem paginada de todos os veículos cadastrados, com filtro opcional por cliente",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
+     *          name="cliente_uuid",
+     *          in="query",
+     *          required=false,
+     *          description="UUID do cliente para filtrar apenas os veículos dele",
+     *          @OA\Schema(type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000")
+     *      ),
      *      @OA\Parameter(
      *          name="page",
      *          in="query",
@@ -92,7 +100,7 @@ class VeiculoController extends Controller
     public function listagem(ListagemRequest $request)
     {
         try {
-            $dto = new ListagemDto();
+            $dto = $request->toDto();
             $response = $this->service->listagem($dto);
         } catch (Throwable $th) {
             return Response::json([
@@ -110,6 +118,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Cadastrar veículo",
      *      description="Cadastra um novo veículo",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(
@@ -120,6 +129,7 @@ class VeiculoController extends Controller
      *              @OA\Property(property="placa", type="string", example="ABC-1234"),
      *              @OA\Property(property="cor", type="string", example="Prata"),
      *              @OA\Property(property="chassi", type="string", example="1234567890ABCDEFG"),
+     *              @OA\Property(property="cliente_uuid", type="string", example="123e4567-e89b-12d3-a456-426614174000"),
      *          )
      *      ),
      *      @OA\Response(
@@ -152,6 +162,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Obter veículo por UUID",
      *      description="Obtém um veículo específico pelo seu UUID",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
@@ -188,6 +199,7 @@ class VeiculoController extends Controller
      *      tags={"Veiculo"},
      *      summary="Remover veículo",
      *      description="Remove um veículo pelo seu UUID",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
@@ -236,6 +248,7 @@ class VeiculoController extends Controller
      *      path="/api/veiculo/{uuid}",
      *      tags={"Veiculo"},
      *      summary="Atualizar veículo",
+     *      security={{"bearerAuth":{}}},
      *      description="Atualiza os dados de um veículo pelo seu UUID",
      *      @OA\Parameter(
      *          name="uuid",
@@ -252,6 +265,7 @@ class VeiculoController extends Controller
      *              @OA\Property(property="placa", type="string", example="DEF-5678"),
      *              @OA\Property(property="cor", type="string", example="Azul"),
      *              @OA\Property(property="chassi", type="string", example="0987654321ZYXWVUT"),
+     *              @OA\Property(property="cliente_uuid", type="string", example="123e4567-e89b-12d3-a456-426614174000"),
      *          )
      *      ),
      *      @OA\Response(

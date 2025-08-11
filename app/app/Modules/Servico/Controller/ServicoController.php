@@ -26,6 +26,7 @@ class ServicoController extends Controller
     /**
      * @OA\Get(
      *      path="/api/servico",
+     *      security={{"bearerAuth":{}}},
      *      tags={"servico"},
      *      summary="Faz a listagem dos serviços cadastrados",
      *      description="Faz a listagem de serviços",
@@ -35,7 +36,7 @@ class ServicoController extends Controller
      *       ),
      *     )
      */
-    public function listagem(ListagemRequest $request)
+    public function listagem()
     {
         try {
             $dto = new ListagemDto();
@@ -55,6 +56,7 @@ class ServicoController extends Controller
      *      path="/api/servico",
      *      tags={"servico"},
      *      summary="Cadastra um serviço",
+     *      security={{"bearerAuth":{}}},
      *      description="Cadastra um serviço",
      *      @OA\RequestBody(
      *          required=true,
@@ -93,6 +95,7 @@ class ServicoController extends Controller
      *     summary="Obtém os dados de um serviço",
      *     description="Retorna os dados completos de um serviço específico com base no UUID informado.",
      *     tags={"servico"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -119,7 +122,7 @@ class ServicoController extends Controller
     {
         try {
             $response = $this->service->obterUmPorUuid($request->uuid);
-            
+
         }catch (ModelNotFoundException $th){
             return Response::json([
                 'error'   => true,
@@ -141,6 +144,7 @@ class ServicoController extends Controller
      *     summary="Remove um servico",
      *     description="Remove um serviço com base no UUID informado.",
      *     tags={"servico"},
+     *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -191,6 +195,7 @@ class ServicoController extends Controller
      *     summary="Atualiza os dados de um serviço",
      *     description="Atualiza os dados de um serviço já existente, identificado pelo UUID.",
      *     tags={"servico"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",

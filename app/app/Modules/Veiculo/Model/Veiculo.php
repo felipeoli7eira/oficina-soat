@@ -6,9 +6,12 @@ use Database\Factories\VeiculoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Traits\SoftDeletes;
 
 class Veiculo extends Model
 {
+    use SoftDeletes;
+
     /** @use HasFactory<\Database\Factories\VeiculoFactory> */
     use HasFactory;
 
@@ -51,5 +54,21 @@ class Veiculo extends Model
     protected static function newFactory(): VeiculoFactory
     {
         return VeiculoFactory::new();
+    }
+
+    /**
+     * Relacionamento com ClienteVeiculo
+     */
+    public function clienteVeiculos()
+    {
+        return $this->hasMany(\App\Modules\ClienteVeiculo\Model\ClienteVeiculo::class, 'veiculo_id');
+    }
+
+    /**
+     * Relacionamento com Cliente através de ClienteVeiculo
+     */
+    public function clientes()
+    {
+        return $this->belongsToMany(\App\Modules\Cliente\Model\Cliente::class, 'cliente_veiculo', 'veiculo_id', 'cliente_id');
     }
 }

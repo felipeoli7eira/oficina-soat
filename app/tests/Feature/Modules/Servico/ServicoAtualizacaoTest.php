@@ -4,6 +4,8 @@ namespace Tests\Feature\Modules\Servico;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Tests\TestCase;
 
 class ServicoAtualizacaoTest extends TestCase
@@ -36,7 +38,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['valor'] = 200;
         $this->payload['status'] = 'ATIVO';
 
-        $response = $this->putJson('/api/servico/' . $servico->uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $servico->uuid, $this->payload);
 
         $response->assertOk();
 
@@ -60,7 +62,7 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Serviço com UUID que não existe';
         $this->payload['valor'] = 200.00;
         $this->payload['status'] = 'ATIVO';
-        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $uuid, $this->payload);
 
         $response->assertNotFound();
     }
@@ -71,8 +73,28 @@ class ServicoAtualizacaoTest extends TestCase
         $this->payload['descricao'] = 'Serviço com UUID inválido';
         $this->payload['valor'] = 200.00;
         $this->payload['status'] = 'ATIVO';
-        $response = $this->putJson('/api/servico/' . $uuid, $this->payload);
+        $response = $this->withAuth()->putJson('/api/servico/' . $uuid, $this->payload);
 
         $response->assertUnprocessable();
+    }
+
+    public function test_atualizar_servico_usando_mock_com_erro_500_interno(): void
+    {
+        $servico = \App\Modules\Servico\Model\Servico::factory()->createOne()->fresh();
+        $servico = \App\Modules\Servico\Model\Servico::where('id', $servico->id)->first();
+
+        $mock = \Mockery::mock(\App\Modules\Servico\Service\Service::class);
+        $mock->shouldReceive('atualizacao')
+            ->with($servico->uuid)
+            ->andThrow(new \Exception('Erro inesperado'));
+
+        $this->app->instance(\App\Modules\Servico\Service\Service::class, $mock);
+
+        $this->payload['descricao'] = 'Serviço com erro 500';
+        $this->payload['valor'] = 200.00;
+        $this->payload['status'] = 'ATIVO';
+        $response = $this->withAuth()->putJson('/api/servico/' . $servico->uuid, $this->payload);
+
+        $response->assertStatus(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

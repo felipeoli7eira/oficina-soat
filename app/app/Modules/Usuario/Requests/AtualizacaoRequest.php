@@ -2,6 +2,7 @@
 
 namespace App\Modules\Usuario\Requests;
 
+use App\Modules\Usuario\Dto\AtualizacaoDto;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
@@ -30,9 +31,11 @@ class AtualizacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uuid' => ['required', 'uuid', 'exists:usuario,uuid'],
-            'nome' => ['sometimes', 'string', 'max:255', 'min:3'],
-            'papel' => ['sometimes', 'string', 'max:255', 'min:3', 'exists:roles,name'],
+            'uuid'   => ['required', 'uuid', 'exists:usuario,uuid'],
+            'nome'   => ['sometimes', 'string', 'max:255', 'min:3'],
+            'email'  => ['sometimes', 'email', 'min:6', 'max:255', 'unique:usuario,email,' . $this->uuid() . ',uuid'],
+            'senha'  => ['sometimes', 'string', 'min:8', 'max:255'],
+            'papel'  => ['sometimes', 'string', 'max:255', 'min:3', 'exists:roles,name'],
             'status' => ['sometimes', 'string', 'max:255', 'min:3', 'in:ativo,inativo'],
         ];
     }
@@ -56,8 +59,8 @@ class AtualizacaoRequest extends FormRequest
         }
     }
 
-    public function toDto(): \App\Modules\Usuario\Dto\AtualizacaoDto
+    public function toDto(): AtualizacaoDto
     {
-        return new \App\Modules\Usuario\Dto\AtualizacaoDto($this->validated());
+        return new AtualizacaoDto($this->validated());
     }
 }

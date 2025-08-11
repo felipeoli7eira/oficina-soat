@@ -8,13 +8,21 @@ use Spatie\Permission\Models\Role;
 
 class CadastroDto
 {
-    public function __construct(public string $nome, public string $papel, public string $status) {}
+    public function __construct(
+        public string $nome,
+        public string $email,
+        public string $senha,
+        public string $papel,
+        public string $status
+    ) {}
 
     public function asArray(): array
     {
         return [
             'nome'    => trim($this->nome),
-            'role_id' => Role::findByName(trim(strtolower($this->papel)))->id,
+            'email'   => trim($this->email),
+            'senha'   => trim($this->senha),
+            'role'    => Role::findByName(trim(strtolower($this->papel))),
             'status'  => trim($this->status),
         ];
     }
