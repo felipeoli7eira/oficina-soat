@@ -13,7 +13,7 @@ class Service
 {
     public function __construct(private readonly ServicoRepository $repo) {}
 
-    public function listagem(ListagemDto $dto)
+    public function listagem()
     {
         return $this->repo->read();
     }
@@ -27,16 +27,12 @@ class Service
     {
         return $this->repo->model()
                           ->where('uuid', $uuid)
-                          ->where('excluido', false)
                           ->firstOrFail();
     }
 
     public function remocao(string $uuid)
     {
-        $this->repo->model()->where('uuid', $uuid)->update([
-            'excluido' => true,
-            'data_exclusao' => now(),
-        ]);
+        return $this->obterUmPorUuid($uuid)->delete();
     }
 
     public function atualizacao(string $uuid, AtualizacaoDto $dto)

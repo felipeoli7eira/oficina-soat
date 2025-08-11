@@ -13,11 +13,15 @@
         </testsuite>
     </testsuites>
 
+    <logging>
+        <junit outputFile="junit.xml"/>
+    </logging>
+
     <coverage>
         <report>
             <html outputDirectory="coverage-html" lowUpperBound="50" highLowerBound="80"/>
-            <!-- <text outputFile="coverage-text.txt"/>
-            <clover outputFile="coverage-clover.xml"/> -->
+            <!-- <text outputFile="coverage-text.txt"/> -->
+            <clover outputFile="coverage-clover.xml"/>
         </report>
     </coverage>
 

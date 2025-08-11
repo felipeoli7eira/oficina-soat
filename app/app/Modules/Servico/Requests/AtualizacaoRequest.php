@@ -24,7 +24,7 @@ class AtualizacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uuid' => ['required', 'uuid', 'exists:servicos,uuid'],
+            'uuid' => ['required', 'uuid'],
             'descricao' => ['sometimes', 'string', 'min:3', 'max:100'],
             'valor' => ['required', 'numeric', 'gt:0'],
             'status' => ['required', 'string', 'min:3', 'max:30'],
@@ -38,9 +38,9 @@ class AtualizacaoRequest extends FormRequest
         $status = Response::HTTP_BAD_REQUEST;
 
         if (!empty($uuidErrors)) {
-            foreach ($uuidErrors as $message) {  
+            foreach ($uuidErrors as $message) {
                 if (str_contains($message, 'inválido') || str_contains($message, 'invalid')  ) {
-                    $status = Response::HTTP_NOT_FOUND; 
+                    $status = Response::HTTP_NOT_FOUND;
                     break;
                 }
 

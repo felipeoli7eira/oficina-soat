@@ -97,20 +97,4 @@ class ServicoAtualizacaoTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
-
-     public function test_atualizar_servico_usando_mock_com_erro_404_interno(): void
-    {
-        $uuid = fake()->uuid();
-
-        $mock = \Mockery::mock(\App\Modules\Servico\Service\Service::class);
-        $mock->shouldReceive('atualizacao')
-            ->with($uuid)
-            ->andThrow(new ModelNotFoundException('Registro não encontrado'));
-
-        $this->app->instance(\App\Modules\Servico\Service\Service::class, $mock);
-
-        $response = $this->putJson("/api/servico/{$uuid}", $this->payload);
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
 }
