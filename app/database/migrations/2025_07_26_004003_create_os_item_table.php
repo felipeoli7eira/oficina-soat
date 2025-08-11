@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('os_item', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->default(DB::raw('uuid_generate_v4()'))->unique();
 
             $table->unsignedBigInteger('peca_insumo_id');
             $table->foreign('peca_insumo_id')->references('id')->on('peca_insumo')->onDelete('cascade');
@@ -25,10 +26,10 @@ return new class extends Migration
             $table->decimal('valor', 15, 2);
 
             $table->boolean('excluido')->default(false);
-            $table->timestamp('data_exclusao');
+            $table->timestamp('data_exclusao')->nullable();
 
             $table->timestamp('data_cadastro')->useCurrent();
-            $table->timestamp('data_atualizacao')->useCurrentOnUpdate();
+            $table->timestamp('data_atualizacao')->useCurrentOnUpdate()->nullable();
         });
     }
 

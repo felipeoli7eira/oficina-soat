@@ -51,4 +51,21 @@ class Cliente extends Model
     {
         return ClienteFactory::new();
     }
+
+
+    /**
+     * Relacionamento com ClienteVeiculo
+     */
+    public function clienteVeiculos()
+    {
+        return $this->hasMany(\App\Modules\ClienteVeiculo\Model\ClienteVeiculo::class, 'veiculo_id');
+    }
+
+    /**
+     * Relacionamento com Veiculo através de ClienteVeiculo
+     */
+    public function veiculos()
+    {
+        return $this->belongsToMany(\App\Modules\Veiculo\Model\Veiculo::class, 'cliente_veiculo', 'cliente_id', 'veiculo_id');
+    }
 }

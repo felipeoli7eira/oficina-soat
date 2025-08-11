@@ -29,4 +29,10 @@ Route::middleware('auth:api')->group(function () {
 
     // * endpoints de peças e insumos
     require __DIR__ . '/../app/Modules/PecaInsumo/Routes/api.php';
+
+    // * endpoints de ordem de serviço item
+    require __DIR__ . '/../app/Modules/OrdemDeServicoItem/Routes/api.php';
 });
+
+
+

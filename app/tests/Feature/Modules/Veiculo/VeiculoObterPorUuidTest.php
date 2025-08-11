@@ -19,7 +19,8 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_por_uuid(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory(1)->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
+
         $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
 
         $response->assertOk();
@@ -27,7 +28,7 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_com_encoding_error(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         // Mock do service para retornar dados com caracteres não UTF-8
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
@@ -75,7 +76,7 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_com_erro_interno(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
             $mock->shouldReceive('obterUmPorUuid')
@@ -90,7 +91,7 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_com_database_exception(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $this->mock(\App\Modules\Veiculo\Service\Service::class, function ($mock) {
             $mock->shouldReceive('obterUmPorUuid')
@@ -110,7 +111,7 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_estrutura_response_completa(): void
     {
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         $response = $this->getJson('/api/veiculo/' . $veiculo->uuid);
 
@@ -131,11 +132,11 @@ class VeiculoObterPorUuidTest extends TestCase
 
     public function test_obter_veiculo_com_relacionamentos(): void
     {
-        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->createOne()->fresh();
-        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->createOne()->fresh();
+        $cliente = \App\Modules\Cliente\Model\Cliente::factory()->create()->fresh();
+        $veiculo = \App\Modules\Veiculo\Model\Veiculo::factory()->create()->fresh();
 
         // Criar relacionamento veículo-cliente
-        \App\Modules\ClienteVeiculo\Model\ClienteVeiculo::factory()->createOne([
+        \App\Modules\ClienteVeiculo\Model\ClienteVeiculo::factory()->create([
             'cliente_id' => $cliente->id,
             'veiculo_id' => $veiculo->id
         ]);

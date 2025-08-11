@@ -40,10 +40,4 @@ class Servico extends Model
     {
         return ServicoFactory::new();
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-    }
 }
