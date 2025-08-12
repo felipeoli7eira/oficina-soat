@@ -13,7 +13,7 @@ use App\Modules\OrdemDeServico\Repository\Repository as OSRepository;
 
 use App\Modules\OrdemDeServico\Dto\AtualizacaoDto;
 use App\Modules\OrdemDeServico\Dto\CadastroDto;
-
+use App\Modules\OrdemDeServico\Enums\StatusOrdemDeServico;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -165,7 +165,8 @@ class Service
         $os = $this->obterUmPorUuid($uuid);
 
         $os->update([
-            'data_finalizacao' => now()->format('Y-m-d H:i:s')
+            'data_finalizacao' => now()->format('Y-m-d H:i:s'),
+            'status'           => StatusOrdemDeServico::FINALIZADA->value
         ]);
 
         return $os->refresh(['cliente', 'veiculo']);

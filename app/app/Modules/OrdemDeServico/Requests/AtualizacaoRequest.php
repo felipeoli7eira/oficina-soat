@@ -3,6 +3,7 @@
 namespace App\Modules\OrdemDeServico\Requests;
 
 use App\Modules\OrdemDeServico\Dto\AtualizacaoDto;
+use App\Modules\OrdemDeServico\Enums\StatusOrdemDeServico;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
@@ -24,6 +25,16 @@ class AtualizacaoRequest extends FormRequest
 
     public function rules(): array
     {
+        $statusDeOrdemDeServicoPossiveis = array_column(StatusOrdemDeServico::cases(), 'value');
+
+        // Remove o status "FINALIZADA" para que isso seja feito pelo endpoint de encerramento
+        $statusPermitidos = array_filter(
+            $statusDeOrdemDeServicoPossiveis,
+            fn ($status) => $status !== StatusOrdemDeServico::FINALIZADA->value
+        );
+
+        $statusPossiveisValidacao = implode(',', $statusPermitidos);
+
         return [
             'uuid'                     => ['required', 'uuid', 'exists:os,uuid'],
             'cliente_uuid'             => ['sometimes', 'uuid', 'exists:cliente,uuid'],
@@ -34,6 +45,7 @@ class AtualizacaoRequest extends FormRequest
             'usuario_uuid_atendente'   => ['sometimes', 'uuid', 'exists:usuario,uuid'],
             'usuario_uuid_mecanico'    => ['sometimes', 'uuid', 'exists:usuario,uuid'],
             'prazo_validade'           => ['sometimes', 'integer', 'min:1'],
+            'status'                   => ['sometimes', 'string', 'in:' . $statusPossiveisValidacao],
         ];
     }
 
