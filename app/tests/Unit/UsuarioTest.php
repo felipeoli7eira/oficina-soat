@@ -121,6 +121,20 @@ class UsuarioTest extends TestCase
 
         $this->assertEquals('minhaSenhaSecreta', $usuario->getAuthPassword());
     }
+
+    /**
+     * Teste se o método role retorna a relação BelongsTo correta
+     */
+    public function test_usuario_model_role_retorna_belongs_to(): void
+    {
+        $usuario = new Usuario();
+        $relation = $usuario->role();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertEquals('role_id', $relation->getForeignKeyName());
+        $this->assertEquals(\Spatie\Permission\Models\Role::class, $relation->getRelated()::class);
+    }
+
     // ==================== TESTES DO REPOSITORY ====================
 
     /**

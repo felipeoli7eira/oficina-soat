@@ -32,7 +32,7 @@ class PecaInsumoCadastroTest extends TestCase
 
     public function test_cadastrar_peca_insumo(): void
     {
-        $response = $this->postJson('/api/peca-insumo', $this->payload);
+        $response = $this->withAuth()->postJson('/api/peca-insumo', $this->payload);
 
         $response->assertCreated();
         $this->assertDatabaseCount('peca_insumo', 1);
