@@ -74,29 +74,9 @@ class OrdemDeServicoServicoListagemTest extends TestCase
     public function test_servico_de_ordem_de_servico_pode_ser_listado_informando_uuid_de_cadastro(): void
     {
         // Arrange
-        $os = OrdemDeServico::factory()->create()->fresh();
-        $servico = Servico::factory()->create()->fresh();
-
-        $payload = [
-            'os_uuid'           => $os->uuid,
-            'servico_uuid'      => $servico->uuid,
-            'observacao'        => 'Serviço conforme solicitado pelo cliente',
-            'quantidade'        => 1,
-            'valor'             => 1000,
-        ];
-
-        // Act - Criar o serviço primeiro
-        $response = $this->postJson('/api/os-servico', $payload);
-        $response->assertCreated();
-
-        $response->assertJsonStructure([
-            'uuid',
-        ]);
-
-        $uuidOsServico = $response->json('uuid');
-
+        $oss = OrdemDeServicoServico::factory()->create()->fresh();
         // Act - Buscar o serviço criado
-        $responseOsServico = $this->withAuth()->getJson('/api/os-servico/' . $uuidOsServico);
+        $responseOsServico = $this->withAuth()->getJson('/api/os-servico/' . $oss->uuid);
         $responseOsServico->assertOk();
     }
 
