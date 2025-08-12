@@ -23,7 +23,7 @@ class CadastroDto
             'email'   => trim($this->email),
             'senha'   => trim($this->senha),
             'role'    => Role::findByName(trim(strtolower($this->papel))),
-            'status'  => trim($this->status),
+            'status'  => strtoupper(trim($this->status))
         ];
     }
 

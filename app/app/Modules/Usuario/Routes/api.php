@@ -13,7 +13,7 @@ Route::post('/usuario/auth/autenticar', [AuthUsuarioController::class, 'autentic
 Route::get('/usuario/auth/identidade', [AuthUsuarioController::class, 'identidade']);
 Route::get('/usuario/auth/logout', [AuthUsuarioController::class, 'logout']);
 
-Route::post('/usuario', [UsuarioController::class, 'cadastro']);
+Route::post('/usuario', [UsuarioController::class, 'cadastro'])->withoutMiddleware('auth:api');
 
 Route::put('/usuario/{uuid}', [UsuarioController::class, 'atualizacao']);
 Route::delete('/usuario/{uuid}', [UsuarioController::class, 'remocao']);
