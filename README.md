@@ -20,7 +20,7 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
 # Material
 - [Documentação DDD](https://miro.com/app/board/uXjVIgj8PiU=/?share_link_id=264509076152)
 - [Vídeo de apresentação](https://youtu.be/LR9RVo93RMQ)
-- [Documento de entrega - PDF](https://www.notion.so/Documento-de-entrega-Fase-1-24da942f7fe3808591a1cd4e3dc6925e?source=copy_link)
+- [Documento de entrega - PDF](https://docs.google.com/document/d/1_qPgbBC32TNpTJXttlJKYTJUsvqLhWWISQJlgQUQ_4M/edit?usp=sharing)
 
 # Sobre o projeto
 Este projeto foi desenvolvido com [Laravel](https://laravel.com), [nginx](https://nginx.org) e [postgresql](https://www.postgresql.org) e por volta dessas 3 tecnologias, está o [docker](https://www.docker.com)/[docker compose](https://docs.docker.com/compose) para containerizar/orquestrar tudo.
