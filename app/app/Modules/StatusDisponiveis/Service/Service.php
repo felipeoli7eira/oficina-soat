@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\StatusDisponiveis\Service;
 
 use App\Modules\StatusDisponiveis\Dto\CadastroDto;
-use App\Modules\StatusDisponiveis\Repository\StatusDisponiveisRepository;
-
+use App\Modules\StatusDisponiveis\Repository\Repository as StatusDisponiveisRepository;
 class Service
 {
     public function __construct(private readonly StatusDisponiveisRepository $repo) {}
