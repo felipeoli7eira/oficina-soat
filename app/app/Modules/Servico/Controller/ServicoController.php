@@ -28,7 +28,7 @@ class ServicoController extends Controller
      *      path="/api/servico",
      *      security={{"bearerAuth":{}}},
      *      tags={"Servico"},
-     *      summary="Faz a listagem dos serviços cadastrados",
+     *      summary="Faz a listagem dos serviços cadastrados não excluídos",
      *      description="Faz a listagem de serviços",
      *      @OA\Response(
      *          response=200,
