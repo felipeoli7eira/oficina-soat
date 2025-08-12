@@ -7,20 +7,20 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
 - Felipe
     - RM: `365154`
     - discord: `felipeoli7eira`
-    - LinkedIn: [@felipeoli7eira](`https://www.linkedin.com/in/felipeoli7eira`)
+    - LinkedIn: [@felipeoli7eira](https://www.linkedin.com/in/felipeoli7eira)
 - Nicolas
     - RM: `365746`
     - discord: `nic_hcm`
-    - LinkedIn: [@Nicolas Martins](`https://www.linkedin.com/in/nicolas-henrique/)
+    - LinkedIn: [@Nicolas Martins](https://www.linkedin.com/in/nicolas-henrique/)
 - William
     - RM: `365973`
-    - dicord: `wllsistemas`
-    - LinkedIn: [@William Francisco Leite](`https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app`)
+    - discord: `wllsistemas`
+    - LinkedIn: [@William Francisco Leite](https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 
 # Material
-- [Documentação DDD](https://google.com)
-- [Vídeo de apresentação](https://google.com)
-- [Documento de entrega - PDF](https://google.com)
+- [Documentação DDD](https://miro.com/app/board/uXjVIgj8PiU=/?share_link_id=264509076152)
+- [Vídeo de apresentação](https://youtu.be/LR9RVo93RMQ)
+- [Documento de entrega - PDF](https://www.notion.so/Documento-de-entrega-Fase-1-24da942f7fe3808591a1cd4e3dc6925e?source=copy_link)
 
 # Sobre o projeto
 Este projeto foi desenvolvido com [Laravel](https://laravel.com), [nginx](https://nginx.org) e [postgresql](https://www.postgresql.org) e por volta dessas 3 tecnologias, está o [docker](https://www.docker.com)/[docker compose](https://docs.docker.com/compose) para containerizar/orquestrar tudo.
