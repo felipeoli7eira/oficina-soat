@@ -420,6 +420,7 @@ class Controller extends BaseController
      *             @OA\Property(property="veiculo_uuid", type="string", format="uuid", example="17dcbf4f-5c3b-4b69-8d6b-76b592cb47d5"),
      *             @OA\Property(property="descricao", type="string", example="descricao qualquer atualizada..."),
      *             @OA\Property(property="valor_desconto", type="number", format="float", example=200),
+     *             @OA\Property(property="status", type="string", example="RECEBIDA,EM_DIAGNOSTICO,RECUSADO_PELO_CLIENTE,DESISTENCIA_DO_CLIENTE,EXPIRADO,AGUARDANDO_APROVACAO,APROVADO,AGUARDANDO_PECAS_INSUMOS,PECAS_INSUMOS_DISPONIVEIS,PECAS_INSUMOS_INDISPONIVEIS,EM_EXECUSAO,FINALIZADA,ENTREGUE"),
      *             @OA\Property(property="valor_total", type="number", format="float", example=700),
      *             @OA\Property(property="usuario_uuid_atendente", type="string", format="uuid", example="4a0a1310-cefd-4e02-935a-1d97017f7ec3"),
      *             @OA\Property(property="usuario_uuid_mecanico", type="string", format="uuid", example="742e08be-e5a0-4704-b9a1-cf4085d931fc"),

@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\OrdemDeServico\Enums\StatusOrdemDeServico;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->string('descricao');
             $table->decimal('valor_desconto', 15, 2);
             $table->decimal('valor_total', 15, 2);
+            $table->string('status')->default(StatusOrdemDeServico::RECEBIDA);
 
             $table->unsignedBigInteger('usuario_id_atendente');
             $table->foreign('usuario_id_atendente')->references('id')->on('usuario');

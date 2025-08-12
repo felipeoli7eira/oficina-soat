@@ -27,8 +27,8 @@ class AuthUsuarioController extends BaseController
      *         required=true,
      *         @OA\JsonContent(
      *             required={"email", "senha"},
-     *             @OA\Property(property="email", type="string", example="uaragao@gmail.com"),
-     *             @OA\Property(property="senha", type="string", example="password")
+     *             @OA\Property(property="email", type="string", example="atendente@example.com"),
+     *             @OA\Property(property="senha", type="string", example="senha8caracteres")
      *         )
      *     ),
      *     @OA\Response(
