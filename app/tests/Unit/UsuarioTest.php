@@ -111,6 +111,16 @@ class UsuarioTest extends TestCase
         $this->assertEquals($expectedFillable, $usuario->getFillable());
     }
 
+    /**
+     * Teste se o método getAuthPassword retorna o campo senha
+     */
+    public function test_usuario_model_get_auth_password_retorna_senha(): void
+    {
+        $usuario = new Usuario();
+        $usuario->senha = 'minhaSenhaSecreta';
+
+        $this->assertEquals('minhaSenhaSecreta', $usuario->getAuthPassword());
+    }
     // ==================== TESTES DO REPOSITORY ====================
 
     /**
