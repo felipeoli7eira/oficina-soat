@@ -6,12 +6,15 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
 
 - Felipe
     - RM: `365154`
+    - discord: `felipeoli7eira`
     - LinkedIn: [@felipeoli7eira](`https://www.linkedin.com/in/felipeoli7eira`)
 - Nicolas
     - RM: `365746`
+    - discord: `nic_hcm`
     - LinkedIn: [@Nicolas Martins](`https://www.linkedin.com/in/nicolas-henrique/)
 - William
     - RM: `365973`
+    - dicord: `wllsistemas`
     - LinkedIn: [@William Francisco Leite](`https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app`)
 
 # Material
