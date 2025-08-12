@@ -20,7 +20,7 @@ use OpenApi\Annotations as OA;
 use Throwable;
 use DomainException;
 
-class Controller extends BaseController
+class OrdemServicoController extends BaseController
 {
     public function __construct(private readonly OSService $service) {}
 

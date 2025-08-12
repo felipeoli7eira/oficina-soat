@@ -7,7 +7,7 @@ use App\Modules\Cliente\Model\Cliente;
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
 
-use App\Modules\OrdemDeServico\Controller\Controller as OSController;
+use App\Modules\OrdemDeServico\Controller\OrdemServicoController as OSController;
 use App\Modules\OrdemDeServico\Service\Service as OSService;
 
 use Database\Seeders\DatabaseSeeder;

@@ -8,7 +8,7 @@ use App\Modules\OrdemDeServico\Requests\CadastroRequest;
 
 use App\Modules\OrdemDeServico\Service\Service as OSService;
 
-use App\Modules\OrdemDeServico\Controller\Controller;
+use App\Modules\OrdemDeServico\Controller\OrdemServicoController;
 
 use App\Modules\Usuario\Model\Usuario;
 use App\Modules\Veiculo\Model\Veiculo;
@@ -32,7 +32,7 @@ class OrdemServicoCadastroTest extends TestCase
         parent::setUp();
 
         $this->serviceMock = Mockery::mock(OSService::class);
-        $this->controller = new Controller($this->serviceMock);
+        $this->controller = new OrdemServicoController($this->serviceMock);
 
         $this->assertDatabaseEmpty('os');
         $this->assertDatabaseEmpty('veiculo');
