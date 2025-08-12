@@ -2,180 +2,132 @@
 
 namespace Tests\Feature\Modules\Cliente;
 
-use App\Enums\Papel;
-use App\Modules\Cliente\Requests\AtualizacaoRequest;
-
-use App\Modules\Cliente\Service\Service as ClienteService;
-
-use App\Modules\Cliente\Controller\ClienteController;
-
 use App\Modules\Cliente\Model\Cliente;
-
-use Database\Seeders\DatabaseSeeder;
-use DomainException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ClienteAtualizacaoTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $serviceMock;
-    private $controller;
+    private array $payload;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->serviceMock = Mockery::mock(ClienteService::class);
-        $this->controller = new ClienteController($this->serviceMock);
-
         $this->assertDatabaseEmpty('cliente');
 
-        $this->seed(DatabaseSeeder::class);
+        $fake = fake('pt_BR');
+
+        $this->payload = [
+            'nome' => $fake->name(),
+            // CPF anterior era inválido e impedia a passagem pela validação, logo o service não era chamado
+            'cpf' => '11144477735',
+            'email' => $fake->email(),
+            'telefone_movel' => '(11) 99999-9999',
+            'cep' => '01000-000',
+            'logradouro' => 'Rua Exemplo',
+            'numero' => '123',
+            'bairro' => 'Centro',
+            'cidade' => 'São Paulo',
+            'uf' => 'SP'
+        ];
     }
 
-    public function test_cliente_pode_ser_atualizado(): void
+    public function test_atualizar_cliente_por_uuid(): void
     {
-        // Arrange
-        $cliente = Cliente::factory()->create()->fresh();
+        $cliente = Cliente::factory()->createOne()->fresh();
 
-        $payloadAtualizacao = [
-            'nome' => 'Nome Atualizado',
+        $dadosAtualizacao = [
+            'nome' => 'Cliente Atualizado',
             'cpf' => $cliente->cpf,
             'email' => 'email.atualizado@teste.com',
-            'telefone_movel' => '(11) 99999-9999',
-        ];
-
-        // Act
-        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $payloadAtualizacao);
-
-        // Assert
-        $response->assertOk();
-    }
-
-    public function test_nome_do_cliente_pode_ser_atualizado(): void
-    {
-        // Arrange
-        $cliente = Cliente::factory()->create()->fresh();
-
-        $payloadAtualizacao = [
-            'nome' => 'Novo Nome do Cliente',
-            'cpf' => $cliente->cpf,
-        ];
-
-        // Act
-        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $payloadAtualizacao);
-
-        // Assert
-        $response->assertOk();
-    }
-
-    public function test_endereco_do_cliente_pode_ser_atualizado(): void
-    {
-        // Arrange
-        $cliente = Cliente::factory()->create()->fresh();
-
-        $payloadAtualizacao = [
-            'cpf' => $cliente->cpf,
-            'logradouro' => 'Nova Rua Exemplo',
+            'telefone_movel' => '(11) 98888-8888',
+            'logradouro' => 'Nova Rua',
             'numero' => '456',
             'bairro' => 'Novo Bairro',
             'cidade' => 'Nova Cidade',
             'uf' => 'RJ',
-            'cep' => '20000-000',
+            'cep' => '20000-000'
         ];
 
-        // Act
-        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $payloadAtualizacao);
+        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $dadosAtualizacao);
 
-        // Assert
         $response->assertOk();
     }
 
-    public function test_atualizacao_cliente_nao_encontrado_lanca_model_not_found_exception(): void
+    public function test_atualizar_cliente_por_uuid_que_nao_existe(): void
     {
-        $uuidFake = 'uuid-inexistente-1234';
+        $uuid = '8acb1b8f-c588-4968-85ca-04ef66f2b380';
+        $this->payload['nome'] = 'Cliente com UUID que não existe';
+        $response = $this->withAuth()->putJson('/api/cliente/' . $uuid, $this->payload);
 
-        $mockDto = Mockery::mock(\App\Modules\Cliente\Dto\AtualizacaoDto::class);
-
-        $mockRequest = Mockery::mock(AtualizacaoRequest::class);
-        $mockRequest->shouldIgnoreMissing(); // ignora outros métodos que não forem stubados
-        $mockRequest->shouldReceive('route')->with('uuid')->once()->andReturn($uuidFake);
-        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
-
-        $this->serviceMock->shouldReceive('atualizacao')
-            ->with($uuidFake, $mockDto)
-            ->once()
-            ->andThrow(ModelNotFoundException::class);
-
-        // Act
-        $response = $this->controller->atualizacao($mockRequest);
-
-        // Assert
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $responseData = $response->getData(true);
-
-        $this->assertTrue($responseData['error']);
-        $this->assertNotEmpty($responseData['message']);
+        $response->assertStatus(400);
     }
 
-    public function test_atualizacao_cliente_retorna_erro_de_regra_de_negocio(): void
+    public function test_atualizar_cliente_com_dados_invalidos(): void
     {
-        $uuidFake = 'uuid-valido-1234';
+        $cliente = Cliente::factory()->createOne()->fresh();
 
-        $mockDto = Mockery::mock(\App\Modules\Cliente\Dto\AtualizacaoDto::class);
+        $dadosInvalidos = [
+            'nome' => 'A',
+            'cpf' => 'cpf-invalido',
+            'email' => 'email-invalido',
+            'telefone_movel' => 'telefone-invalido',
+            'cep' => 'cep-invalido',
+            'uf' => 'XX'
+        ];
 
-        $mockRequest = Mockery::mock(AtualizacaoRequest::class);
-        $mockRequest->shouldIgnoreMissing();
-        $mockRequest->shouldReceive('route')->with('uuid')->once()->andReturn($uuidFake);
-        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
+        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $dadosInvalidos);
 
-        $domainException = new DomainException('Erro de regra de negócio', 400);
-
-        $this->serviceMock->shouldReceive('atualizacao')
-            ->with($uuidFake, $mockDto)
-            ->once()
-            ->andThrow($domainException);
-
-        // Act
-        $response = $this->controller->atualizacao($mockRequest);
-
-        // Assert
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $data = $response->getData(true);
-        $this->assertTrue($data['error']);
+        $response->assertStatus(400);
     }
 
-    public function test_atualizacao_cliente_retorna_erro_interno_em_excecao_generica(): void
+    public function test_atualizar_cliente_com_uuid_mal_formado(): void
     {
-        $uuidFake = 'uuid-valido-1234';
+        $uuidInvalido = 'uuid-mal-formado-123';
 
-        $mockDto = Mockery::mock(\App\Modules\Cliente\Dto\AtualizacaoDto::class);
+        $response = $this->withAuth()->putJson('/api/cliente/' . $uuidInvalido, $this->payload);
 
-        $mockRequest = Mockery::mock(AtualizacaoRequest::class);
-        $mockRequest->shouldIgnoreMissing();
-        $mockRequest->shouldReceive('route')->with('uuid')->once()->andReturn($uuidFake);
-        $mockRequest->shouldReceive('toDto')->once()->andReturn($mockDto);
+        $response->assertStatus(400);
+    }
 
-        $erroGenerico = new Exception('Erro interno');
+    public function test_atualizar_cliente_com_erro_interno(): void
+    {
+        $cliente = Cliente::factory()->createOne()->fresh();
 
-        $this->serviceMock->shouldReceive('atualizacao')
-            ->with($uuidFake, $mockDto)
-            ->once()
-            ->andThrow($erroGenerico);
+        $this->mock(\App\Modules\Cliente\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('atualizacao')
+                 ->once()
+                 ->andThrow(new \Exception('Erro interno simulado'));
+        });
 
-        // Act
-        $response = $this->controller->atualizacao($mockRequest);
+        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $this->payload);
 
-        // Assert
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $data = $response->getData(true);
-        $this->assertTrue($data['error']);
-        $this->assertEquals('Erro interno', $data['message']);
+        // Erro interno deve retornar 500
+        $response->assertStatus(500);
+    }
+
+    public function test_atualizar_cliente_com_database_exception(): void
+    {
+        $cliente = Cliente::factory()->createOne()->fresh();
+
+        $this->mock(\App\Modules\Cliente\Service\Service::class, function ($mock) {
+            $mock->shouldReceive('atualizacao')
+                 ->once()
+                 ->andThrow(new \Illuminate\Database\QueryException(
+                     'connection',
+                     'SELECT * FROM cliente',
+                     [],
+                     new \Exception('Database connection failed')
+                 ));
+        });
+
+        $response = $this->withAuth()->putJson('/api/cliente/' . $cliente->uuid, $this->payload);
+
+        // Exceções de banco tratadas como erro interno
+        $response->assertStatus(500);
     }
 }

@@ -102,7 +102,7 @@ class UsuarioAtualizacaoTest extends TestCase
 
         // Act
 
-        $desativado = StatusUsuario::INATIVO->value;
+        $desativado = 'inativo'; // Usar valor em minúsculo
 
         $response = $this->withAuth()->putJson('/api/usuario/' . $usuario->uuid, [
             'status' => $desativado,

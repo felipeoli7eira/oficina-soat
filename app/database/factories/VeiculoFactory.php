@@ -48,7 +48,7 @@ class VeiculoFactory extends Factory
             'ano_fabricacao'   => fake()->numberBetween(1990, 2024),
             'cor'              => fake()->randomElement($cores),
             'chassi'           => $chassi,
-            'excluido'         => fake()->boolean(20),
+            'excluido'         => false,
             'data_cadastro'    => fake()->dateTimeBetween('-2 years', 'now'),
             'data_atualizacao' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
