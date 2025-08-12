@@ -118,18 +118,18 @@ class ClienteController extends Controller
      *         description="Cliente encontrado com sucesso",
      *         @OA\JsonContent(
      *             @OA\Property(property="uuid", type="string", format="uuid", example="b53b68c6-bc87-4553-b72a-8b2d6dbad7d6"),
-     *             @OA\Property(property="nome", type="string", example="Felipe Oliveira"),
-     *             @OA\Property(property="cpf", type="string", example="03364266239"),
-     *             @OA\Property(property="cnpj", type="string", example="50162731000101"),
-     *             @OA\Property(property="email", type="string", example="me.felipeoliveira@gmail.com"),
-     *             @OA\Property(property="telefone_movel", type="string", example="(96) 98415-7994"),
-     *             @OA\Property(property="cep", type="string", example="68909-811"),
-     *             @OA\Property(property="logradouro", type="string", example="Viela Ambrósio Rodrigues de Medeiros"),
-     *             @OA\Property(property="numero", type="string", example="18"),
-     *             @OA\Property(property="bairro", type="string", example="Portal D'Oeste"),
+     *             @OA\Property(property="nome", type="string", example="Jhon Doe"),
+     *             @OA\Property(property="cpf", type="string", example="10207011028"),
+     *             @OA\Property(property="cnpj", type="string", example="47259180000194"),
+     *             @OA\Property(property="email", type="string", example="usuario@gmail.com"),
+     *             @OA\Property(property="telefone_movel", type="string", example="(99) 99999-9999"),
+     *             @OA\Property(property="cep", type="string", example="53170-045"),
+     *             @OA\Property(property="logradouro", type="string", example="Avenida Capitão Luís Reis"),
+     *             @OA\Property(property="numero", type="string", example="11"),
+     *             @OA\Property(property="bairro", type="string", example="Passarinho"),
      *             @OA\Property(property="complemento", type="string", example="Casa 2"),
-     *             @OA\Property(property="cidade", type="string", example="Osasco"),
-     *             @OA\Property(property="uf", type="string", example="AP")
+     *             @OA\Property(property="cidade", type="string", example="Olinda"),
+     *             @OA\Property(property="uf", type="string", example="PE")
      *         )
      *     ),
      *     @OA\Response(

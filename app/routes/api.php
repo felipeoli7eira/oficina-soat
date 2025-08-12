@@ -37,5 +37,3 @@ Route::middleware('auth:api')->group(function () {
     require __DIR__ . '/../app/Modules/OrdemDeServicoServico/Routes/api.php';
 
 });
-
-
