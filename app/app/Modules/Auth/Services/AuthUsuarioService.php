@@ -30,9 +30,4 @@ class AuthUsuarioService
             'expires_in'   =>  ((int) JWTAuth::factory()->getTTL()) * 60,
         ];
     }
-
-    public function refresh(): array
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
 }

@@ -116,11 +116,6 @@ class AuthUsuarioController extends BaseController
         return response()->json(auth()->user());
     }
 
-    public function refresh(): array
-    {
-        return $this->service->refresh();
-    }
-
     /**
      * @OA\Post(
      *     path="/api/usuario/auth/logout",
