@@ -27,7 +27,7 @@ class ServicoController extends Controller
      * @OA\Get(
      *      path="/api/servico",
      *      security={{"bearerAuth":{}}},
-     *      tags={"servico"},
+     *      tags={"Servico"},
      *      summary="Faz a listagem dos serviços cadastrados",
      *      description="Faz a listagem de serviços",
      *      @OA\Response(
@@ -54,7 +54,7 @@ class ServicoController extends Controller
      /**
      * @OA\Post(
      *      path="/api/servico",
-     *      tags={"servico"},
+     *      tags={"Servico"},
      *      summary="Cadastra um serviço",
      *      security={{"bearerAuth":{}}},
      *      description="Cadastra um serviço",
@@ -94,7 +94,7 @@ class ServicoController extends Controller
      *     path="/api/servico/{uuid}",
      *     summary="Obtém os dados de um serviço",
      *     description="Retorna os dados completos de um serviço específico com base no UUID informado.",
-     *     tags={"servico"},
+     *     tags={"Servico"},
      *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
@@ -143,7 +143,7 @@ class ServicoController extends Controller
      *     path="/api/servico/{uuid}",
      *     summary="Remove um servico",
      *     description="Remove um serviço com base no UUID informado.",
-     *     tags={"servico"},
+     *     tags={"Servico"},
      *      security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
@@ -194,7 +194,7 @@ class ServicoController extends Controller
      *     path="/api/servico/{uuid}",
      *     summary="Atualiza os dados de um serviço",
      *     description="Atualiza os dados de um serviço já existente, identificado pelo UUID.",
-     *     tags={"servico"},
+     *     tags={"Servico"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="uuid",
