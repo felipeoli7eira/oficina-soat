@@ -15,6 +15,11 @@ class DatabaseSeeder extends Seeder
         $this->veiculos();
         $this->servicos();
         $this->statusDisponiveis();
+        $this->pecasInsumos();
+        $this->clienteVeiculos();
+        $this->ordemDeServicos();
+        $this->ordemDeServicoItems();
+        $this->ordemDeServicoServicos();
     }
 
     public function roles(): void
@@ -23,11 +28,6 @@ class DatabaseSeeder extends Seeder
         DB::table('roles')->insert(['name' => 'comercial', 'guard_name' => 'web']);
         DB::table('roles')->insert(['name' => 'mecanico', 'guard_name' => 'web']);
         DB::table('roles')->insert(['name' => 'gestor_estoque', 'guard_name' => 'web']);
-        $this->pecasInsumos();
-        $this->clienteVeiculos();
-        $this->ordemDeServicos();
-        $this->ordemDeServicoItems();
-        $this->ordemDeServicoServicos();
     }
 
     public function clientes(): void

@@ -171,4 +171,45 @@ class Service
 
         return $os->refresh(['cliente', 'veiculo']);
     }
+
+    public function tempoMedioExecucao()
+    {
+        $ordens = $this->repo->model()
+            ->whereNotNull('data_finalizacao')
+            ->whereNotNull('data_abertura')
+            ->select(['data_abertura', 'data_finalizacao'])
+            ->get();
+
+        if ($ordens->isEmpty()) {
+            return [
+                'total_ordens_finalizadas' => 0,
+                'tempo_medio_horas' => 0,
+                'tempo_medio_dias' => 0,
+                'tempo_medio_formatado' => '0 dias, 0 horas'
+            ];
+        }
+
+        $totalSegundos = 0;
+
+        foreach ($ordens as $ordem) {
+            $dataAbertura = \Carbon\Carbon::parse($ordem->data_abertura);
+            $dataFinalizacao = \Carbon\Carbon::parse($ordem->data_finalizacao);
+
+            $totalSegundos += $dataAbertura->diffInSeconds($dataFinalizacao);
+        }
+
+        $tempoMedioSegundos = $totalSegundos / $ordens->count();
+        $tempoMedioHoras = $tempoMedioSegundos / 3600;
+        $tempoMedioDias = $tempoMedioHoras / 24;
+
+        $dias = floor($tempoMedioDias);
+        $horas = floor($tempoMedioHoras % 24);
+
+        return [
+            'total_ordens_finalizadas' => $ordens->count(),
+            'tempo_medio_horas' => round($tempoMedioHoras, 2),
+            'tempo_medio_dias' => round($tempoMedioDias, 2),
+            'tempo_medio_formatado' => "{$dias} dias, {$horas} horas"
+        ];
+    }
 }

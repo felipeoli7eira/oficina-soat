@@ -603,4 +603,48 @@ class OrdemServicoController extends BaseController
 
         return Response::json($response, HttpResponse::HTTP_OK);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/os/tempo-medio-execucao",
+     *     tags={"OS"},
+     *     summary="Monitora o tempo médio de execução das ordens de serviço",
+     *     description="Retorna estatísticas sobre o tempo médio de execução das ordens de serviço finalizadas.",
+     *     security={{
+     *       "bearerAuth":{}
+     *      }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Estatísticas do tempo médio de execução das ordens de serviço",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="total_ordens_finalizadas", type="integer", example=15, description="Total de ordens de serviço finalizadas"),
+     *             @OA\Property(property="tempo_medio_horas", type="number", format="float", example=72.5, description="Tempo médio em horas"),
+     *             @OA\Property(property="tempo_medio_dias", type="number", format="float", example=3.02, description="Tempo médio em dias"),
+     *             @OA\Property(property="tempo_medio_formatado", type="string", example="3 dias, 0 horas", description="Tempo médio formatado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro inesperado no servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Erro interno do servidor.")
+     *         )
+     *     )
+     * )
+     */
+    public function tempoMedioExecucao()
+    {
+        try {
+            $response = $this->service->tempoMedioExecucao();
+        } catch (Throwable $th) {
+            return Response::json([
+                'error'   => true,
+                'message' => $th->getMessage()
+            ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return Response::json($response, HttpResponse::HTTP_OK);
+    }
 }

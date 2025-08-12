@@ -6,6 +6,7 @@ use App\Modules\OrdemDeServico\Controller\OrdemServicoController as OSController
 use Illuminate\Support\Facades\Route;
 
 Route::get('/os', [OSController::class, 'listagem']);
+Route::get('/os/tempo-medio-execucao', [OSController::class, 'tempoMedioExecucao']);
 Route::get('/os/{uuid}', [OSController::class, 'obterUmPorUuid']);
 Route::post('/os', [OSController::class, 'cadastro']);
 

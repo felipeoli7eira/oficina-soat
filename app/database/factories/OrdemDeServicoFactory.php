@@ -30,7 +30,7 @@ class OrdemDeServicoFactory extends Factory
             'Revisão do motor'
         ];
 
-        $dataAbertura = $faker->dateTimeBetween('-6 months', 'now');
+        $dataAbertura = $faker->dateTimeBetween('-3 months', '-1 day');
         $valorTotal = $faker->randomFloat(2, 150, 2500);
         $valorDesconto = $faker->randomFloat(2, 0, $valorTotal * 0.2);
 
@@ -38,7 +38,8 @@ class OrdemDeServicoFactory extends Factory
         $dataFinalizacao = null;
 
         if ($jaFinalizada) {
-            $dataFinalizacao = $faker->dateTimeBetween($dataAbertura, 'now');
+            $dataMinFinalizacao = (clone $dataAbertura)->modify('+1 hour');
+            $dataFinalizacao = $faker->dateTimeBetween($dataMinFinalizacao, 'now');
         }
 
         $data = [
@@ -72,8 +73,10 @@ class OrdemDeServicoFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $dataAbertura = $attributes['data_abertura'] ?? now()->subDays(rand(1, 30));
+            // Garantir que data_finalizacao seja sempre posterior à data_abertura
+            $dataMinFinalizacao = (clone $dataAbertura)->modify('+1 hour');
             return [
-                'data_finalizacao' => $this->faker->dateTimeBetween($dataAbertura, 'now'),
+                'data_finalizacao' => $this->faker->dateTimeBetween($dataMinFinalizacao, 'now'),
             ];
         });
     }
