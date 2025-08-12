@@ -89,6 +89,7 @@ class OrdemDeServicoTest extends TestCase
             'descricao',
             'valor_desconto',
             'valor_total',
+            'status',
             'usuario_id_atendente',
             'usuario_id_mecanico',
             'excluido',
