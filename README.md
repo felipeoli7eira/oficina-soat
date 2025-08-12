@@ -8,11 +8,11 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
     - RM: `365154`
     - LinkedIn: [@felipeoli7eira](`https://www.linkedin.com/in/felipeoli7eira`)
 - Nicolas
-    - RM: `000000`
-    - LinkedIn: [@userName](`https://google.com`)
+    - RM: `365746`
+    - LinkedIn: [@Nicolas Martins](`https://www.linkedin.com/in/nicolas-henrique/)
 - William
     - RM: `365973`
-    - LinkedIn: [@userName](`https://google.com`)
+    - LinkedIn: [@William Francisco Leite](`https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app`)
 
 # Material
 - [Documentação DDD](https://google.com)
