@@ -15,31 +15,30 @@ class ClienteFactory extends Factory
     {
         $faker = \Faker\Factory::create('pt_BR');
 
-        $empresa = $faker->boolean(30); // 30% chance de ser empresa
+        $empresa = $faker->boolean(30);
+
+        $telefone = '11' . $faker->randomNumber(9, true);
+        $telefone = substr($telefone, 0, 11);
 
         $data = [
-            'nome'             => $faker->name(),
+            'nome'             => substr($faker->name(), 0, 100),
             'cpf'              => $empresa ? null : $faker->cpf(false),
             'cnpj'             => $empresa ? $faker->cnpj(false) : null,
             'email'            => $faker->email(),
-            'telefone_movel'   => str_replace(['(', ')', '-', ' '], '', $faker->phoneNumber()),
+            'telefone_movel'   => $telefone,
 
-            'cep'              => str_replace('-', '', $faker->postcode()),
-            'logradouro'       => $faker->streetName(),
-            'numero'           => $faker->buildingNumber(),
-            'bairro'           => $faker->citySuffix(),
-            'complemento'      => $faker->optional(0.3)->secondaryAddress(), // nem todo mundo tem
-            'cidade'           => $faker->city(),
+            'cep'              => substr(str_replace('-', '', $faker->postcode()), 0, 8),
+            'logradouro'       => substr($faker->streetName(), 0, 100),
+            'numero'           => substr($faker->buildingNumber(), 0, 20),
+            'bairro'           => substr($faker->citySuffix(), 0, 50),
+            'complemento'      => $faker->optional(0.3)->text(100),
+            'cidade'           => substr($faker->city(), 0, 50),
             'uf'               => $faker->stateAbbr(),
 
-            'excluido'         => $faker->boolean(10), // só 10% excluídos
-            'data_cadastro'    => $faker->dateTimeBetween('-1 year', 'now'),
-            'data_atualizacao' => $faker->dateTimeBetween('-1 year', 'now'),
+            'excluido'         => false,
+            'data_cadastro'    => now(),
+            'data_atualizacao' => now(),
         ];
-
-        if ($data['excluido']) {
-            $data['data_exclusao'] = $faker->dateTimeBetween($data['data_atualizacao'], 'now');
-        }
 
         return $data;
     }
