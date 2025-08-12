@@ -35,11 +35,11 @@ class ClienteController extends Controller
      *       ),
      *     )
      */
-    public function listagem(ListagemRequest $request)
+    public function listagem()
     {
         try {
-            $dto = new ListagemDto();
-            $response = $this->service->listagem($dto);
+            $dtoCliente = new ListagemDto();
+            $response = $this->service->listagem($dtoCliente);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
@@ -84,8 +84,8 @@ class ClienteController extends Controller
     public function cadastro(CadastroRequest $request)
     {
         try {
-            $dto = $request->toDto();
-            $response = $this->service->cadastro($dto);
+            $dtoCliente = $request->toDto();
+            $response = $this->service->cadastro($dtoCliente);
         } catch (Throwable $th) {
             return Response::json([
                 'error'   => true,
