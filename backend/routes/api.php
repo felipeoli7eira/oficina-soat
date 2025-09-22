@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('ping', fn() => response()->json([
@@ -8,6 +7,9 @@ Route::get('ping', fn() => response()->json([
     'msg' => 'pong'
 ]));
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+require_once __DIR__ . '/usuario.php';
+
+Route::fallback(fn() => response()->json([
+    'err' => true,
+    'msg' => 'Recurso não encontrado',
+]));

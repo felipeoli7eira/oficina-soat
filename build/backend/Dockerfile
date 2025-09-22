@@ -21,4 +21,6 @@ RUN chmod +x /usr/local/bin/startup.sh
 
 COPY ./backend .
 
+USER www-data
+
 ENTRYPOINT ["/usr/local/bin/startup.sh"]
