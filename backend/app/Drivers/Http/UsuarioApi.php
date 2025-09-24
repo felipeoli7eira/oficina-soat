@@ -36,4 +36,25 @@ class UsuarioApi
 
         $resultado->apresentar();
     }
+
+    public function listar(Request $request)
+    {
+        // $input = Validator::make($request->all(), [
+        //     'nome'      => ['required', 'string'],
+        //     'email'     => ['required', 'string'],
+        //     'senha'     => ['required', 'string'],
+        //     'documento' => ['required', 'string'],
+        // ]);
+
+        // if ($input->fails()) {
+        //     return response()->json($input->errors(), Response::HTTP_BAD_REQUEST);
+        // }
+
+        $resultado = $this->controlador->listar(
+            porPagina: $request->get('porPagina', 10),
+            pagina: $request->get('pagina', 1)
+        );
+
+        $resultado->apresentar();
+    }
 }

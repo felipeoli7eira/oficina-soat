@@ -7,6 +7,7 @@ namespace App\Aplicacao\Usuario;
 use App\Dominio\Usuario\Repositorio\Contrato as Repositorio;
 use App\Interface\Dto\Usuario\CriacaoDto;
 use App\Dominio\Usuario\Entidade\Entidade as EntidadeUsuario;
+use App\Interface\Dto\JsonPaginado;
 use DomainException;
 
 class CasoDeUso
@@ -39,5 +40,10 @@ class CasoDeUso
                 null
             )
         );
+    }
+
+    public function listar(int $porPagina, int $pagina): JsonPaginado
+    {
+        return $this->repositorioDeDados->obterTodos($porPagina, $pagina);
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Dominio\Usuario\Repositorio;
 
-use stdClass;
 use App\Dominio\Usuario\Entidade\Entidade as EntidadeUsuario;
+use App\Interface\Dto\JsonPaginado;
 
 interface Contrato
 {
-    public function obterTodos(): array;
+    public function obterTodos(int $porPagina, int $pagina): JsonPaginado;
     public function encontrarPorIdentificadorUnico(string $identificador /** cnpj, cpf, uuid, email */, string $nomeIdentificador): ?EntidadeUsuario;
 
     public function criar(EntidadeUsuario $entidade): EntidadeUsuario;

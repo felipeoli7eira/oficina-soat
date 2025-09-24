@@ -8,6 +8,7 @@ use DateTimeImmutable;
 
 use App\Dominio\Usuario\Entidade\Entidade as EntidadeUsuario;
 use App\Dominio\Usuario\Repositorio\Contrato as UsuarioRepositorioContrato;
+use App\Interface\Dto\JsonPaginado;
 use App\Models\UsuarioModel;
 
 use Illuminate\Support\Str;
@@ -15,9 +16,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UsuarioRepositorioEloquent implements UsuarioRepositorioContrato
 {
-    public function obterTodos(): array
+    public function obterTodos(int $porPagina = 20, int $pagina = 1): JsonPaginado
     {
-        return [];
+        $dados = UsuarioModel::paginate($porPagina, ['*'], 'page', $pagina);
+
+        return new JsonPaginado(
+            $dados->items(),
+            $dados->total(),
+            $dados->perPage(),
+            $dados->currentPage(),
+            $dados->lastPage()
+        );
     }
 
     public function encontrarPorIdentificadorUnico(string $nomeIdentificador, string $identificador): ?EntidadeUsuario
