@@ -8,9 +8,7 @@ use App\Contrato\Apresentacao;
 
 final class Json implements Apresentacao
 {
-    public function __construct(public readonly array $dados)
-    {
-    }
+    public function __construct(public readonly array $dados) {}
 
     #[\Override]
     public function apresentar(): void

@@ -25,17 +25,13 @@ class UsuarioControlador
             )
         );
 
-        return new Json(
-            (array) $dados
-        );
+        return new Json((array) $dados);
     }
 
     public function listar(int $porPagina, int $pagina): Json
     {
         $dados = $this->casoDeUso->listar($porPagina, $pagina);
 
-        return new Json(
-            (array) $dados
-        );
+        return new Json((array) $dados);
     }
 }
