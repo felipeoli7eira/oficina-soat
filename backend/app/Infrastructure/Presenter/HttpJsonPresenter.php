@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Interface\Presenter;
+namespace App\Infrastructure\Presenter;
 
 use App\Signature\PresenterInterface;
 

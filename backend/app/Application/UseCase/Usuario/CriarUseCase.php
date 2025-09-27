@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Usuario;
 
-use App\Interface\Gateway\UsuarioGateway;
-use App\Interface\Dto\UsuarioDto;
+use App\Infrastructure\Gateway\UsuarioGateway;
+use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Usuario\Entidade;
 use App\Exception\DomainHttpException;
 
-class CriarUsuarioUseCase
+class CriarUseCase
 {
     public function __construct() {}
 
@@ -21,15 +21,8 @@ class CriarUsuarioUseCase
             throw new DomainHttpException('E-mail já cadastrado', 400);
         }
 
-        return new Entidade(
-            '',
-            $dados->nome,
-            $dados->email,
-            $dados->senha,
-            Entidade::STATUS_ATIVO,
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
-            null
-        );
+        $cadastro = $gateway->criar($dados);
+
+        return $cadastro;
     }
 }

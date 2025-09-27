@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Interface\Gateway;
+namespace App\Infrastructure\Gateway;
 
 use App\Domain\Usuario\Entidade;
 use App\Domain\Usuario\RepositorioInterface;
-use App\Interface\Dto\UsuarioDto;
+use App\Infrastructure\Dto\UsuarioDto;
 use App\Models\UsuarioModel;
 
 class UsuarioGateway
@@ -39,5 +39,10 @@ class UsuarioGateway
     public function criar(UsuarioDto $dados): Entidade
     {
         return $this->repositorio->criar($dados);
+    }
+
+    public function listar(): array
+    {
+        return $this->repositorio->listar();
     }
 }

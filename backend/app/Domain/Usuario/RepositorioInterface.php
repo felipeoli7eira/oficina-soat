@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Usuario;
 
 use App\Domain\Usuario\Entidade;
-use App\Interface\Dto\UsuarioDto;
+use App\Infrastructure\Dto\UsuarioDto;
 
 interface RepositorioInterface
 {
@@ -17,4 +17,6 @@ interface RepositorioInterface
     ): ?Entidade;
 
     public function criar(UsuarioDto $dados): Entidade;
+
+    public function listar(array $columns = ['*']): array;
 }
