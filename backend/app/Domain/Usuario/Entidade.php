@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Dominio\Usuario\Entidade;
+namespace App\Domain\Usuario;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -14,12 +14,14 @@ use InvalidArgumentException;
  */
 class Entidade
 {
+    public const STATUS_ATIVO = true;
+    public const STATUS_INATIVO = false;
+
     public function __construct(
         public string $identificadorUnicoUniversal, // identidade de domínio (uuid)
         public string $nome,
         public string $email,
         public string $senha,
-        public string $documento,
         public bool   $ativo,
         public DateTimeImmutable $criadoEm,
         public DateTimeImmutable $atualizadoEm,
@@ -72,5 +74,18 @@ class Entidade
         if (strlen(trim($this->nome)) < 3) {
             throw new InvalidArgumentException('Nome deve ter pelo menos 3 caracteres');
         }
+    }
+
+    public function toHttpResponse(): array
+    {
+        return [
+            'identificadorUnicoUniversal' => $this->identificadorUnicoUniversal,
+            'nome'                        => $this->nome,
+            'email'                       => $this->email,
+            'ativo'                       => $this->ativo,
+            'criado_em'                   => $this->criadoEm,
+            'atualizado_em'               => $this->atualizadoEm,
+            'deletado_em'                 => $this->deletadoEm,
+        ];
     }
 }

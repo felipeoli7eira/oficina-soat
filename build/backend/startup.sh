@@ -3,14 +3,17 @@
 set -e
 
 echo "🛠️ Ajustando permissões"
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage
+# chown -R www-data:www-data storage bootstrap/cache
+# chmod -R 775 storage bootstrap/cache
 
-mkdir -p /tmp
-touch /tmp/xdebug.log
-chmod 777 /tmp/xdebug.log
+# mkdir -p /tmp
+# touch /tmp/xdebug.log
+# chmod 777 /tmp/xdebug.log
 
 echo "📦 Instalando dependências"
+mkdir -p vendor
 composer install --optimize-autoloader || {
     echo "❌ Falha na instalação das dependências"
     exit 1
@@ -28,7 +31,7 @@ if [ ! -f .env ]; then
 fi
 
 echo "🆙 Preparando banco de dados"
-php artisan migrate:fresh --seed
+php artisan migrate --seed
 
 echo "🚀 Iniciando o container"
 

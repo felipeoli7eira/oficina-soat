@@ -18,12 +18,14 @@ return new class extends Migration
             $table->string('email')->unique();
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('senha');
-            $table->string('documento', 14)->unique();
             $table->boolean('ativo')->default(true);
             // $table->rememberToken();
-            $table->timestamp('criado_em')->useCurrent();
-            $table->timestamp('atualizado_em')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('deletado_em')->nullable();
+            // $table->timestamp('criado_em')->useCurrent();
+            // $table->timestamp('atualizado_em')->useCurrent()->useCurrentOnUpdate();
+            // $table->timestamp('deletado_em')->nullable();
+
+            $defaultsTimestampsColumns = require __DIR__ . '/../defaults/ColumnsTimestamps.php';
+            $defaultsTimestampsColumns->addDefaultColumnsTimestamps($table);
         });
 
         // Schema::create('password_reset_tokens', function (Blueprint $table) {

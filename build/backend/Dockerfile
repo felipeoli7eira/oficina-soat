@@ -7,6 +7,7 @@ RUN apk update && apk upgrade
 RUN apk add --no-cache \
     curl \
     zip \
+    git \
     unzip \
     libpq-dev \
     && rm -rf /var/lib/apk/lists/* \
@@ -19,8 +20,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY ./build/backend/startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
+RUN sed -i 's/\r$//' /usr/local/bin/startup.sh
+
 COPY ./backend .
 
-USER www-data
+# RUN chown -R www-data:www-data /var/www/html/storage \
+#     && chmod -R 775 /var/www/html/storage
 
 ENTRYPOINT ["/usr/local/bin/startup.sh"]

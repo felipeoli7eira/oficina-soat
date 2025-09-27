@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Drivers\Http;
 
+use App\Application\UseCase\Usuario\CriarUsuarioUseCase;
 use App\Exception\DomainHttpException;
-use App\Interface\Controlador\UsuarioControlador;
-use App\Interface\Dto\Usuario\CriacaoDto as UsuarioCriacaoDto;
+use App\Interface\Presenter\HttpJsonPresenter;
+use App\Interface\Controller\Usuario as UsuarioController;
+use App\Interface\Dto\UsuarioDto;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,56 +17,51 @@ use Throwable;
 
 class UsuarioApi
 {
-    public function __construct(public readonly UsuarioControlador $controlador) {}
+    public function __construct(
+        public readonly UsuarioController $controller,
+        public readonly HttpJsonPresenter $presenter,
+    ) {}
 
     public function criar(Request $request)
     {
         try {
-            $input = Validator::make($request->all(), [
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($request->only(['nome', 'email', 'senha']), [
                 'nome'      => ['required', 'string'],
-                'email'     => ['required', 'string'],
+                'email'     => ['required', 'string', 'email'],
                 'senha'     => ['required', 'string'],
-                'documento' => ['required', 'string'],
-            ]);
+            ])->stopOnFirstFailure(true);
 
-            if ($input->fails()) {
-                return response()->json($input->errors(), Response::HTTP_BAD_REQUEST);
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $resultado = $this->controlador->criar(new UsuarioCriacaoDto(
-                nome: $input->validated()['nome'],
-                email: $input->validated()['email'],
-                senha: $input->validated()['senha'],
-                documento: $input->validated()['documento'],
-            ));
+            $dados = $validacao->validated();
+            $dto = new UsuarioDto(
+                nome: $dados['nome'],
+                email: $dados['email'],
+                senha: $dados['senha'],
+            );
 
-            $resultado->apresentar();
+            $res = $this->controller->criar($dto, app(CriarUsuarioUseCase::class));
+
+            $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res->toHttpResponse());
         } catch (DomainHttpException $err) {
-            $resposta = [
+            $res = [
                 'err' => true,
                 'msg' => $err->getMessage(),
             ];
 
-            return response()->json($resposta, $err->getCode());
+            return response()->json($res, $err->getCode());
         } catch (Throwable $err) {
-            $resposta = [
+            $res = [
                 'err' => true,
                 'msg' => $err->getMessage(),
             ];
 
-            $codigo = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-            return response()->json($resposta, $codigo);
+            return response()->json($res, $cod);
         }
-    }
-
-    public function listar(Request $request)
-    {
-        $resultado = $this->controlador->listar(
-            porPagina: (int) $request->get('pp', 10),
-            pagina: (int) $request->get('p', 1)
-        );
-
-        $resultado->apresentar();
     }
 }
