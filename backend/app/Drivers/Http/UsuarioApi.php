@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Drivers\Http;
 
-use App\Application\UseCase\Usuario\CriarUseCase as CriarUsuarioUseCase;
+use App\Application\UseCase\Usuario\CriarUseCase;
+use App\Application\UseCase\Usuario\DeletarUseCase;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
 use App\Infrastructure\Controller\Usuario as UsuarioController;
@@ -43,7 +44,7 @@ class UsuarioApi
                 senha: $dados['senha'],
             );
 
-            $res = $this->controller->criar($dto, app(CriarUsuarioUseCase::class));
+            $res = $this->controller->criar($dto, app(CriarUseCase::class));
 
             $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res->toHttpResponse());
         } catch (DomainHttpException $err) {
@@ -88,5 +89,41 @@ class UsuarioApi
 
             return response()->json($res, $cod);
         }
+    }
+
+    public function deletar(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make(['uuid' => $req->uuid], [
+                'uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $uuid = $validacao->validated()['uuid'];
+
+            $res = $this->controller->deletar($uuid, app(DeletarUseCase::class));
+        } catch (DomainHttpException $err) {
+            $res = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
+
+            return response()->json($res, $err->getCode());
+        } catch (Throwable $err) {
+            $res = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
+
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            return response()->json($res, $cod);
+        }
+
+        return response()->noContent();
     }
 }

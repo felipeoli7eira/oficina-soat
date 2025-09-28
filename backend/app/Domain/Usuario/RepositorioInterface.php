@@ -19,4 +19,6 @@ interface RepositorioInterface
     public function criar(UsuarioDto $dados): Entidade;
 
     public function listar(array $columns = ['*']): array;
+
+    public function deletar(string $uuid): bool;
 }

@@ -48,4 +48,15 @@ class UsuarioEloquentRepository implements RepositorioInterface
     {
         return $this->model->query()->get($columns)->toArray();
     }
+
+    public function deletar(string $uuid): bool
+    {
+        $del = $this->model->query()->where('uuid', $uuid)->delete();
+
+        if (! $del) {
+            return false;
+        }
+
+        return true;
+    }
 }

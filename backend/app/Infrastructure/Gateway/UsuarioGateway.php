@@ -45,4 +45,9 @@ class UsuarioGateway
     {
         return $this->repositorio->listar();
     }
+
+    public function deletar(string $uuid): bool
+    {
+        return $this->repositorio->deletar($uuid);
+    }
 }

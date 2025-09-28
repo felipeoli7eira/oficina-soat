@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller;
 
 use App\Application\UseCase\Usuario\CriarUseCase as CriarUsuarioUseCase;
+use App\Application\UseCase\Usuario\DeletarUseCase;
 use App\Domain\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Usuario\RepositorioInterface;
@@ -24,5 +25,10 @@ class Usuario
     public function listar(): array
     {
         return $this->repositorio->listar();
+    }
+
+    public function deletar(string $uuid, DeletarUseCase $useCase): bool
+    {
+        return $useCase->deletar($uuid);
     }
 }
