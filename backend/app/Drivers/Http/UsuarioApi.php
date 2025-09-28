@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Drivers\Http;
 
-use App\Application\UseCase\Usuario\AtualizarUseCase;
-use App\Application\UseCase\Usuario\CriarUseCase;
-use App\Application\UseCase\Usuario\DeletarUseCase;
-use App\Application\UseCase\Usuario\ListarUseCase;
+use App\Application\UseCase\Usuario\CreateUseCase;
+use App\Application\UseCase\Usuario\ReadUseCase;
+use App\Application\UseCase\Usuario\UpdateUseCase;
+use App\Application\UseCase\Usuario\DeleteUseCase;
+
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
 use App\Infrastructure\Controller\Usuario as UsuarioController;
@@ -25,7 +26,7 @@ class UsuarioApi
         public readonly HttpJsonPresenter $presenter,
     ) {}
 
-    public function criar(Request $req)
+    public function create(Request $req)
     {
         try {
             // validacao basica sem regras de negocio
@@ -46,92 +47,44 @@ class UsuarioApi
                 senha: $dados['senha'],
             );
 
-            $res = $this->controller->criar($dto, app(CriarUseCase::class));
-
-            $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res->toHttpResponse());
+            $res = $this->controller->criar($dto, app(CreateUseCase::class));
         } catch (DomainHttpException $err) {
-            $res = [
+            return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
-            ];
-
-            return response()->json($res, $err->getCode());
+            ], $err->getCode());
         } catch (Throwable $err) {
-            $res = [
+            return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
-            ];
-
-            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
-
-            return response()->json($res, $cod);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res->toHttpResponse());
     }
 
-    public function listar(Request $req)
+    public function read(Request $req)
     {
         try {
-            $gateway = app(ListarUseCase::class);
+            $gateway = app(ReadUseCase::class);
 
             $res = $this->controller->listar($gateway);
-
-            $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
         } catch (DomainHttpException $err) {
-            $res = [
+            return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
-            ];
-
-            return response()->json($res, $err->getCode());
+            ], $err->getCode());
         } catch (Throwable $err) {
-            $res = [
+            return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
-            ];
-
-            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
-
-            return response()->json($res, $cod);
-        }
-    }
-
-    public function deletar(Request $req)
-    {
-        try {
-            // validacao basica sem regras de negocio
-            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
-                'uuid' => ['required', 'string', 'uuid'],
-            ])->stopOnFirstFailure(true);
-
-            if ($validacao->fails()) {
-                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-            }
-
-            $uuid = $validacao->validated()['uuid'];
-
-            $res = $this->controller->deletar($uuid, app(DeletarUseCase::class));
-        } catch (DomainHttpException $err) {
-            $res = [
-                'err' => true,
-                'msg' => $err->getMessage(),
-            ];
-
-            return response()->json($res, $err->getCode());
-        } catch (Throwable $err) {
-            $res = [
-                'err' => true,
-                'msg' => $err->getMessage(),
-            ];
-
-            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
-
-            return response()->json($res, $cod);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->noContent();
+        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
-    public function atualizar(Request $req)
+    public function update(Request $req)
     {
         try {
             // validacao basica sem regras de negocio
@@ -149,7 +102,7 @@ class UsuarioApi
                 uuid: $validacao->validated()['uuid'],
             );
 
-            $responseSuccess = $this->controller->atualizar($dto, app(AtualizarUseCase::class));
+            $responseSuccess = $this->controller->atualizar($dto, app(UpdateUseCase::class));
         } catch (DomainHttpException $err) {
             $resErr = [
                 'err' => true,
@@ -169,5 +122,35 @@ class UsuarioApi
         }
 
         return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess->toHttpResponse());
+    }
+
+    public function delete(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
+                'uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $uuid = $validacao->validated()['uuid'];
+
+            $this->controller->deletar($uuid, app(DeleteUseCase::class));
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->noContent();
     }
 }

@@ -7,11 +7,11 @@ namespace App\Application\UseCase\Usuario;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\UsuarioGateway;
 
-class DeletarUseCase
+class DeleteUseCase
 {
     public function __construct(public readonly UsuarioGateway $gateway) {}
 
-    public function deletar(string $uuid): bool
+    public function exec(string $uuid): bool
     {
         // regras de negocio
 

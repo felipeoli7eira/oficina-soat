@@ -9,11 +9,11 @@ use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Usuario\Entidade;
 use App\Exception\DomainHttpException;
 
-class CriarUseCase
+class CreateUseCase
 {
     public function __construct() {}
 
-    public function criar(UsuarioDto $dados, UsuarioGateway $gateway): Entidade
+    public function exec(UsuarioDto $dados, UsuarioGateway $gateway): Entidade
     {
         // regras de negocio, validacoes...
 

@@ -6,11 +6,11 @@ namespace App\Application\UseCase\Usuario;
 
 use App\Infrastructure\Gateway\UsuarioGateway;
 
-class ListarUseCase
+class ReadUseCase
 {
     public function __construct() {}
 
-    public function listar(UsuarioGateway $gateway): array
+    public function exec(UsuarioGateway $gateway): array
     {
         $res = $gateway->listar();
 

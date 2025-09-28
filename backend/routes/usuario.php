@@ -3,7 +3,7 @@
 use App\Drivers\Http\UsuarioApi;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/usuario', [UsuarioApi::class, 'criar']);
-Route::get('/usuario', [UsuarioApi::class, 'listar']);
-Route::delete('/usuario/{uuid}', [UsuarioApi::class, 'deletar']);
-Route::put('/usuario/{uuid}', [UsuarioApi::class, 'atualizar']);
+Route::post('/usuario', [UsuarioApi::class, 'create']);
+Route::get('/usuario', [UsuarioApi::class, 'read']);
+Route::put('/usuario/{uuid}', [UsuarioApi::class, 'update']);
+Route::delete('/usuario/{uuid}', [UsuarioApi::class, 'delete']);

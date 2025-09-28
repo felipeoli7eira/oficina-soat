@@ -2,10 +2,11 @@
 
 namespace App\Infrastructure\Controller;
 
-use App\Application\UseCase\Usuario\AtualizarUseCase;
-use App\Application\UseCase\Usuario\CriarUseCase as CriarUsuarioUseCase;
-use App\Application\UseCase\Usuario\DeletarUseCase;
-use App\Application\UseCase\Usuario\ListarUseCase;
+use App\Application\UseCase\Usuario\CreateUseCase;
+use App\Application\UseCase\Usuario\ReadUseCase;
+use App\Application\UseCase\Usuario\UpdateUseCase;
+use App\Application\UseCase\Usuario\DeleteUseCase;
+
 use App\Domain\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Usuario\RepositorioInterface;
@@ -15,34 +16,36 @@ class Usuario
 {
     public function __construct(public readonly RepositorioInterface $repositorio) {}
 
-    public function criar(UsuarioDto $dados, CriarUsuarioUseCase $useCase): Entidade
+    public function criar(UsuarioDto $dados, CreateUseCase $useCase): Entidade
     {
         $gateway = app(UsuarioGateway::class);
 
-        $cadastro = $useCase->criar($dados, $gateway);
+        $res = $useCase->exec($dados, $gateway);
 
-        return $cadastro;
+        return $res;
     }
 
-    public function listar(ListarUseCase $useCase): array
+    public function listar(ReadUseCase $useCase): array
     {
         $gateway = app(UsuarioGateway::class);
 
-        $dados = $useCase->listar($gateway);
+        $res = $useCase->exec($gateway);
 
-        return $dados;
+        return $res;
     }
 
-    public function deletar(string $uuid, DeletarUseCase $useCase): bool
+    public function deletar(string $uuid, DeleteUseCase $useCase): bool
     {
-        return $useCase->deletar($uuid);
+        $res = $useCase->exec($uuid);
+
+        return $res;
     }
 
-    public function atualizar(UsuarioDto $dados, AtualizarUseCase $useCase): Entidade
+    public function atualizar(UsuarioDto $dados, UpdateUseCase $useCase): Entidade
     {
         $gateway = app(UsuarioGateway::class);
 
-        $res = $useCase->atualizar($dados, $gateway);
+        $res = $useCase->exec($dados, $gateway);
 
         return $res;
     }
