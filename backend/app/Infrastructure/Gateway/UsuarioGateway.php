@@ -50,4 +50,9 @@ class UsuarioGateway
     {
         return $this->repositorio->deletar($uuid);
     }
+
+    public function atualizar(UsuarioDto $dados): Entidade
+    {
+        return $this->repositorio->atualizar($dados);
+    }
 }

@@ -21,4 +21,6 @@ interface RepositorioInterface
     public function listar(array $columns = ['*']): array;
 
     public function deletar(string $uuid): bool;
+
+    public function atualizar(UsuarioDto $dados): Entidade;
 }

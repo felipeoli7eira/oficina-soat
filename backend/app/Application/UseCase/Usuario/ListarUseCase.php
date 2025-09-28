@@ -8,11 +8,11 @@ use App\Infrastructure\Gateway\UsuarioGateway;
 
 class ListarUseCase
 {
-    public function __construct(public readonly UsuarioGateway $gateway) {}
+    public function __construct() {}
 
-    public function listar(): array
+    public function listar(UsuarioGateway $gateway): array
     {
-        $res = $this->gateway->listar();
+        $res = $gateway->listar();
 
         return $res;
     }

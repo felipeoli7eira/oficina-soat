@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Drivers\Http;
 
+use App\Application\UseCase\Usuario\AtualizarUseCase;
 use App\Application\UseCase\Usuario\CriarUseCase;
 use App\Application\UseCase\Usuario\DeletarUseCase;
+use App\Application\UseCase\Usuario\ListarUseCase;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
 use App\Infrastructure\Controller\Usuario as UsuarioController;
@@ -69,7 +71,9 @@ class UsuarioApi
     public function listar(Request $req)
     {
         try {
-            $res = $this->controller->listar();
+            $gateway = app(ListarUseCase::class);
+
+            $res = $this->controller->listar($gateway);
 
             $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
         } catch (DomainHttpException $err) {
@@ -95,7 +99,7 @@ class UsuarioApi
     {
         try {
             // validacao basica sem regras de negocio
-            $validacao = Validator::make(['uuid' => $req->uuid], [
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
                 'uuid' => ['required', 'string', 'uuid'],
             ])->stopOnFirstFailure(true);
 
@@ -125,5 +129,45 @@ class UsuarioApi
         }
 
         return response()->noContent();
+    }
+
+    public function atualizar(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['nome', 'uuid']), [
+                'uuid' => ['required', 'string', 'uuid'],
+                'nome' => ['required', 'string'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $dto = new UsuarioDto(
+                nome: $validacao->validated()['nome'],
+                uuid: $validacao->validated()['uuid'],
+            );
+
+            $responseSuccess = $this->controller->atualizar($dto, app(AtualizarUseCase::class));
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
+
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
+
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            return response()->json($resErr, $cod);
+        }
+
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess->toHttpResponse());
     }
 }

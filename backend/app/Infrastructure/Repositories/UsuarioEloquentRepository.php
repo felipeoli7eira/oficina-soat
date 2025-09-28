@@ -59,4 +59,17 @@ class UsuarioEloquentRepository implements RepositorioInterface
 
         return true;
     }
+
+    public function atualizar(UsuarioDto $dados): Entidade
+    {
+        $model = $this->model->query()->where('uuid', $dados->uuid)->first();
+
+        $model->update([
+            'nome' => $dados->nome,
+        ]);
+
+        return (new UsuarioMapper())->fromModelToEntity(
+            $model->refresh()
+        );
+    }
 }

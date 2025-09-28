@@ -2,8 +2,10 @@
 
 namespace App\Infrastructure\Controller;
 
+use App\Application\UseCase\Usuario\AtualizarUseCase;
 use App\Application\UseCase\Usuario\CriarUseCase as CriarUsuarioUseCase;
 use App\Application\UseCase\Usuario\DeletarUseCase;
+use App\Application\UseCase\Usuario\ListarUseCase;
 use App\Domain\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Usuario\RepositorioInterface;
@@ -22,13 +24,26 @@ class Usuario
         return $cadastro;
     }
 
-    public function listar(): array
+    public function listar(ListarUseCase $useCase): array
     {
-        return $this->repositorio->listar();
+        $gateway = app(UsuarioGateway::class);
+
+        $dados = $useCase->listar($gateway);
+
+        return $dados;
     }
 
     public function deletar(string $uuid, DeletarUseCase $useCase): bool
     {
         return $useCase->deletar($uuid);
+    }
+
+    public function atualizar(UsuarioDto $dados, AtualizarUseCase $useCase): Entidade
+    {
+        $gateway = app(UsuarioGateway::class);
+
+        $res = $useCase->atualizar($dados, $gateway);
+
+        return $res;
     }
 }
