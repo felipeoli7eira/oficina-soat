@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Drivers\Http;
+namespace App\Http;
 
 use App\Domain\UseCase\Usuario\CreateUseCase;
 use App\Domain\UseCase\Usuario\ReadUseCase;

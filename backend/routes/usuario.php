@@ -1,6 +1,6 @@
 <?php
 
-use App\Drivers\Http\UsuarioApi;
+use App\Http\UsuarioApi;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/usuario', [UsuarioApi::class, 'create']);
