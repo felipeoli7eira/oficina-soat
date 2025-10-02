@@ -2,11 +2,9 @@
 
 namespace App\Infrastructure\Gateway;
 
-use App\Domain\Usuario\Entidade;
-use App\Domain\Usuario\RepositorioInterface;
+use App\Domain\Entity\Usuario\Entidade;
+use App\Domain\Entity\Usuario\RepositorioInterface;
 use App\Infrastructure\Dto\UsuarioDto;
-use App\Models\UsuarioModel;
-
 class UsuarioGateway
 {
     public function __construct(public readonly RepositorioInterface $repositorio) {}

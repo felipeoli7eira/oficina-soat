@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Drivers\Http;
 
-use App\Application\UseCase\Usuario\CreateUseCase;
-use App\Application\UseCase\Usuario\ReadUseCase;
-use App\Application\UseCase\Usuario\UpdateUseCase;
-use App\Application\UseCase\Usuario\DeleteUseCase;
+use App\Domain\UseCase\Usuario\CreateUseCase;
+use App\Domain\UseCase\Usuario\ReadUseCase;
+use App\Domain\UseCase\Usuario\UpdateUseCase;
+use App\Domain\UseCase\Usuario\DeleteUseCase;
 
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;

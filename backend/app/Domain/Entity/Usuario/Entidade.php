@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Usuario;
+namespace App\Domain\Entity\Usuario;
 
 use DateTimeImmutable;
 use InvalidArgumentException;

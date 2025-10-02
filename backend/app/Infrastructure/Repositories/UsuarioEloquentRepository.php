@@ -6,11 +6,11 @@ namespace App\Infrastructure\Repositories;
 
 use Illuminate\Support\Str;
 use App\Models\UsuarioModel;
-use App\Domain\Usuario\Entidade;
+use App\Domain\Entity\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use Illuminate\Support\Facades\Hash;
-use App\Domain\Usuario\RepositorioInterface;
-use App\Domain\Usuario\Mapper as UsuarioMapper;
+use App\Domain\Entity\Usuario\RepositorioInterface;
+use App\Domain\Entity\Usuario\Mapper as UsuarioMapper;
 
 class UsuarioEloquentRepository implements RepositorioInterface
 {

@@ -2,14 +2,14 @@
 
 namespace App\Infrastructure\Controller;
 
-use App\Application\UseCase\Usuario\CreateUseCase;
-use App\Application\UseCase\Usuario\ReadUseCase;
-use App\Application\UseCase\Usuario\UpdateUseCase;
-use App\Application\UseCase\Usuario\DeleteUseCase;
+use App\Domain\UseCase\Usuario\CreateUseCase;
+use App\Domain\UseCase\Usuario\ReadUseCase;
+use App\Domain\UseCase\Usuario\UpdateUseCase;
+use App\Domain\UseCase\Usuario\DeleteUseCase;
 
-use App\Domain\Usuario\Entidade;
+use App\Domain\Entity\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
-use App\Domain\Usuario\RepositorioInterface;
+use App\Domain\Entity\Usuario\RepositorioInterface;
 use App\Infrastructure\Gateway\UsuarioGateway;
 
 class Usuario

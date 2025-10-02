@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCase\Usuario;
+namespace App\Domain\UseCase\Usuario;
 
-use App\Domain\Usuario\Entidade;
+use App\Domain\Entity\Usuario\Entidade;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Infrastructure\Gateway\UsuarioGateway;

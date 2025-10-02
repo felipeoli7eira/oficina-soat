@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Usuario;
+namespace App\Domain\Entity\Usuario;
 
-use App\Domain\Usuario\Entidade;
+use App\Domain\Entity\Usuario\Entidade;
 use App\Models\UsuarioModel;
 use DateTimeImmutable;
 

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Domain\Usuario\RepositorioInterface as UsuarioRpository;
+use App\Domain\Entity\Usuario\RepositorioInterface as UsuarioRepository;
 use App\Infrastructure\Repositories\UsuarioEloquentRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            UsuarioRpository::class,
+            UsuarioRepository::class,
             UsuarioEloquentRepository::class
         );
     }
