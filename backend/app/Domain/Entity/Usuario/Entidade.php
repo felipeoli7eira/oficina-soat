@@ -88,4 +88,16 @@ class Entidade
             'deletado_em'                 => $this->deletadoEm,
         ];
     }
+
+    public function toTokenPayload(): array
+    {
+        return [
+            'sub' => $this->identificadorUnicoUniversal,
+        ];
+    }
+
+    public function verifyPassword(string $password): bool
+    {
+        return password_verify($password, $this->senha);
+    }
 }

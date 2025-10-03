@@ -10,6 +10,7 @@ use App\Domain\UseCase\Usuario\DeleteUseCase;
 use App\Domain\Entity\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Entity\Usuario\RepositorioInterface;
+use App\Domain\UseCase\Usuario\AuthenticateUseCase;
 use App\Infrastructure\Gateway\UsuarioGateway;
 
 class Usuario
@@ -46,6 +47,14 @@ class Usuario
         $gateway = app(UsuarioGateway::class);
 
         $res = $useCase->exec($dados, $gateway);
+
+        return $res;
+    }
+
+    public function authenticate(string $email, string $password, AuthenticateUseCase $useCase): array {
+        $gateway = app(UsuarioGateway::class);
+
+        $res = $useCase->exec($email, $password, $gateway);
 
         return $res;
     }

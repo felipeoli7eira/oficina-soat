@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Authentication;
+use App\Http\Middleware\JsonWebTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('ping', fn() => response()->json([
@@ -13,3 +15,10 @@ Route::fallback(fn() => response()->json([
     'err' => true,
     'msg' => 'Recurso não encontrado',
 ]));
+
+
+// auth
+
+Route::post('auth/login', [Authentication::class, 'authenticate'])->withoutMiddleware(
+    JsonWebTokenMiddleware::class
+);
