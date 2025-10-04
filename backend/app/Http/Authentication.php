@@ -50,11 +50,9 @@ class Authentication
             return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
-                'f' => $err->getFile(),
-                'l' => $err->getLine(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res->toAssociativeArray());
     }
 }

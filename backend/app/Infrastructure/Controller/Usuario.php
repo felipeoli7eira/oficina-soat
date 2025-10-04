@@ -11,6 +11,7 @@ use App\Domain\Entity\Usuario\Entidade;
 use App\Infrastructure\Dto\UsuarioDto;
 use App\Domain\Entity\Usuario\RepositorioInterface;
 use App\Domain\UseCase\Usuario\AuthenticateUseCase;
+use App\Infrastructure\Dto\AuthenticatedDto;
 use App\Infrastructure\Gateway\UsuarioGateway;
 
 class Usuario
@@ -51,7 +52,8 @@ class Usuario
         return $res;
     }
 
-    public function authenticate(string $email, string $password, AuthenticateUseCase $useCase): array {
+    public function authenticate(string $email, string $password, AuthenticateUseCase $useCase): AuthenticatedDto
+    {
         $gateway = app(UsuarioGateway::class);
 
         $res = $useCase->exec($email, $password, $gateway);

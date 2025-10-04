@@ -8,13 +8,13 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Signature\TokenServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
-use App\Domain\Entity\Usuario\RepositorioInterface;
+use App\Domain\Entity\Usuario\RepositorioInterface as UsuarioRepositorio;
 
 class JsonWebTokenMiddleware
 {
     public function __construct(
         private TokenServiceInterface $tokenService,
-        private RepositorioInterface $usuarioRepositorio,
+        private UsuarioRepositorio $usuarioRepositorio,
     ) {}
 
     public function handle(Request $request, Closure $nextRequest)
@@ -33,12 +33,12 @@ class JsonWebTokenMiddleware
         $claims = $this->tokenService->validate($token);
 
         if ($claims === null) {
-            $responseErr['msg'] = 'Token inválido';
+            $responseErr['msg'] = 'Autenticação inválida';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
         // Carrega usuário
-        $user = $this->usuarioRepositorio->encontrarPorIdentificadorUnico($claims['sub'], 'uuid');
+        $user = $this->usuarioRepositorio->encontrarPorIdentificadorUnico($claims->sub, 'uuid');
 
         if ($user === null) {
             $responseErr['msg'] = 'Usuário não encontrado';

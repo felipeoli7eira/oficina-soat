@@ -6,6 +6,7 @@ namespace App\Domain\UseCase\Usuario;
 
 use App\Domain\Entity\Usuario\Entidade as UsuarioEntity;
 use App\Exception\DomainHttpException;
+use App\Infrastructure\Dto\AuthenticatedDto;
 use App\Infrastructure\Gateway\UsuarioGateway;
 use App\Signature\AuthServiceInterface;
 use App\Signature\TokenServiceInterface;
@@ -18,7 +19,7 @@ class AuthenticateUseCase
         public readonly TokenServiceInterface $tokenService,
     ) {}
 
-    public function exec(string $email, string $plainTextPassword, UsuarioGateway $gateway): array
+    public function exec(string $email, string $plainTextPassword, UsuarioGateway $gateway): AuthenticatedDto
     {
         $usuario = $this->authService->attempt($email, $plainTextPassword);
 
@@ -28,10 +29,6 @@ class AuthenticateUseCase
 
         $token = $this->tokenService->generate($usuario->toTokenPayload());
 
-        return [
-            'user'       => $usuario->toHttpResponse(),
-            'token'      => $token,
-            'token_type' => 'Bearer',
-        ];
+        return new AuthenticatedDto($usuario, $token, 'Bearer');
     }
 }

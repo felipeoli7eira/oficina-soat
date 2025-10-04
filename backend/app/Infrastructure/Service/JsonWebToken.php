@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service;
 
+use App\Infrastructure\Dto\JsonWebTokenFragment;
 use App\Signature\TokenServiceInterface;
 use Exception;
 use InvalidArgumentException;
@@ -42,16 +43,22 @@ class JsonWebToken implements TokenServiceInterface
         // return JWTAuth::encode(new Payload(new Collection($payload), new PayloadValidator()), $this->secret, $this->algo);
     }
 
-    public function validate(string $token): ?array
+    public function validate(string $token): ?JsonWebTokenFragment
     {
         try {
             $decoded = JWT::decode($token, new Key($this->secret, $this->algo));
-
-            return (array) $decoded;
-        } catch (Exception $err) {
+        } catch (Exception $_) {
+            return null;
         }
 
-        return null;
+        return new JsonWebTokenFragment(
+            sub: $decoded->sub,
+            iss: $decoded->iss,
+            aud: $decoded->aud,
+            iat: $decoded->iat,
+            exp: $decoded->exp,
+            nbf: $decoded->nbf,
+        );
     }
 
     public function refresh(string $token): string
@@ -62,10 +69,12 @@ class JsonWebToken implements TokenServiceInterface
             throw new Exception('Token inválido');
         }
 
-        // Remove claims de controle
-        unset($claims['iat'], $claims['exp'], $claims['iss']);
+        $c = $claims->toAssociativeArray();
 
-        return $this->generate($claims);
+        // Remove claims de controle
+        unset($c['iat'], $c['exp'], $c['iss']);
+
+        return $this->generate($c);
     }
 
     public function invalidate(string $token): void

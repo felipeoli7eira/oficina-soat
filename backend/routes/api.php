@@ -19,6 +19,4 @@ Route::fallback(fn() => response()->json([
 
 // auth
 
-Route::post('auth/login', [Authentication::class, 'authenticate'])->withoutMiddleware(
-    JsonWebTokenMiddleware::class
-);
+Route::post('auth/login', [Authentication::class, 'authenticate'])->withoutMiddleware(JsonWebTokenMiddleware::class);
