@@ -5,6 +5,7 @@ namespace App\Infrastructure\Gateway;
 use App\Domain\Entity\Usuario\Entidade;
 use App\Domain\Entity\Usuario\RepositorioInterface;
 use App\Infrastructure\Dto\UsuarioDto;
+
 class UsuarioGateway
 {
     public function __construct(public readonly RepositorioInterface $repositorio) {}
@@ -41,7 +42,14 @@ class UsuarioGateway
 
     public function listar(): array
     {
-        return $this->repositorio->listar();
+        return $this->repositorio->listar([
+            'uuid',
+            'nome',
+            'email',
+            'ativo',
+            'criado_em',
+            'atualizado_em',
+        ]);
     }
 
     public function deletar(string $uuid): bool

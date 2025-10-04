@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service;
 
-use App\Infrastructure\Dto\JsonWebTokenFragment;
-use App\Signature\TokenServiceInterface;
 use Exception;
-use InvalidArgumentException;
-use Tymon\JWTAuth\Claims\Collection;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Payload;
-use Tymon\JWTAuth\Validators\PayloadValidator;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Signature\TokenServiceInterface;
+use App\Infrastructure\Dto\JsonWebTokenFragment;
+use RuntimeException;
 
 class JsonWebToken implements TokenServiceInterface
 {
@@ -22,7 +18,11 @@ class JsonWebToken implements TokenServiceInterface
 
     public function __construct()
     {
-        $this->secret = config('jwt.secret');
+        if (env('JWT_SECRET') === null) {
+            throw new RuntimeException('JWT_SECRET não configurado', 500);
+        }
+
+        $this->secret = env('JWT_SECRET');
     }
 
     public function generate(array $claims): string
