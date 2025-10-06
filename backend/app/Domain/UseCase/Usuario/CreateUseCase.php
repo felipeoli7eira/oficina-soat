@@ -13,7 +13,7 @@ class CreateUseCase
 {
     public function __construct() {}
 
-    public function exec(UsuarioDto $dados, UsuarioGateway $gateway): Entidade
+    public function exec(CreateInputModel $dados, UsuarioGateway $gateway): Entidade
     {
         // regras de negocio, validacoes...
 

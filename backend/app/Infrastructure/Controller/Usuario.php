@@ -8,28 +8,30 @@ use App\Domain\UseCase\Usuario\UpdateUseCase;
 use App\Domain\UseCase\Usuario\DeleteUseCase;
 
 use App\Domain\Entity\Usuario\Entidade;
+use App\Domain\Entity\Usuario\RepositorioInterface as UsuarioRepositorio;
 use App\Infrastructure\Dto\UsuarioDto;
-use App\Domain\Entity\Usuario\RepositorioInterface;
 use App\Domain\UseCase\Usuario\AuthenticateUseCase;
 use App\Infrastructure\Dto\AuthenticatedDto;
 use App\Infrastructure\Gateway\UsuarioGateway;
 
 class Usuario
 {
-    public function __construct(public readonly RepositorioInterface $repositorio) {}
+    public function __construct() {}
 
-    public function criar(UsuarioDto $dados, CreateUseCase $useCase): Entidade
+    public function criar(UsuarioDto $dados, UsuarioRepositorio $repositorio): Entidade
     {
-        $gateway = app(UsuarioGateway::class);
+        $gateway = new UsuarioGateway($repositorio);
+        $useCase = new CreateUseCase();
 
         $res = $useCase->exec($dados, $gateway);
 
         return $res;
     }
 
-    public function listar(ReadUseCase $useCase): array
+    public function listar(UsuarioRepositorio $repositorio): array
     {
-        $gateway = app(UsuarioGateway::class);
+        $gateway = new UsuarioGateway($repositorio);
+        $useCase = new ReadUseCase();
 
         $res = $useCase->exec($gateway);
 

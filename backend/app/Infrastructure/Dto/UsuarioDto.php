@@ -15,6 +15,7 @@ class UsuarioDto
         public readonly ?string $email = null,
         public readonly ?string $senha = null,
         public readonly ?bool $ativo = null,
+        public readonly ?string $perfil = null,
         public readonly ?DateTimeImmutable $criado_em = null,
         public readonly ?DateTimeImmutable $atualizado_em = null,
         public readonly ?DateTimeImmutable $deletado_em = null,

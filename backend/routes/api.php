@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('ping', fn() => response()->json([
     'err' => false,
     'msg' => 'pong'
-]));
+]))->withoutMiddleware(JsonWebTokenMiddleware::class);
 
 require_once __DIR__ . '/usuario.php';
 

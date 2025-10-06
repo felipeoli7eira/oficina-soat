@@ -37,6 +37,7 @@ class UsuarioEloquentRepository implements RepositorioInterface
             'email'     => $dados->email,
             'senha'     => Hash::make($dados->senha),
             'ativo'     => Entidade::STATUS_ATIVO,
+            'perfil'    => $dados->perfil
         ]);
 
         return (new UsuarioMapper())->fromModelToEntity(

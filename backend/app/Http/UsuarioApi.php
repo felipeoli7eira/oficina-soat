@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http;
 
 use App\Domain\UseCase\Usuario\CreateUseCase;
-use App\Domain\UseCase\Usuario\ReadUseCase;
 use App\Domain\UseCase\Usuario\UpdateUseCase;
 use App\Domain\UseCase\Usuario\DeleteUseCase;
+
+use App\Domain\Entity\Usuario\RepositorioInterface as UsuarioRepositorio;
 
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
@@ -24,16 +25,18 @@ class UsuarioApi
     public function __construct(
         public readonly UsuarioController $controller,
         public readonly HttpJsonPresenter $presenter,
+        public readonly UsuarioRepositorio $repositorio,
     ) {}
 
     public function create(Request $req)
     {
         try {
             // validacao basica sem regras de negocio
-            $validacao = Validator::make($req->only(['nome', 'email', 'senha']), [
+            $validacao = Validator::make($req->only(['nome', 'email', 'senha', 'perfil']), [
                 'nome'      => ['required', 'string'],
                 'email'     => ['required', 'string', 'email'],
                 'senha'     => ['required', 'string'],
+                'perfil'    => ['required', 'string'],
             ])->stopOnFirstFailure(true);
 
             if ($validacao->fails()) {
@@ -45,9 +48,10 @@ class UsuarioApi
                 nome: $dados['nome'],
                 email: $dados['email'],
                 senha: $dados['senha'],
+                perfil: $dados['perfil'],
             );
 
-            $res = $this->controller->criar($dto, app(CreateUseCase::class));
+            $res = $this->controller->criar($dto, $this->repositorio);
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,
@@ -66,9 +70,7 @@ class UsuarioApi
     public function read(Request $req)
     {
         try {
-            $gateway = app(ReadUseCase::class);
-
-            $res = $this->controller->listar($gateway);
+            $res = $this->controller->listar($this->repositorio);
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,
