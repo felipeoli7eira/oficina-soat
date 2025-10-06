@@ -1,0 +1,68 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - 80:80
+    networks:
+      - appnet
+    hostname: nginx
+    restart: on-failure:3
+    volumes:
+      - ./build/server/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend:/var/www/html
+    depends_on:
+      php:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f php:9000/api/ping || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  php:
+    container_name: php
+    hostname: phpcontainer
+    build:
+      context: .
+      dockerfile: ./build/backend/Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+    restart: on-failure:3
+    expose:
+      - 9000
+    networks:
+      - appnet
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+      image: postgres:17.5
+      container_name: postgres
+      restart: always
+      ports:
+        - 5432:5432
+      environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+      volumes:
+          - pgdata:/var/lib/postgresql/data
+      networks:
+        - appnet
+      healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U postgres"]
+          interval: 5s
+          timeout: 3s
+          retries: 5
+          start_period: 5s
+
+volumes:
+  pgdata:
+
+networks:
+  appnet:
+    name: appnet
+    driver: bridge
