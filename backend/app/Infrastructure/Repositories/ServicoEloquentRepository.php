@@ -51,15 +51,13 @@ class ServicoEloquentRepository implements RepositorioInterface
 
     public function deletar(string $uuid): bool
     {
+        $del = $this->model->query()->where('uuid', $uuid)->delete();
+
+        if (! $del) {
+            return false;
+        }
+
         return true;
-
-        // $del = $this->model->query()->where('uuid', $uuid)->delete();
-
-        // if (! $del) {
-        //     return false;
-        // }
-
-        // return true;
     }
 
     public function atualizar(string $uuid, array $novosDados): array

@@ -35,10 +35,10 @@ class ServicoGateway
         ]);
     }
 
-    // public function deletar(string $uuid): bool
-    // {
-    //     return $this->repositorio->deletar($uuid);
-    // }
+    public function deletar(string $uuid): bool
+    {
+        return $this->repositorio->deletar($uuid);
+    }
 
     // public function atualizar(string $uuid, array $novosDados): array
     // {

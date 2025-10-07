@@ -6,7 +6,7 @@ use App\Domain\UseCase\Servico\CreateUseCase;
 use App\Domain\UseCase\Servico\ReadUseCase;
 use App\Domain\UseCase\Servico\ReadOneUseCase;
 // use App\Domain\UseCase\Servico\UpdateUseCase;
-// use App\Domain\UseCase\Servico\DeleteUseCase;
+use App\Domain\UseCase\Servico\DeleteUseCase;
 
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
 use App\Domain\UseCase\Usuario\AuthenticateUseCase;
@@ -68,15 +68,19 @@ class Servico
         return $res;
     }
 
-    // public function deletar(string $uuid, UsuarioRepositorio $repositorio): bool
-    // {
-    //     $gateway = new UsuarioGateway($repositorio);
-    //     $useCase = new DeleteUseCase($gateway);
+    public function deletar(string $uuid): bool
+    {
+        if (! $this->repositorio instanceof ServicoRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $res = $useCase->exec($uuid);
+        $gateway = new ServicoGateway($this->repositorio);
+        $useCase = new DeleteUseCase($gateway);
 
-    //     return $res;
-    // }
+        $res = $useCase->exec($uuid);
+
+        return $res;
+    }
 
     // public function atualizar(string $uuid, array $novosDados, UsuarioRepositorio $repositorio): array
     // {
