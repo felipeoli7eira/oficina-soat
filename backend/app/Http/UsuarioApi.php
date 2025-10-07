@@ -99,12 +99,16 @@ class UsuarioApi
                 throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $dto = new UsuarioDto(
-                nome: $validacao->validated()['nome'],
-                uuid: $validacao->validated()['uuid'],
-            );
+            $dadosValidados = $validacao->validated();
+            $novosDados = [
+                'nome' => $dadosValidados['nome'],
+            ];
 
-            $responseSuccess = $this->controller->atualizar($dto, app(UpdateUseCase::class));
+            $responseSuccess = $this->controller->atualizar(
+                $dadosValidados['uuid'],
+                $novosDados,
+                $this->repositorio
+            );
         } catch (DomainHttpException $err) {
             $resErr = [
                 'err' => true,
@@ -123,7 +127,7 @@ class UsuarioApi
             return response()->json($resErr, $cod);
         }
 
-        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess->toHttpResponse());
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
     }
 
     public function delete(Request $req)
@@ -138,9 +142,9 @@ class UsuarioApi
                 throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $uuid = $validacao->validated()['uuid'];
+            $dadosValidos = $validacao->validated();
 
-            $this->controller->deletar($uuid, app(DeleteUseCase::class));
+            $this->controller->deletar($dadosValidos['uuid'], $this->repositorio);
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,

@@ -43,20 +43,24 @@ class Usuario
         return $res;
     }
 
-    public function deletar(string $uuid, DeleteUseCase $useCase): bool
+    public function deletar(string $uuid, UsuarioRepositorio $repositorio): bool
     {
+        $gateway = new UsuarioGateway($repositorio);
+        $useCase = new DeleteUseCase($gateway);
+
         $res = $useCase->exec($uuid);
 
         return $res;
     }
 
-    public function atualizar(UsuarioDto $dados, UpdateUseCase $useCase): Entidade
+    public function atualizar(string $uuid, array $novosDados, UsuarioRepositorio $repositorio): array
     {
-        $gateway = app(UsuarioGateway::class);
+        $gateway = new UsuarioGateway($repositorio);
+        $useCase = new UpdateUseCase($gateway);
 
-        $res = $useCase->exec($dados, $gateway);
+        $res = $useCase->exec($uuid, $novosDados);
 
-        return $res;
+        return $res->toHttpResponse();
     }
 
     public function authenticate(string $email, string $password, AuthenticateUseCase $useCase): AuthenticatedDto

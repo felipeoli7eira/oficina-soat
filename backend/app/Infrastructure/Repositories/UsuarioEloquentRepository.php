@@ -64,16 +64,14 @@ class UsuarioEloquentRepository implements RepositorioInterface
         return true;
     }
 
-    public function atualizar(UsuarioDto $dados): Entidade
+    public function atualizar(string $uuid, array $novosDados): array
     {
-        $model = $this->model->query()->where('uuid', $dados->uuid)->first();
+        $model = $this->model->query()->where('uuid', $uuid)->first();
 
         $model->update([
-            'nome' => $dados->nome,
+            'nome' => $novosDados['nome'],
         ]);
 
-        return (new UsuarioMapper())->fromModelToEntity(
-            $model->refresh()
-        );
+        return $model->refresh()->toArray();
     }
 }
