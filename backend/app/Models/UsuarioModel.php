@@ -15,8 +15,8 @@ class UsuarioModel extends Model
         'nome',
         'email',
         'senha',
-        'documento',
         'ativo',
+        'perfil',
         'criado_em',
         'atualizado_em',
         'deletado_em'

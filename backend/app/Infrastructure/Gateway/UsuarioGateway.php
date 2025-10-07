@@ -35,7 +35,7 @@ class UsuarioGateway
     //     );
     // }
 
-    public function criar(UsuarioDto $dados): Entidade
+    public function criar(array $dados): array
     {
         return $this->repositorio->criar($dados);
     }
@@ -57,8 +57,8 @@ class UsuarioGateway
         return $this->repositorio->deletar($uuid);
     }
 
-    public function atualizar(UsuarioDto $dados): Entidade
+    public function atualizar(string $uuid, array $novosDados): array
     {
-        return $this->repositorio->atualizar($dados);
+        return $this->repositorio->atualizar($uuid, $novosDados);
     }
 }

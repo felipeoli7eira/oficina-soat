@@ -29,19 +29,18 @@ class UsuarioEloquentRepository implements RepositorioInterface
         return null;
     }
 
-    public function criar(UsuarioDto $dados): Entidade
+    public function criar(array $dados): array
     {
         $model = $this->model->query()->create([
             'uuid'      => Str::uuid()->toString(),
-            'nome'      => $dados->nome,
-            'email'     => $dados->email,
-            'senha'     => Hash::make($dados->senha),
-            'ativo'     => Entidade::STATUS_ATIVO,
+            'nome'      => $dados['nome'],
+            'email'     => $dados['email'],
+            'senha'     => Hash::make($dados['senha']),
+            'ativo'     => true,
+            'perfil'    => $dados['perfil']
         ]);
 
-        return (new UsuarioMapper())->fromModelToEntity(
-            $model->refresh()
-        );
+        return $model->refresh()->toArray();
     }
 
     public function listar(array $columns = ['*']): array
@@ -65,16 +64,14 @@ class UsuarioEloquentRepository implements RepositorioInterface
         return true;
     }
 
-    public function atualizar(UsuarioDto $dados): Entidade
+    public function atualizar(string $uuid, array $novosDados): array
     {
-        $model = $this->model->query()->where('uuid', $dados->uuid)->first();
+        $model = $this->model->query()->where('uuid', $uuid)->first();
 
         $model->update([
-            'nome' => $dados->nome,
+            'nome' => $novosDados['nome'],
         ]);
 
-        return (new UsuarioMapper())->fromModelToEntity(
-            $model->refresh()
-        );
+        return $model->refresh()->toArray();
     }
 }

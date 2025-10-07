@@ -18,14 +18,15 @@ class Entidade
     public const STATUS_INATIVO = false;
 
     public function __construct(
-        public string $identificadorUnicoUniversal, // identidade de domínio (uuid)
+        public string $uuid, // identidade de domínio (uuid)
         public string $nome,
         public string $email,
         public string $senha,
         public bool   $ativo,
+        public string $perfil,
         public DateTimeImmutable $criadoEm,
         public DateTimeImmutable $atualizadoEm,
-        public ?DateTimeImmutable $deletadoEm,
+        public ?DateTimeImmutable $deletadoEm = null,
     ) {
         $this->validadores();
     }
@@ -34,8 +35,16 @@ class Entidade
     {
         $this->validarEmail();
         $this->validarNome();
+        $this->validarPerfil();
 
         // ... outros validadores conforme necessidade
+    }
+
+    public function validarPerfil(): void
+    {
+        if (! in_array($this->perfil, Perfil::casesAsArray())) {
+            throw new InvalidArgumentException('Perfil inválido');
+        }
     }
 
     public function ativar(): void
@@ -79,20 +88,32 @@ class Entidade
     public function toHttpResponse(): array
     {
         return [
-            'identificadorUnicoUniversal' => $this->identificadorUnicoUniversal,
-            'nome'                        => $this->nome,
-            'email'                       => $this->email,
-            'ativo'                       => $this->ativo,
-            'criado_em'                   => $this->criadoEm,
-            'atualizado_em'               => $this->atualizadoEm,
-            'deletado_em'                 => $this->deletadoEm,
+            'uuid'          => $this->uuid,
+            'nome'          => $this->nome,
+            'email'         => $this->email,
+            'ativo'         => $this->ativo,
+            'perfil'        => $this->perfil,
+            'criado_em'     => $this->criadoEm,
+            'atualizado_em' => $this->atualizadoEm,
+            'deletado_em'   => $this->deletadoEm,
+        ];
+    }
+
+    public function toCreateDataArray(): array
+    {
+        return [
+            'nome'          => $this->nome,
+            'email'         => $this->email,
+            'senha'         => $this->senha,
+            'perfil'        => $this->perfil,
         ];
     }
 
     public function toTokenPayload(): array
     {
         return [
-            'sub' => $this->identificadorUnicoUniversal,
+            'sub'  => $this->uuid,
+            'perf' => $this->perfil,
         ];
     }
 
