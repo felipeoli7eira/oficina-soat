@@ -54,7 +54,7 @@ class Entidade
     public function validarValor(): void
     {
         if ($this->valor < 0) {
-            throw new InvalidArgumentException('Valor deve ser maior que zero');
+            throw new InvalidArgumentException('Valor deve ser maior ou igual a zero');
         }
     }
 
@@ -63,10 +63,9 @@ class Entidade
         return [
             'uuid'          => $this->uuid,
             'nome'          => $this->nome,
-            'valor'         => $this->valor,
-            'criado_em'     => $this->criadoEm,
-            'atualizado_em' => $this->atualizadoEm,
-            'deletado_em'   => $this->deletadoEm,
+            'valor'         => $this->valor / 100,
+            'criado_em'     => $this->criadoEm instanceof DateTimeImmutable ? $this->criadoEm->format('d/m/Y H:i') : null,
+            'atualizado_em' => $this->atualizadoEm instanceof DateTimeImmutable ? $this->atualizadoEm->format('d/m/Y H:i') : null,
         ];
     }
 

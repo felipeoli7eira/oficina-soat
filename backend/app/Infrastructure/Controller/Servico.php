@@ -4,6 +4,7 @@ namespace App\Infrastructure\Controller;
 
 use App\Domain\UseCase\Servico\CreateUseCase;
 use App\Domain\UseCase\Servico\ReadUseCase;
+use App\Domain\UseCase\Servico\ReadOneUseCase;
 // use App\Domain\UseCase\Servico\UpdateUseCase;
 // use App\Domain\UseCase\Servico\DeleteUseCase;
 
@@ -47,6 +48,20 @@ class Servico
 
         $gateway = new ServicoGateway($this->repositorio);
         $useCase = new ReadUseCase();
+
+        $res = $useCase->exec($gateway);
+
+        return $res;
+    }
+
+    public function obterUm(string $uuid): ?array
+    {
+        if (! $this->repositorio instanceof ServicoRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
+
+        $gateway = new ServicoGateway($this->repositorio);
+        $useCase = new ReadOneUseCase($uuid);
 
         $res = $useCase->exec($gateway);
 

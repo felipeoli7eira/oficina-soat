@@ -19,21 +19,6 @@ class ServicoGateway
         );
     }
 
-    // public function buscarPorEmail(string $email): ?EntidadeUsuario
-    // {
-    //     $usuarioModel = UsuarioModel::where('email', $email)->first();
-    //     if (!$usuarioModel) {
-    //         return null;
-    //     }
-
-    //     return new EntidadeUsuario(
-    //         id: $usuarioModel->id,
-    //         nome: $usuarioModel->nome,
-    //         email: $usuarioModel->email,
-    //         senha: $usuarioModel->senha
-    //     );
-    // }
-
     public function criar(array $dados): array
     {
         return $this->repositorio->criar($dados);
