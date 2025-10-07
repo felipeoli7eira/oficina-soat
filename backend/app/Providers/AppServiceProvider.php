@@ -10,6 +10,9 @@ use App\Signature\AuthServiceInterface;
 use App\Signature\TokenServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
+use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepository;
+use App\Infrastructure\Repositories\ServicoEloquentRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -17,6 +20,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UsuarioRepository::class,
             UsuarioEloquentRepository::class
+        );
+
+        // servicos repository resolution
+        $this->app->bind(
+            ServicoRepository::class,
+            ServicoEloquentRepository::class
         );
 
         $this->app->bind(

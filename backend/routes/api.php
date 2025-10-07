@@ -10,6 +10,7 @@ Route::get('ping', fn() => response()->json([
 ]))->withoutMiddleware(JsonWebTokenMiddleware::class);
 
 require_once __DIR__ . '/usuario.php';
+require_once __DIR__ . '/servico.php';
 
 Route::fallback(fn() => response()->json([
     'err' => true,
