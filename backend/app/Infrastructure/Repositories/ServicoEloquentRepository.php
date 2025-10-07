@@ -42,14 +42,11 @@ class ServicoEloquentRepository implements RepositorioInterface
 
     public function listar(array $columns = ['*']): array
     {
-        return [];
-
-        // return $this->model
-        //     ->query()
-        //     ->where('ativo', Entidade::STATUS_ATIVO)
-        //     ->where('deletado_em', null)
-        //     ->get($columns)
-        //     ->toArray();
+        return $this->model
+            ->query()
+            ->where('deletado_em', null)
+            ->get($columns)
+            ->toArray();
     }
 
     public function deletar(string $uuid): bool

@@ -39,17 +39,16 @@ class ServicoGateway
         return $this->repositorio->criar($dados);
     }
 
-    // public function listar(): array
-    // {
-    //     return $this->repositorio->listar([
-    //         'uuid',
-    //         'nome',
-    //         'email',
-    //         'ativo',
-    //         'criado_em',
-    //         'atualizado_em',
-    //     ]);
-    // }
+    public function listar(): array
+    {
+        return $this->repositorio->listar([
+            'uuid',
+            'nome',
+            'valor',
+            'criado_em',
+            'atualizado_em',
+        ]);
+    }
 
     // public function deletar(string $uuid): bool
     // {
