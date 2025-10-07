@@ -64,7 +64,7 @@ class UsuarioApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res->toHttpResponse());
+        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
 
     public function read(Request $req)

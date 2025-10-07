@@ -18,14 +18,19 @@ class Usuario
 {
     public function __construct() {}
 
-    public function criar(UsuarioDto $dados, UsuarioRepositorio $repositorio): Entidade
+    public function criar(UsuarioDto $dados, UsuarioRepositorio $repositorio): array
     {
         $gateway = new UsuarioGateway($repositorio);
-        $useCase = new CreateUseCase();
+        $useCase = new CreateUseCase(
+            $dados->nome,
+            $dados->email,
+            $dados->senha,
+            $dados->perfil
+        );
 
-        $res = $useCase->exec($dados, $gateway);
+        $res = $useCase->exec($gateway);
 
-        return $res;
+        return $res->toHttpResponse();
     }
 
     public function listar(UsuarioRepositorio $repositorio): array

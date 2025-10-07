@@ -8,4 +8,9 @@ enum Perfil: string
     case COMERCIAL = 'comercial';
     case MECANICO = 'mecanico';
     case GESTOR_ESTOQUE = 'gestor_estoque';
+
+    public static function casesAsArray(): array
+    {
+        return array_map(fn($case) => $case->value, Perfil::cases());
+    }
 }

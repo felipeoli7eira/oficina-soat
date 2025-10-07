@@ -26,7 +26,7 @@ class Entidade
         public string $perfil,
         public DateTimeImmutable $criadoEm,
         public DateTimeImmutable $atualizadoEm,
-        public ?DateTimeImmutable $deletadoEm,
+        public ?DateTimeImmutable $deletadoEm = null,
     ) {
         $this->validadores();
     }
@@ -42,7 +42,7 @@ class Entidade
 
     public function validarPerfil(): void
     {
-        if (! in_array($this->perfil, Perfil::cases())) {
+        if (! in_array($this->perfil, Perfil::casesAsArray())) {
             throw new InvalidArgumentException('Perfil inválido');
         }
     }
@@ -96,6 +96,16 @@ class Entidade
             'criado_em'     => $this->criadoEm,
             'atualizado_em' => $this->atualizadoEm,
             'deletado_em'   => $this->deletadoEm,
+        ];
+    }
+
+    public function toCreateDataArray(): array
+    {
+        return [
+            'nome'          => $this->nome,
+            'email'         => $this->email,
+            'senha'         => $this->senha,
+            'perfil'        => $this->perfil,
         ];
     }
 

@@ -29,20 +29,18 @@ class UsuarioEloquentRepository implements RepositorioInterface
         return null;
     }
 
-    public function criar(UsuarioDto $dados): Entidade
+    public function criar(array $dados): array
     {
         $model = $this->model->query()->create([
             'uuid'      => Str::uuid()->toString(),
-            'nome'      => $dados->nome,
-            'email'     => $dados->email,
-            'senha'     => Hash::make($dados->senha),
-            'ativo'     => Entidade::STATUS_ATIVO,
-            'perfil'    => $dados->perfil
+            'nome'      => $dados['nome'],
+            'email'     => $dados['email'],
+            'senha'     => Hash::make($dados['senha']),
+            'ativo'     => true,
+            'perfil'    => $dados['perfil']
         ]);
 
-        return (new UsuarioMapper())->fromModelToEntity(
-            $model->refresh()
-        );
+        return $model->refresh()->toArray();
     }
 
     public function listar(array $columns = ['*']): array

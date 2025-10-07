@@ -16,7 +16,7 @@ interface RepositorioInterface
         ?string $nomeIdentificador
     ): ?Entidade;
 
-    public function criar(UsuarioDto $dados): Entidade;
+    public function criar(array $dados): array;
 
     public function listar(array $columns = ['*']): array;
 

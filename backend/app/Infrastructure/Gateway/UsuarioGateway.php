@@ -35,7 +35,7 @@ class UsuarioGateway
     //     );
     // }
 
-    public function criar(UsuarioDto $dados): Entidade
+    public function criar(array $dados): array
     {
         return $this->repositorio->criar($dados);
     }
