@@ -13,26 +13,38 @@ use Illuminate\Support\ServiceProvider;
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepository;
 use App\Infrastructure\Repositories\ServicoEloquentRepository;
 
+use App\Domain\Entity\Material\RepositorioInterface as MaterialRepository;
+use App\Infrastructure\Repositories\MaterialEloquentRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        // "usuario" repository binding
         $this->app->bind(
             UsuarioRepository::class,
             UsuarioEloquentRepository::class
         );
 
-        // servicos repository resolution
+        // "servicos" repository binding
         $this->app->bind(
             ServicoRepository::class,
             ServicoEloquentRepository::class
         );
 
+        // "material" repository binding
+        $this->app->bind(
+            MaterialRepository::class,
+            MaterialEloquentRepository::class
+        );
+
+        // "token" service binding
         $this->app->bind(
             TokenServiceInterface::class,
             JsonWebToken::class
         );
 
+        // "auth" service binding
         $this->app->bind(
             AuthServiceInterface::class,
             LaravelAuthService::class
