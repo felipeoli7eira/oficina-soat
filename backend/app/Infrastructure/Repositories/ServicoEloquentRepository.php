@@ -62,14 +62,10 @@ class ServicoEloquentRepository implements RepositorioInterface
 
     public function atualizar(string $uuid, array $novosDados): array
     {
-        return [];
+        $model = $this->model->query()->where('uuid', $uuid)->first();
 
-        // $model = $this->model->query()->where('uuid', $uuid)->first();
+        $model->update($novosDados);
 
-        // $model->update([
-        //     'nome' => $novosDados['nome'],
-        // ]);
-
-        // return $model->refresh()->toArray();
+        return $model->refresh()->toArray();
     }
 }

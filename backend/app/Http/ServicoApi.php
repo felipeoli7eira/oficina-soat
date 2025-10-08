@@ -114,49 +114,47 @@ class ServicoApi
         $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
-    // public function update(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['nome', 'uuid']), [
-    //             'uuid' => ['required', 'string', 'uuid'],
-    //             'nome' => ['required', 'string'],
-    //         ])->stopOnFirstFailure(true);
+    public function update(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['nome', 'uuid', 'valor']), [
+                'uuid'  => ['required', 'string', 'uuid'],
+                'nome'  => ['required', 'string'],
+                'valor' => ['required', 'numeric', 'decimal:0,2']
+            ])->stopOnFirstFailure(true);
 
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
 
-    //         $dadosValidados = $validacao->validated();
-    //         $novosDados = [
-    //             'nome' => $dadosValidados['nome'],
-    //         ];
+            $dadosValidados = $validacao->validated();
 
-    //         $responseSuccess = $this->controller->atualizar(
-    //             $dadosValidados['uuid'],
-    //             $novosDados,
-    //             $this->repositorio
-    //         );
-    //     } catch (DomainHttpException $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ];
+            $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar(
+                $dadosValidados['uuid'],
+                $dadosValidados['nome'],
+                (int) round($dadosValidados['valor'] * 100) // converte em centavos
+            );
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
 
-    //         return response()->json($resErr, $err->getCode());
-    //     } catch (Throwable $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ];
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
 
-    //         $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-    //         return response()->json($resErr, $cod);
-    //     }
+            return response()->json($resErr, $cod);
+        }
 
-    //     return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
-    // }
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
 
     public function delete(Request $req)
     {

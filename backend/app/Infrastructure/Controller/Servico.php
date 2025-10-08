@@ -5,7 +5,7 @@ namespace App\Infrastructure\Controller;
 use App\Domain\UseCase\Servico\CreateUseCase;
 use App\Domain\UseCase\Servico\ReadUseCase;
 use App\Domain\UseCase\Servico\ReadOneUseCase;
-// use App\Domain\UseCase\Servico\UpdateUseCase;
+use App\Domain\UseCase\Servico\UpdateUseCase;
 use App\Domain\UseCase\Servico\DeleteUseCase;
 
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
@@ -82,22 +82,17 @@ class Servico
         return $res;
     }
 
-    // public function atualizar(string $uuid, array $novosDados, UsuarioRepositorio $repositorio): array
-    // {
-    //     $gateway = new UsuarioGateway($repositorio);
-    //     $useCase = new UpdateUseCase($gateway);
+    public function atualizar(string $uuid, string $nome, int $valor): array
+    {
+        if (! $this->repositorio instanceof ServicoRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $res = $useCase->exec($uuid, $novosDados);
+        $gateway = new ServicoGateway($this->repositorio);
+        $useCase = new UpdateUseCase($gateway);
 
-    //     return $res->toHttpResponse();
-    // }
+        $res = $useCase->exec($uuid, $nome, $valor);
 
-    // public function authenticate(string $email, string $password, AuthenticateUseCase $useCase): AuthenticatedDto
-    // {
-    //     $gateway = app(UsuarioGateway::class);
-
-    //     $res = $useCase->exec($email, $password, $gateway);
-
-    //     return $res;
-    // }
+        return $res->toHttpResponse();
+    }
 }

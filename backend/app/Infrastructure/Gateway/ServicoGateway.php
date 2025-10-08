@@ -40,8 +40,8 @@ class ServicoGateway
         return $this->repositorio->deletar($uuid);
     }
 
-    // public function atualizar(string $uuid, array $novosDados): array
-    // {
-    //     return $this->repositorio->atualizar($uuid, $novosDados);
-    // }
+    public function atualizar(string $uuid, array $novosDados): array
+    {
+        return $this->repositorio->atualizar($uuid, $novosDados);
+    }
 }
