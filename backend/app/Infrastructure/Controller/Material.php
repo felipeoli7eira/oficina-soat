@@ -6,7 +6,7 @@ use App\Domain\UseCase\Material\CreateUseCase;
 use App\Domain\UseCase\Material\ReadUseCase;
 use App\Domain\UseCase\Material\ReadOneUseCase;
 // use App\Domain\UseCase\Material\UpdateUseCase;
-// use App\Domain\UseCase\Material\DeleteUseCase;
+use App\Domain\UseCase\Material\DeleteUseCase;
 
 use App\Infrastructure\Gateway\MaterialGateway;
 use App\Domain\Entity\Material\RepositorioInterface as MaterialRepositorio;
@@ -85,19 +85,19 @@ class Material
         return $res;
     }
 
-    // public function deletar(string $uuid): bool
-    // {
-    //     if (! $this->repositorio instanceof MaterialRepositorio) {
-    //         throw new DomainHttpException('Repositorio não definido', 500);
-    //     }
+    public function deletar(string $uuid): bool
+    {
+        if (! $this->repositorio instanceof MaterialRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $gateway = new ServicoGateway($this->repositorio);
-    //     $useCase = new DeleteUseCase($gateway);
+        $gateway = new MaterialGateway($this->repositorio);
+        $useCase = new DeleteUseCase($gateway);
 
-    //     $res = $useCase->exec($uuid);
+        $res = $useCase->exec($uuid);
 
-    //     return $res;
-    // }
+        return $res;
+    }
 
     // public function atualizar(string $uuid, string $nome, int $valor): array
     // {

@@ -199,33 +199,33 @@ class MaterialApi
     //     return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
     // }
 
-    // public function delete(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
-    //             'uuid' => ['required', 'string', 'uuid'],
-    //         ])->stopOnFirstFailure(true);
+    public function delete(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
+                'uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
 
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
 
-    //         $dadosValidos = $validacao->validated();
+            $dadosValidos = $validacao->validated();
 
-    //         $this->controller->useRepositorio($this->repositorio)->deletar($dadosValidos['uuid']);
-    //     } catch (DomainHttpException $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
+            $this->controller->useRepositorio($this->repositorio)->deletar($dadosValidos['uuid']);
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-    //     return response()->noContent();
-    // }
+        return response()->noContent();
+    }
 }
