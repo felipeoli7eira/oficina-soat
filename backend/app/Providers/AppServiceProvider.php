@@ -16,6 +16,9 @@ use App\Infrastructure\Repositories\ServicoEloquentRepository;
 use App\Domain\Entity\Material\RepositorioInterface as MaterialRepository;
 use App\Infrastructure\Repositories\MaterialEloquentRepository;
 
+use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepository;
+use App\Infrastructure\Repositories\ClienteEloquentRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -36,6 +39,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             MaterialRepository::class,
             MaterialEloquentRepository::class
+        );
+
+        // "cliente" repository binding
+        $this->app->bind(
+            ClienteRepository::class,
+            ClienteEloquentRepository::class
         );
 
         // "token" service binding
