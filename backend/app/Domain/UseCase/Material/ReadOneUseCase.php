@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\UseCase\Servico;
+namespace App\Domain\UseCase\Material;
 
-use App\Infrastructure\Gateway\ServicoGateway;
+use App\Infrastructure\Gateway\MaterialGateway;
 
 class ReadOneUseCase
 {
     public function __construct(public readonly string $uuid) {}
 
-    public function exec(ServicoGateway $gateway): ?array
+    public function exec(MaterialGateway $gateway): ?array
     {
         if (empty($this->uuid)) {
             return null;
