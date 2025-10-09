@@ -12,6 +12,7 @@ Route::get('ping', fn() => response()->json([
 require_once __DIR__ . '/usuario.php';
 require_once __DIR__ . '/servico.php';
 require_once __DIR__ . '/material.php';
+require_once __DIR__ . '/cliente.php';
 
 Route::fallback(fn() => response()->json([
     'err' => true,
