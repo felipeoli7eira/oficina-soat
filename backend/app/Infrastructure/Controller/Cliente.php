@@ -5,7 +5,7 @@ namespace App\Infrastructure\Controller;
 use App\Domain\UseCase\Cliente\CreateUseCase;
 use App\Domain\UseCase\Cliente\ReadUseCase;
 use App\Domain\UseCase\Cliente\ReadOneUseCase;
-// use App\Domain\UseCase\Cliente\UpdateUseCase;
+use App\Domain\UseCase\Cliente\UpdateUseCase;
 use App\Domain\UseCase\Cliente\DeleteUseCase;
 
 use App\Infrastructure\Gateway\ClienteGateway;
@@ -32,7 +32,7 @@ class Cliente
         string $fone,
     ): array {
         if (! $this->repositorio instanceof ClienteRepositorio) {
-            throw new DomainHttpException('Repositorio não definido', 500);
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
         $gateway = new ClienteGateway($this->repositorio);
@@ -52,7 +52,7 @@ class Cliente
     public function listar(): array
     {
         if (! $this->repositorio instanceof ClienteRepositorio) {
-            throw new DomainHttpException('Repositorio não definido', 500);
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
         $gateway = new ClienteGateway($this->repositorio);
@@ -66,7 +66,7 @@ class Cliente
     public function obterUm(string $uuid): ?array
     {
         if (! $this->repositorio instanceof ClienteRepositorio) {
-            throw new DomainHttpException('Repositorio não definido', 500);
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
         $gateway = new ClienteGateway($this->repositorio);
@@ -80,7 +80,7 @@ class Cliente
     public function deletar(string $uuid): bool
     {
         if (! $this->repositorio instanceof ClienteRepositorio) {
-            throw new DomainHttpException('Repositorio não definido', 500);
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
         $gateway = new ClienteGateway($this->repositorio);
@@ -91,17 +91,17 @@ class Cliente
         return $res;
     }
 
-    // public function atualizar(string $uuid, array $novosDados): array
-    // {
-    //     if (! $this->repositorio instanceof ClienteRepositorio) {
-    //         throw new DomainHttpException('Repositorio não definido', 500);
-    //     }
+    public function atualizar(string $uuid, array $novosDados): array
+    {
+        if (! $this->repositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
 
-    //     $gateway = new ClienteGateway($this->repositorio);
-    //     $useCase = new UpdateUseCase($gateway);
+        $gateway = new ClienteGateway($this->repositorio);
+        $useCase = new UpdateUseCase($gateway);
 
-    //     $res = $useCase->exec($uuid, $novosDados);
+        $res = $useCase->exec($uuid, $novosDados);
 
-    //     return $res->toHttpResponse();
-    // }
+        return $res->toHttpResponse();
+    }
 }

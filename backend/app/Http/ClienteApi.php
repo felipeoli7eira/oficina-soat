@@ -101,46 +101,20 @@ class ClienteApi
     //     return $dados;
     // }
 
-    // public function castsUpdate(array $dados): array
-    // {
-    //     if (! isset($dados['sku']) || (is_string($dados['sku']) && empty($dados['sku']))) {
-    //         $dados['sku'] = null;
-    //     }
+    public function castsUpdate(array $dados): array
+    {
+        if (isset($dados['documento'])) {
+            $dados['documento'] = str_replace(['.', '/', '-'], '', $dados['documento']);
+        }
 
-    //     if (! isset($dados['descricao']) || (is_string($dados['descricao']) && empty($dados['descricao']))) {
-    //         $dados['descricao'] = null;
-    //     }
+        if (isset($dados['fone'])) {
+            $dados['fone'] = str_replace(['(', ')', '-', ' '], '', $dados['fone']);
+        }
 
-    //     if (isset($dados['estoque']) && is_string($dados['estoque'])) {
-    //         $dados['estoque'] = intval($dados['estoque']);
-    //     }
-
-    //     if (isset($dados['preco_custo'])) {
-    //         if (is_string($dados['preco_custo'])) {
-    //             $dados['preco_custo'] = intval($dados['preco_custo']);
-    //         }
-
-    //         $dados['preco_custo'] = (int) round($dados['preco_custo'] * 100);
-    //     }
-
-    //     if (isset($dados['preco_venda'])) {
-    //         if (is_string($dados['preco_venda'])) {
-    //             $dados['preco_venda'] = intval($dados['preco_venda']);
-    //         }
-
-    //         $dados['preco_venda'] = (int) round($dados['preco_venda'] * 100);
-    //     }
-
-    //     if (isset($dados['preco_uso_interno'])) {
-    //         if (is_string($dados['preco_uso_interno'])) {
-    //             $dados['preco_uso_interno'] = intval($dados['preco_uso_interno']);
-    //         }
-
-    //         $dados['preco_uso_interno'] = (int) round($dados['preco_uso_interno'] * 100);
-    //     }
-
-    //     return array_filter($dados, fn($field) => ! is_null($field));
-    // }
+        return array_filter($dados, function (mixed $field) {
+            return !is_null($field);
+        });
+    }
 
     public function read(Request $req)
     {
@@ -195,53 +169,49 @@ class ClienteApi
         $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
-    // public function update(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'gtin', 'estoque', 'preco_custo', 'preco_venda', 'preco_uso_interno', 'sku', 'descricao']), [
-    //             'uuid'              => ['nullable', 'string', 'uuid'],
-    //             'nome'              => ['nullable', 'string'],
-    //             'gtin'              => ['nullable', 'string'],
-    //             'estoque'           => ['nullable', 'integer'],
-    //             'preco_custo'       => ['nullable', 'decimal:0,2'],
-    //             'preco_venda'       => ['nullable', 'decimal:0,2'],
-    //             'preco_uso_interno' => ['nullable', 'decimal:0,2'],
-    //             'sku'               => ['string', 'nullable'],
-    //             'descricao'         => ['string', 'nullable'],
-    //         ])->stopOnFirstFailure(true);
+    public function update(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'documento', 'email', 'fone']), [
+                'uuid'      => ['required', 'string', 'uuid'],
+                'nome'      => ['nullable', 'string'],
+                'documento' => ['nullable', 'string'],
+                'email'     => ['nullable', 'string', 'email'],
+                'fone'      => ['nullable', 'string'],
+            ])->stopOnFirstFailure(true);
 
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
 
-    //         $dados = $this->castsUpdate($validacao->validated());
+            $dados = $this->castsUpdate($validacao->validated());
 
-    //         $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar($dados['uuid'], $dados);
-    //     } catch (DomainHttpException $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ];
+            $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar($dados['uuid'], $dados);
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
 
-    //         return response()->json($resErr, $err->getCode());
-    //     } catch (Throwable $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //             'meta' => [
-    //                 'getFile' => $err->getFile(),
-    //                 'getLine' => $err->getLine(),
-    //             ]
-    //         ];
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ];
 
-    //         $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-    //         return response()->json($resErr, $cod);
-    //     }
+            return response()->json($resErr, $cod);
+        }
 
-    //     return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
-    // }
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
 
     public function delete(Request $req)
     {

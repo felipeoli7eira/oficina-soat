@@ -134,6 +134,18 @@ class Entidade
             $this->nome = $dados['nome'];
         }
 
+        if (isset($dados['documento'])) {
+            $this->documento = $dados['documento'];
+        }
+
+        if (isset($dados['email'])) {
+            $this->email = $dados['email'];
+        }
+
+        if (isset($dados['fone'])) {
+            $this->fone = $dados['fone'];
+        }
+
         $this->atualizadoEm = new DateTimeImmutable();
 
         $this->validacoes();

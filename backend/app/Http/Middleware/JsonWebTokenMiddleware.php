@@ -33,7 +33,7 @@ class JsonWebTokenMiddleware
         $claims = $this->tokenService->validate($token);
 
         if ($claims === null) {
-            $responseErr['msg'] = 'Autenticação inválida';
+            $responseErr['msg'] = 'Token inválido';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
@@ -41,7 +41,7 @@ class JsonWebTokenMiddleware
         $user = $this->usuarioRepositorio->encontrarPorIdentificadorUnico($claims->sub, 'uuid');
 
         if ($user === null) {
-            $responseErr['msg'] = 'Usuário não encontrado';
+            $responseErr['msg'] = 'É necessário autenticação para acessar este recurso';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
