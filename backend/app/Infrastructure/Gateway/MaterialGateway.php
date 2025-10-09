@@ -26,13 +26,7 @@ class MaterialGateway
 
     public function listar(): array
     {
-        return $this->repositorio->listar([
-            'uuid',
-            'nome',
-            'valor',
-            'criado_em',
-            'atualizado_em',
-        ]);
+        return $this->repositorio->listar(['*']);
     }
 
     public function deletar(string $uuid): bool
