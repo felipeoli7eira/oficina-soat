@@ -3,10 +3,10 @@
 namespace App\Infrastructure\Controller;
 
 use App\Domain\UseCase\Cliente\CreateUseCase;
-// use App\Domain\UseCase\Cliente\ReadUseCase;
-// use App\Domain\UseCase\Cliente\ReadOneUseCase;
+use App\Domain\UseCase\Cliente\ReadUseCase;
+use App\Domain\UseCase\Cliente\ReadOneUseCase;
 // use App\Domain\UseCase\Cliente\UpdateUseCase;
-// use App\Domain\UseCase\Cliente\DeleteUseCase;
+use App\Domain\UseCase\Cliente\DeleteUseCase;
 
 use App\Infrastructure\Gateway\ClienteGateway;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
@@ -49,47 +49,47 @@ class Cliente
         return $res->toHttpResponse();
     }
 
-    // public function listar(): array
-    // {
-    //     if (! $this->repositorio instanceof ClienteRepositorio) {
-    //         throw new DomainHttpException('Repositorio não definido', 500);
-    //     }
+    public function listar(): array
+    {
+        if (! $this->repositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $gateway = new ClienteGateway($this->repositorio);
-    //     $useCase = new ReadUseCase();
+        $gateway = new ClienteGateway($this->repositorio);
+        $useCase = new ReadUseCase();
 
-    //     $res = $useCase->exec($gateway);
+        $res = $useCase->exec($gateway);
 
-    //     return $res;
-    // }
+        return $res;
+    }
 
-    // public function obterUm(string $uuid): ?array
-    // {
-    //     if (! $this->repositorio instanceof ClienteRepositorio) {
-    //         throw new DomainHttpException('Repositorio não definido', 500);
-    //     }
+    public function obterUm(string $uuid): ?array
+    {
+        if (! $this->repositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $gateway = new ClienteGateway($this->repositorio);
-    //     $useCase = new ReadOneUseCase($uuid);
+        $gateway = new ClienteGateway($this->repositorio);
+        $useCase = new ReadOneUseCase($uuid);
 
-    //     $res = $useCase->exec($gateway);
+        $res = $useCase->exec($gateway);
 
-    //     return $res;
-    // }
+        return $res;
+    }
 
-    // public function deletar(string $uuid): bool
-    // {
-    //     if (! $this->repositorio instanceof ClienteRepositorio) {
-    //         throw new DomainHttpException('Repositorio não definido', 500);
-    //     }
+    public function deletar(string $uuid): bool
+    {
+        if (! $this->repositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('Repositorio não definido', 500);
+        }
 
-    //     $gateway = new ClienteGateway($this->repositorio);
-    //     $useCase = new DeleteUseCase($gateway);
+        $gateway = new ClienteGateway($this->repositorio);
+        $useCase = new DeleteUseCase($gateway);
 
-    //     $res = $useCase->exec($uuid);
+        $res = $useCase->exec($uuid);
 
-    //     return $res;
-    // }
+        return $res;
+    }
 
     // public function atualizar(string $uuid, array $novosDados): array
     // {

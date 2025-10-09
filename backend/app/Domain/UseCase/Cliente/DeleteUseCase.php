@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\UseCase\Material;
+namespace App\Domain\UseCase\Cliente;
 
 use App\Exception\DomainHttpException;
-use App\Infrastructure\Gateway\MaterialGateway;
+use App\Infrastructure\Gateway\ClienteGateway;
 
 class DeleteUseCase
 {
-    public function __construct(public readonly MaterialGateway $gateway) {}
+    public function __construct(public readonly ClienteGateway $gateway) {}
 
     public function exec(string $uuid): bool
     {

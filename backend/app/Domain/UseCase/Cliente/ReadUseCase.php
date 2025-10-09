@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\UseCase\Material;
+namespace App\Domain\UseCase\Cliente;
 
-use App\Domain\Entity\Material\Entidade;
-use App\Infrastructure\Gateway\MaterialGateway;
+use App\Domain\Entity\Cliente\Entidade;
+use App\Infrastructure\Gateway\ClienteGateway;
 use DateTimeImmutable;
 
 class ReadUseCase
 {
     public function __construct() {}
 
-    public function exec(MaterialGateway $gateway): array
+    public function exec(ClienteGateway $gateway): array
     {
         $res = $gateway->listar();
 
@@ -20,13 +20,9 @@ class ReadUseCase
             $entidade = new Entidade(
                 uuid: $r['uuid'],
                 nome: $r['nome'],
-                gtin: $r['gtin'],
-                estoque: $r['estoque'],
-                sku: $r['sku'],
-                descricao: $r['descricao'],
-                preco_custo: $r['preco_custo'],
-                preco_venda: $r['preco_venda'],
-                preco_uso_interno: $r['preco_uso_interno'],
+                documento: $r['documento'],
+                email: $r['email'],
+                fone: $r['fone'],
                 criadoEm: new DateTimeImmutable($r['criado_em']),
                 atualizadoEm: new DateTimeImmutable($r['atualizado_em']),
             );
