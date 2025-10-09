@@ -119,4 +119,57 @@ class Entidade
             'preco_uso_interno' => $this->preco_uso_interno,
         ];
     }
+
+    public function atualizar(array $dados): void
+    {
+        if (isset($dados['nome'])) {
+            $this->nome = $dados['nome'];
+        }
+
+        if (isset($dados['gtin'])) {
+            $this->gtin = $dados['gtin'];
+        }
+
+        if (isset($dados['estoque'])) {
+            $this->estoque = $dados['estoque'];
+        }
+
+        if (isset($dados['sku'])) {
+            $this->sku = $dados['sku'];
+        }
+
+        if (isset($dados['descricao'])) {
+            $this->descricao = $dados['descricao'];
+        }
+
+        if (isset($dados['preco_custo'])) {
+            $this->preco_custo = $dados['preco_custo'];
+        }
+
+        if (isset($dados['preco_venda'])) {
+            $this->preco_venda = $dados['preco_venda'];
+        }
+
+        if (isset($dados['preco_uso_interno'])) {
+            $this->preco_uso_interno = $dados['preco_uso_interno'];
+        }
+
+        $this->atualizadoEm = new DateTimeImmutable();
+
+        $this->validacoes();
+    }
+
+    public function toUpdateDataArray(): array
+    {
+        return [
+            'nome'              => $this->nome,
+            'gtin'              => $this->gtin,
+            'estoque'           => $this->estoque,
+            'sku'               => $this->sku,
+            'descricao'         => $this->descricao,
+            'preco_custo'       => $this->preco_custo,
+            'preco_venda'       => $this->preco_venda,
+            'preco_uso_interno' => $this->preco_uso_interno,
+        ];
+    }
 }
