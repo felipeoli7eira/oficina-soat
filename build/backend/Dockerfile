@@ -10,8 +10,17 @@ RUN apk add --no-cache \
     git \
     unzip \
     libpq-dev \
+    autoconf \
+    g++ \
+    make \
+    linux-headers \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=coverage,develop" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && apk del autoconf g++ make linux-headers \
     && rm -rf /var/lib/apk/lists/* \
     && rm -rf /var/cache/apk/*
+
 
 RUN docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql
 
