@@ -2,10 +2,10 @@
 
 namespace App\Infrastructure\Gateway;
 
-use App\Domain\Entity\Cliente\Entidade;
-use App\Domain\Entity\Cliente\RepositorioInterface;
+use App\Domain\Entity\Veiculo\Entidade;
+use App\Domain\Entity\Veiculo\RepositorioInterface;
 
-class ClienteGateway
+class VeiculoGateway
 {
     public function __construct(public readonly RepositorioInterface $repositorio) {}
 
@@ -37,16 +37,5 @@ class ClienteGateway
     public function atualizar(string $uuid, array $novosDados): array
     {
         return $this->repositorio->atualizar($uuid, $novosDados);
-    }
-
-    /**
-     * Metodo responsavel por devolver um id numero, caso haja, a partir de um uuid
-     *
-     * @param string $uuid o uuid para ser resolvido em id numerico
-     * @return int -1 para erro ou não encontrado, 1+ com o id encontrado
-     */
-    public function obterIdNumerico(string $uuid): int
-    {
-        return $this->repositorio->obterIdNumerico($uuid);
     }
 }
