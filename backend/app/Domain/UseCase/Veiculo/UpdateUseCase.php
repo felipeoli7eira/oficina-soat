@@ -6,6 +6,7 @@ namespace App\Domain\UseCase\Veiculo;
 
 use App\Domain\Entity\Veiculo\Entidade;
 use App\Exception\DomainHttpException;
+use App\Infrastructure\Gateway\ClienteGateway;
 use App\Infrastructure\Gateway\VeiculoGateway;
 use DateTimeImmutable;
 
@@ -31,7 +32,7 @@ class UpdateUseCase
             $existente->modelo,
             $existente->placa,
             $existente->ano,
-            $existente->clienteId,
+            0, // nao é possivel alterar o cliente do veiculo, entao pode passar zero ou qualquer numero pois o ->toUpdateDataArray() nao devolve o cliente_id
             $existente->criadoEm,
             $existente->atualizadoEm,
             $existente->deletadoEm instanceof DateTimeImmutable ? $existente->deletadoEm : null,
@@ -51,7 +52,7 @@ class UpdateUseCase
             $update['modelo'],
             $update['placa'],
             $update['ano'],
-            $update['cliente_id'],
+            0,
             new DateTimeImmutable($update['criado_em']),
             new DateTimeImmutable($update['atualizado_em']),
             $update['deletado_em'] ? new DateTimeImmutable($update['deletado_em']) : null,

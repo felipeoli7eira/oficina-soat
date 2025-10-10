@@ -70,20 +70,12 @@ class VeiculoApi
         $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
 
-    // public function castsUpdate(array $dados): array
-    // {
-    //     if (isset($dados['documento'])) {
-    //         $dados['documento'] = str_replace(['.', '/', '-'], '', $dados['documento']);
-    //     }
-
-    //     if (isset($dados['fone'])) {
-    //         $dados['fone'] = str_replace(['(', ')', '-', ' '], '', $dados['fone']);
-    //     }
-
-    //     return array_filter($dados, function (mixed $field) {
-    //         return !is_null($field);
-    //     });
-    // }
+    public function castsUpdate(array $dados): array
+    {
+        return array_filter($dados, function (mixed $field) {
+            return !is_null($field);
+        });
+    }
 
     public function read(Request $req)
     {
@@ -144,49 +136,52 @@ class VeiculoApi
         $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
-    // public function update(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'documento', 'email', 'fone']), [
-    //             'uuid'      => ['required', 'string', 'uuid'],
-    //             'nome'      => ['nullable', 'string'],
-    //             'documento' => ['nullable', 'string'],
-    //             'email'     => ['nullable', 'string', 'email'],
-    //             'fone'      => ['nullable', 'string'],
-    //         ])->stopOnFirstFailure(true);
+    public function update(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'marca', 'modelo', 'placa', 'ano']), [
+                'uuid'         => ['required', 'string', 'uuid'],
+                'marca'        => ['nullable', 'string'],
+                'modelo'       => ['nullable', 'string'],
+                'placa'        => ['nullable', 'string'],
+                'ano'          => ['nullable', 'integer'],
+            ])->stopOnFirstFailure(true);
 
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
 
-    //         $dados = $this->castsUpdate($validacao->validated());
+            $dados = $this->castsUpdate($validacao->validated());
 
-    //         $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar($dados['uuid'], $dados);
-    //     } catch (DomainHttpException $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ];
+            $responseSuccess = $this->controller
+                ->useRepositorio($this->repositorio)
+                ->useClienteRepositorio($this->clienteRepositorio)
+                ->atualizar($dados['uuid'], $dados);
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
 
-    //         return response()->json($resErr, $err->getCode());
-    //     } catch (Throwable $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //             'meta' => [
-    //                 'getFile' => $err->getFile(),
-    //                 'getLine' => $err->getLine(),
-    //             ]
-    //         ];
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ];
 
-    //         $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-    //         return response()->json($resErr, $cod);
-    //     }
+            return response()->json($resErr, $cod);
+        }
 
-    //     return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
-    // }
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
 
     public function delete(Request $req)
     {
