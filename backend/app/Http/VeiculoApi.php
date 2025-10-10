@@ -44,13 +44,13 @@ class VeiculoApi
             $dados = $validacao->validated();
 
             $res = $this->controller->useRepositorio($this->repositorio)->useClienteRepositorio($this->clienteRepositorio)
-            ->criar(
-                $dados['marca'],
-                $dados['modelo'],
-                $dados['placa'],
-                $dados['ano'],
-                $dados['cliente_uuid'],
-            );
+                ->criar(
+                    $dados['marca'],
+                    $dados['modelo'],
+                    $dados['placa'],
+                    $dados['ano'],
+                    $dados['cliente_uuid'],
+                );
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,
@@ -85,24 +85,27 @@ class VeiculoApi
     //     });
     // }
 
-    // public function read(Request $req)
-    // {
-    //     try {
-    //         $res = $this->controller->useRepositorio($this->repositorio)->listar();
-    //     } catch (DomainHttpException $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
+    public function read(Request $req)
+    {
+        try {
+            $res = $this->controller
+                ->useRepositorio($this->repositorio)
+                ->useClienteRepositorio($this->clienteRepositorio)
+                ->listar();
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-    //     $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
-    // }
+        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+    }
 
     // public function readOne(Request $req)
     // {

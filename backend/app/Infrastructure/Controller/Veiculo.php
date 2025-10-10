@@ -45,6 +45,10 @@ class Veiculo
             throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
+        if (! $this->clienteRepositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('fonte de dados do cliente deve ser definida', 500);
+        }
+
         $gateway = new VeiculoGateway($this->repositorio);
         $clienteGateway = new ClienteGateway($this->clienteRepositorio);
         $useCase = new CreateUseCase(
@@ -66,10 +70,15 @@ class Veiculo
             throw new DomainHttpException('fonte de dados deve ser definida', 500);
         }
 
+        if (! $this->clienteRepositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('fonte de dados do cliente deve ser definida', 500);
+        }
+
         $gateway = new VeiculoGateway($this->repositorio);
+        $clienteGateway = new ClienteGateway($this->clienteRepositorio);
         $useCase = new ReadUseCase();
 
-        $res = $useCase->exec($gateway);
+        $res = $useCase->exec($gateway, $clienteGateway);
 
         return $res;
     }
