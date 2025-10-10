@@ -14,6 +14,7 @@ require_once __DIR__ . '/servico.php';
 require_once __DIR__ . '/material.php';
 require_once __DIR__ . '/cliente.php';
 require_once __DIR__ . '/veiculo.php';
+require_once __DIR__ . '/ordem.php';
 
 Route::fallback(fn() => response()->json([
     'err' => true,
