@@ -8,9 +8,9 @@ chown -R www-data:www-data /var/www/html/storage \
 # chown -R www-data:www-data storage bootstrap/cache
 # chmod -R 775 storage bootstrap/cache
 
-# mkdir -p /tmp
-# touch /tmp/xdebug.log
-# chmod 777 /tmp/xdebug.log
+mkdir -p /tmp
+touch /tmp/xdebug.log
+chmod 777 /tmp/xdebug.log
 
 echo "📦 Instalando dependências"
 mkdir -p vendor
@@ -31,7 +31,16 @@ if [ ! -f .env ]; then
 fi
 
 echo "🆙 Preparando banco de dados"
-php artisan migrate --seed
+php artisan migrate:fresh --force || {
+    echo "❌ Falha na execução das migrations"
+    exit 1
+}
+
+echo "🌱 Executando seeders"
+php artisan db:seed || {
+    echo "❌ Falha na execução dos seeders"
+    exit 1
+}
 
 echo "🚀 Iniciando o container"
 
