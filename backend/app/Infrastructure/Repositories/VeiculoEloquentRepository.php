@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories;
 
 use Illuminate\Support\Str;
-use App\Models\ClienteModel;
-use App\Domain\Entity\Cliente\Entidade;
-use App\Domain\Entity\Cliente\RepositorioInterface;
-use App\Domain\Entity\Cliente\Mapper;
+use App\Models\VeiculoModel;
+use App\Domain\Entity\Veiculo\Entidade;
+use App\Domain\Entity\Veiculo\RepositorioInterface;
+use App\Domain\Entity\Veiculo\Mapper;
 
-class ClienteEloquentRepository implements RepositorioInterface
+class VeiculoEloquentRepository implements RepositorioInterface
 {
-    public function __construct(private readonly ClienteModel $model) {}
+    public function __construct(private readonly VeiculoModel $model) {}
 
     public function encontrarPorIdentificadorUnico(string|int $identificador, ?string $nomeIdentificador = 'uuid'): ?Entidade
     {
@@ -65,28 +65,5 @@ class ClienteEloquentRepository implements RepositorioInterface
         $model->update($novosDados);
 
         return $model->refresh()->toArray();
-    }
-
-    /**
-     * Metodo responsavel por devolver um id numero, caso haja, a partir de um uuid
-     *
-     * @param string $uuid o uuid para ser resolvido em id numerico
-     * @return int -1 para erro ou não encontrado, 1+ com o id encontrado
-     */
-    public function obterIdNumerico(string $uuid): int
-    {
-        $modelResult = $this->model->query()->where('uuid', $uuid);
-
-        if (! $modelResult->exists()) {
-            return -1;
-        }
-
-        $modelValue = $modelResult->first();
-
-        if (! $modelValue->id) {
-            return -1;
-        }
-
-        return $modelValue->id;
     }
 }
