@@ -7,12 +7,14 @@ namespace App\Infrastructure\Repositories;
 use App\Models\ClienteModel;
 use App\Models\OrdemModel;
 use App\Models\VeiculoModel;
+use App\Models\ServicoModel;
 
 use Illuminate\Support\Str;
 use App\Domain\Entity\Ordem\Entidade;
 use App\Domain\Entity\Ordem\RepositorioInterface;
 use App\Domain\Entity\Ordem\Mapper;
 use App\Exception\DomainHttpException;
+use Illuminate\Support\Facades\DB;
 
 class OrdemEloquentRepository implements RepositorioInterface
 {
@@ -20,6 +22,7 @@ class OrdemEloquentRepository implements RepositorioInterface
         public readonly OrdemModel $model,
         public readonly ClienteModel $clienteModel,
         public readonly VeiculoModel $veiculoModel,
+        public readonly ServicoModel $servicoModel
     ) {}
 
     public function encontrarPorIdentificadorUnico(string|int $identificador, ?string $nomeIdentificador = 'uuid'): ?Entidade
@@ -125,5 +128,23 @@ class OrdemEloquentRepository implements RepositorioInterface
             ->toArray();
 
         return $res;
+    }
+
+    public function adicionarServico(string $ordemUuid, string $servicoUuid): string
+    {
+        $ordem = $this->model->query()->where('uuid', $ordemUuid)->first();
+        $servico = $this->servicoModel->query()->where('uuid', $servicoUuid)->first();
+
+        $id = DB::table('os_servico')->insertGetId([
+            'uuid'       => Str::uuid()->toString(),
+            'os_id'      => $ordem->id,
+            'servico_id' => $servico->id,
+        ]);
+
+        if (! $id) {
+            throw new DomainHttpException('Erro ao adicionar serviço', 500);
+        }
+
+        return DB::table('os_servico')->where('id', $id)->first()->uuid;
     }
 }

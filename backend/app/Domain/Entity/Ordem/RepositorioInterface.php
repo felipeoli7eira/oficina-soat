@@ -18,4 +18,5 @@ interface RepositorioInterface
     public function obterIdNumerico(string $uuid): int;
     public function obterOrdensDoClienteComStatus(string $clienteUuid, string $status): array;
     public function obterOrdensDoClienteComStatusDiferenteDe(string $clienteUuid, string $status): array;
+    public function adicionarServico(string $ordemUuid, string $servicoUuid): string;
 }

@@ -8,6 +8,7 @@ use App\Infrastructure\Controller\Ordem as OrdemController;
 use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
+use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
 
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
@@ -25,6 +26,7 @@ class OrdemApi
         public readonly OrdemRepositorio $repositorio,
         public readonly ClienteRepositorio $clienteRepositorio,
         public readonly VeiculoRepositorio $veiculoRepositorio,
+        public readonly ServicoRepositorio $servicoRepositorio,
     ) {}
 
     public function create(Request $req)
@@ -70,21 +72,6 @@ class OrdemApi
 
         $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
-
-    // public function castsUpdate(array $dados): array
-    // {
-    //     if (isset($dados['documento'])) {
-    //         $dados['documento'] = str_replace(['.', '/', '-'], '', $dados['documento']);
-    //     }
-
-    //     if (isset($dados['fone'])) {
-    //         $dados['fone'] = str_replace(['(', ')', '-', ' '], '', $dados['fone']);
-    //     }
-
-    //     return array_filter($dados, function (mixed $field) {
-    //         return !is_null($field);
-    //     });
-    // }
 
     public function read(Request $req)
     {
@@ -193,5 +180,46 @@ class OrdemApi
         }
 
         return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
+
+    public function addService(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->only(['ordem_uuid', 'servico_uuid']), [
+                'ordem_uuid'   => ['required', 'string', 'uuid'],
+                'servico_uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $dados = $validacao->validated();
+
+            $res = $this->controller
+                ->useRepositorio($this->repositorio)
+                ->useServicoRepositorio($this->servicoRepositorio)
+                ->adicionaServico(
+                    $dados['ordem_uuid'],
+                    $dados['servico_uuid'],
+                );
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
     }
 }

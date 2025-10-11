@@ -15,14 +15,17 @@ use App\Infrastructure\Gateway\VeiculoGateway;
 use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
-
+use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
+use App\Domain\UseCase\Ordem\AddServiceUseCase;
 use App\Exception\DomainHttpException;
+use App\Infrastructure\Gateway\ServicoGateway;
 
 class Ordem
 {
     public readonly OrdemRepositorio $repositorio;
     public readonly ClienteRepositorio $clienteRepositorio;
     public readonly VeiculoRepositorio $veiculoRepositorio;
+    public readonly ServicoRepositorio $servicoRepositorio;
 
     public function __construct() {}
 
@@ -41,6 +44,12 @@ class Ordem
     public function useVeiculoRepositorio(VeiculoRepositorio $veiculoRepositorio): self
     {
         $this->veiculoRepositorio = $veiculoRepositorio;
+        return $this;
+    }
+
+    public function useServicoRepositorio(ServicoRepositorio $servicoRepositorio): self
+    {
+        $this->servicoRepositorio = $servicoRepositorio;
         return $this;
     }
 
@@ -118,5 +127,18 @@ class Ordem
         $useCase = new UpdateUseCase($gateway);
 
         return $useCase->exec($uuid, $novosDados)->toExternal();
+    }
+
+    public function adicionaServico(string $ordemUuid, string $servicoUuid): string
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio || ! $this->servicoRepositorio instanceof ServicoRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $servicoGateway = new ServicoGateway($this->servicoRepositorio);
+        $useCase = new AddServiceUseCase($gateway, $servicoGateway);
+
+        return $useCase->exec($ordemUuid, $servicoUuid);
     }
 }

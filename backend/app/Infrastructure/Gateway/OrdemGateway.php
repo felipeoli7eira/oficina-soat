@@ -58,4 +58,9 @@ class OrdemGateway
     {
         return $this->repositorio->obterOrdensDoClienteComStatusDiferenteDe($clienteUuid, $status);
     }
+
+    public function adicionarServico(string $ordemUuid, string $servicoUuid): string
+    {
+        return $this->repositorio->adicionarServico($ordemUuid, $servicoUuid);
+    }
 }
