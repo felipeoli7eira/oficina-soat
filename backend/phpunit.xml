@@ -3,7 +3,17 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
->
+        >
+    <coverage>
+        <report>
+            <html outputDirectory="var/coverage" lowUpperBound="50" highLowerBound="80"/>
+            <text outputFile="var/coverage.txt"/>
+        </report>
+        <include>
+            <directory>app</directory>
+        </include>
+    </coverage>
+    
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
