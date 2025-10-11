@@ -22,11 +22,12 @@ return new class extends Migration
 
             $table->string('status');
 
-            $table->dateTime('dt_abertura');
-            $table->dateTime('dt_finalizacao');
+            $table->timestamp('dt_abertura');
+            $table->timestamp('dt_finalizacao')->nullable();
+            $table->timestamp('dt_atualizacao')->nullable()->useCurrentOnUpdate();
 
-            $defaultsTimestampsColumns = require __DIR__ . '/../defaults/ColumnsTimestamps.php';
-            $defaultsTimestampsColumns->addDefaultColumnsTimestamps($table);
+            // $defaultsTimestampsColumns = require __DIR__ . '/../defaults/ColumnsTimestamps.php';
+            // $defaultsTimestampsColumns->addDefaultColumnsTimestamps($table);
         });
 
         Schema::create('os_servico', function (Blueprint $table) {

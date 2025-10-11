@@ -114,4 +114,15 @@ class Entidade
             'ano'    => $this->ano,
         ];
     }
+
+    public function toExternal(): array
+    {
+        return [
+            'uuid'              => $this->uuid,
+            'marca'             => $this->marca,
+            'modelo'            => $this->modelo,
+            'placa'             => $this->placa,
+            'ano'               => $this->ano,
+        ];
+    }
 }

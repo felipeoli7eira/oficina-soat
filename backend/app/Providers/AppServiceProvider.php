@@ -22,6 +22,9 @@ use App\Infrastructure\Repositories\ClienteEloquentRepository;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepository;
 use App\Infrastructure\Repositories\VeiculoEloquentRepository;
 
+use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepository;
+use App\Infrastructure\Repositories\OrdemEloquentRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -54,6 +57,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             VeiculoRepository::class,
             VeiculoEloquentRepository::class
+        );
+
+        // "ordem" repository binding
+        $this->app->bind(
+            OrdemRepository::class,
+            OrdemEloquentRepository::class
         );
 
         // "token" service binding

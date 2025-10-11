@@ -4,64 +4,77 @@ declare(strict_types=1);
 
 namespace App\Domain\UseCase\Ordem;
 
-use App\Domain\Entity\Ordem\Entidade;
+use App\Domain\Entity\Ordem\Entidade as Ordem;
+use App\Domain\Entity\Cliente\Entidade as Cliente;
+use App\Domain\Entity\Veiculo\Entidade as Veiculo;
+
 use App\Infrastructure\Gateway\OrdemGateway;
 
 use DateTimeImmutable;
 use App\Exception\DomainHttpException;
+use App\Infrastructure\Gateway\ClienteGateway;
+use App\Infrastructure\Gateway\VeiculoGateway;
 
 class CreateUseCase
 {
-    public readonly OrdemGateway $gateway;
-
     public function __construct(
-        public string $nome,
-        public string $documento,
-        public string $email,
-        public string $fone,
+        public string $clienteUuid,
+        public string $veiculoUuid,
+        public ?string $descricao = null,
     ) {}
 
-    public function exec(OrdemGateway $gateway): Entidade
+    public function exec(OrdemGateway $gateway, ClienteGateway $clienteGateway, VeiculoGateway $veiculoGateway): Ordem
     {
-        // regras de negocio, validacoes...
+        $cliente = $clienteGateway->encontrarPorIdentificadorUnico($this->clienteUuid, 'uuid');
+        if ($cliente instanceof Cliente === false) {
+            throw new DomainHttpException('Cliente não encontrado', 404);
+        }
 
-        $entidade = new Entidade(
+        $veiculo = $veiculoGateway->encontrarPorIdentificadorUnico($this->veiculoUuid, 'uuid');
+        if ($veiculo instanceof Veiculo === false) {
+            throw new DomainHttpException('Veículo não encontrado', 404);
+        }
+
+        $ordensNaoFinalizadas = $gateway->obterOrdensDoClienteComStatusDiferenteDe($cliente->uuid, Ordem::STATUS_FINALIZADA);
+
+        $countOrdensNaoFinalizadas = count($ordensNaoFinalizadas);
+
+        if ($countOrdensNaoFinalizadas) {
+            throw new DomainHttpException("Cliente possui {$countOrdensNaoFinalizadas} ordem(ns) não finalizada(s)", 400);
+        }
+
+        $ordem = new Ordem(
             uuid: '',
-            nome: $this->nome,
-            documento: $this->documento,
-            email: $this->email,
-            fone: $this->fone,
-            criadoEm: new DateTimeImmutable(),
-            atualizadoEm: new DateTimeImmutable(),
+            cliente: $cliente,
+            veiculo: $veiculo,
+            descricao: $this->descricao,
+            status: Ordem::STATUS_RECEBIDA,
+            dtAbertura: new DateTimeImmutable(),
+            dtFinalizacao: null,
+            dtAtualizacao: null,
         );
 
-        if ($gateway->encontrarPorIdentificadorUnico($entidade->documentoLimpo(), 'documento') instanceof Entidade) {
-            throw new DomainHttpException('Ordem com documento repetido', 400);
-        }
+        $dadosOrdem = [
+            'descricao' => $ordem->descricao,
+            'status'    => $ordem->status,
+            'dt_abertura' => $ordem->dtAbertura->format('Y-m-d H:i:s'),
+        ];
 
-        if ($gateway->encontrarPorIdentificadorUnico($this->fone, 'fone') instanceof Entidade) {
-            throw new DomainHttpException('Fone já cadastrado', 400);
-        }
-
-
-        if ($gateway->encontrarPorIdentificadorUnico($this->email, 'email') instanceof Entidade) {
-            throw new DomainHttpException('E-mail já cadastrado', 400);
-        }
-
-        $cadastro = $gateway->criar($entidade->toCreateDataArray());
+        $cadastro = $gateway->criar($cliente->uuid, $veiculo->uuid, $dadosOrdem);
 
         if (! is_array($cadastro)) {
             throw new DomainHttpException('Erro ao cadastrar', 500);
         }
 
-        return new Entidade(
+        return new Ordem(
             uuid: $cadastro['uuid'],
-            nome: $cadastro['nome'],
-            documento: $cadastro['documento'],
-            email: $cadastro['email'],
-            fone: $cadastro['fone'],
-            criadoEm: new DateTimeImmutable($cadastro['criado_em']),
-            atualizadoEm: new DateTimeImmutable($cadastro['atualizado_em']),
+            cliente: $cliente,
+            veiculo: $veiculo,
+            descricao: $cadastro['descricao'],
+            status: $cadastro['status'],
+            dtAbertura: new DateTimeImmutable($cadastro['dt_abertura']),
+            dtFinalizacao: null,
+            dtAtualizacao: null,
         );
     }
 }

@@ -6,6 +6,8 @@ namespace App\Http;
 
 use App\Infrastructure\Controller\Ordem as OrdemController;
 use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
+use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
+use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
 
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Presenter\HttpJsonPresenter;
@@ -21,6 +23,8 @@ class OrdemApi
         public readonly OrdemController $controller,
         public readonly HttpJsonPresenter $presenter,
         public readonly OrdemRepositorio $repositorio,
+        public readonly ClienteRepositorio $clienteRepositorio,
+        public readonly VeiculoRepositorio $veiculoRepositorio,
     ) {}
 
     public function create(Request $req)
@@ -39,11 +43,14 @@ class OrdemApi
 
             $dados = $validacao->validated();
 
-            $res = $this->controller->useRepositorio($this->repositorio)->criar(
-                $dados['nome'],
-                $dados['documento'],
-                $dados['email'],
-                $dados['fone'],
+            $res = $this->controller
+            ->useRepositorio($this->repositorio)
+            ->useClienteRepositorio($this->clienteRepositorio)
+            ->useVeiculoRepositorio($this->veiculoRepositorio)
+            ->criar(
+                $dados['cliente_uuid'],
+                $dados['veiculo_uuid'],
+                $dados['descricao'],
             );
         } catch (DomainHttpException $err) {
             return response()->json([

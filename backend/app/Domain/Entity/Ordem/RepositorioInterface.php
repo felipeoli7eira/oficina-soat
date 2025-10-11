@@ -11,9 +11,11 @@ interface RepositorioInterface
         ?string $nomeIdentificador
     ): ?Entidade;
 
-    public function criar(array $dados): array;
+    public function criar(string $clienteUuid, string $veiculoUuid, array $dados): array;
     public function listar(array $columns = ['*']): array;
     public function deletar(string $uuid): bool;
     public function atualizar(string $uuid, array $novosDados): array;
     public function obterIdNumerico(string $uuid): int;
+    public function obterOrdensDoClienteComStatus(string $clienteUuid, string $status): array;
+    public function obterOrdensDoClienteComStatusDiferenteDe(string $clienteUuid, string $status): array;
 }

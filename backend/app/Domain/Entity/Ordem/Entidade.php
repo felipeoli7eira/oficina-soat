@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Entity\Ordem;
 
 use DateTimeImmutable;
-use InvalidArgumentException;
+
+use App\Domain\Entity\Cliente\Entidade as Cliente;
+use App\Domain\Entity\Veiculo\Entidade as Veiculo;
 
 /**
  * Na Clean Architecture, a entidade representa o núcleo do seu domínio - ela deve ser rica em comportamentos e expressar as regras de negócio.
@@ -26,14 +28,13 @@ class Entidade
 
     public function __construct(
         public string $uuid,
-        public int $clienteId,
-        public int $veiculoId,
-        public string $descricao,
-        public string $status,
-
-        public DateTimeImmutable $criadoEm,
-        public DateTimeImmutable $atualizadoEm,
-        public ?DateTimeImmutable $deletadoEm = null,
+        public readonly Cliente $cliente,
+        public readonly Veiculo $veiculo,
+        public ?string $descricao = null,
+        public ?string $status = self::STATUS_RECEBIDA,
+        public DateTimeImmutable $dtAbertura,
+        public ?DateTimeImmutable $dtFinalizacao = null,
+        public ?DateTimeImmutable $dtAtualizacao = null,
     ) {
         $this->validacoes();
     }
@@ -43,21 +44,38 @@ class Entidade
         // ... outros validadores conforme necessidade
     }
 
-    public function excluir(): void
+    public function encerrar(): void
     {
-        $this->deletadoEm = new DateTimeImmutable();
-        $this->atualizadoEm = new DateTimeImmutable();
-    }
-
-    public function estaExcluido(): bool
-    {
-        return $this->deletadoEm !== null;
+        $this->status = self::STATUS_FINALIZADA;
+        $this->dtAtualizacao = new DateTimeImmutable();
     }
 
     public function atualizar(array $novosDados): void
     {
-        $this->atualizadoEm = new DateTimeImmutable();
+        $this->dtAtualizacao = new DateTimeImmutable();
 
         $this->validacoes();
+    }
+
+    public function toExternal(): array
+    {
+        return [
+            'uuid'              => $this->uuid,
+            'cliente'           => $this->cliente->toExternal(),
+            'veiculo'           => $this->veiculo->toExternal(),
+            'descricao'         => $this->descricao,
+            'status'            => $this->status,
+            'dt_abertura'       => $this->dtAbertura->format('Y-m-d H:i:s'),
+            'dt_finalizacao'    => (
+                is_null($this->dtFinalizacao)
+                ? null
+                : $this->dtFinalizacao->format('Y-m-d H:i:s')
+            ),
+            'dt_atualizacao'    => (
+                is_null($this->dtAtualizacao)
+                ? null
+                : $this->dtAtualizacao->format('Y-m-d H:i:s')
+            ),
+        ];
     }
 }
