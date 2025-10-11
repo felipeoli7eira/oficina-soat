@@ -147,77 +147,51 @@ class OrdemApi
         $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
-    // public function update(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'documento', 'email', 'fone']), [
-    //             'uuid'      => ['required', 'string', 'uuid'],
-    //             'nome'      => ['nullable', 'string'],
-    //             'documento' => ['nullable', 'string'],
-    //             'email'     => ['nullable', 'string', 'email'],
-    //             'fone'      => ['nullable', 'string'],
-    //         ])->stopOnFirstFailure(true);
+    public function update(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'descricao']), [
+                'uuid'      => ['required', 'string', 'uuid'],
+                'descricao' => ['nullable', 'string'],
+            ])->stopOnFirstFailure(true);
 
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
 
-    //         $dados = $this->castsUpdate($validacao->validated());
+            $dados = $validacao->validated();
 
-    //         $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar($dados['uuid'], $dados);
-    //     } catch (DomainHttpException $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ];
+            if (! isset($dados['descricao']) || (is_string($dados['descricao']) && empty($dados['descricao']))) {
+                return response()->json([
+                    'err' => false,
+                    'msg' => 'Nada para atualizar',
+                ]);
+            }
 
-    //         return response()->json($resErr, $err->getCode());
-    //     } catch (Throwable $err) {
-    //         $resErr = [
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //             'meta' => [
-    //                 'getFile' => $err->getFile(),
-    //                 'getLine' => $err->getLine(),
-    //             ]
-    //         ];
+            $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizar($dados['uuid'], $dados);
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
 
-    //         $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ];
 
-    //         return response()->json($resErr, $cod);
-    //     }
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-    //     return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
-    // }
+            return response()->json($resErr, $cod);
+        }
 
-    // public function delete(Request $req)
-    // {
-    //     try {
-    //         // validacao basica sem regras de negocio
-    //         $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
-    //             'uuid' => ['required', 'string', 'uuid'],
-    //         ])->stopOnFirstFailure(true);
-
-    //         if ($validacao->fails()) {
-    //             throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
-    //         }
-
-    //         $dadosValidos = $validacao->validated();
-
-    //         $this->controller->useRepositorio($this->repositorio)->deletar($dadosValidos['uuid']);
-    //     } catch (DomainHttpException $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return response()->json([
-    //             'err' => true,
-    //             'msg' => $err->getMessage(),
-    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     return response()->noContent();
-    // }
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
 }

@@ -117,9 +117,6 @@ class Ordem
         $gateway = new OrdemGateway($this->repositorio);
         $useCase = new UpdateUseCase($gateway);
 
-        $res = $useCase->exec($uuid, $novosDados);
-
-        dd($res);
-        // return $res->toHttpResponse();
+        return $useCase->exec($uuid, $novosDados)->toExternal();
     }
 }

@@ -75,7 +75,9 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         $model->update($novosDados);
 
-        return $model->refresh()->toArray();
+        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+
+        return $updated->first()->toArray();
     }
 
     /**
