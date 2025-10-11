@@ -16,8 +16,8 @@ class ReadOneUseCase
             return null;
         }
 
-        $res = $gateway->encontrarPorIdentificadorUnico($this->uuid, 'uuid');
+        $entidade = $gateway->encontrarPorIdentificadorUnico($this->uuid, 'uuid');
 
-        return $res?->toHttpResponse();
+        return $entidade?->toExternal();
     }
 }

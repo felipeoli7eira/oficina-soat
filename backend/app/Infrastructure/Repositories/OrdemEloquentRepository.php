@@ -24,15 +24,13 @@ class OrdemEloquentRepository implements RepositorioInterface
 
     public function encontrarPorIdentificadorUnico(string|int $identificador, ?string $nomeIdentificador = 'uuid'): ?Entidade
     {
-        $modelResult = $this->model->query()->where($nomeIdentificador, $identificador);
+        $model = $this->model->query()->where($nomeIdentificador, $identificador);
 
-        if ($modelResult->exists()) {
-            $modelValue = $modelResult->first();
-
-            return (new Mapper())->fromModelToEntity($modelValue);
+        if (! $model->exists()) {
+            return null;
         }
 
-        return null;
+        return (new Mapper())->fromModelToEntity($model->with(['cliente', 'veiculo'])->first());
     }
 
     public function criar(string $clienteUuid, string $veiculoUuid, array $dados): array

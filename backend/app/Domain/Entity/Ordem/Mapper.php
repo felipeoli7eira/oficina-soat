@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\Ordem;
 
+use App\Domain\Entity\Cliente\Entidade as ClienteEntidade;
+use App\Domain\Entity\Veiculo\Entidade as VeiculoEntidade;
 use App\Models\OrdemModel;
 use DateTimeImmutable;
 
@@ -14,14 +16,31 @@ class Mapper
     public function fromModelToEntity(OrdemModel $m): Entidade
     {
         return new Entidade(
-            uuid: $m->uuid,
-            nome: $m->nome,
-            documento: $m->documento,
-            email: $m->email,
-            fone: $m->fone,
-            criadoEm: new DateTimeImmutable($m->criado_em),
-            atualizadoEm: new DateTimeImmutable($m->atualizado_em),
-            deletadoEm: $m->deletado_em ? new DateTimeImmutable($m->deletado_em) : null,
+            $m->uuid,
+            new ClienteEntidade(
+                $m->cliente->uuid,
+                $m->cliente->nome,
+                $m->cliente->documento,
+                $m->cliente->email,
+                $m->cliente->fone,
+                new DateTimeImmutable($m->cliente->criado_em),
+                new DateTimeImmutable($m->cliente->atualizado_em),
+            ),
+            new VeiculoEntidade(
+                $m->veiculo->uuid,
+                $m->veiculo->marca,
+                $m->veiculo->modelo,
+                $m->veiculo->placa,
+                $m->veiculo->ano,
+                $m->veiculo->cliente_id,
+                new DateTimeImmutable($m->veiculo->criado_em),
+                new DateTimeImmutable($m->veiculo->atualizado_em),
+            ),
+            $m->descricao,
+            $m->status,
+            new DateTimeImmutable($m->dt_abertura),
+            $m->dt_finalizacao ? new DateTimeImmutable($m->dt_finalizacao) : null,
+            $m->dt_atualizacao ? new DateTimeImmutable($m->dt_atualizacao) : null,
         );
     }
 

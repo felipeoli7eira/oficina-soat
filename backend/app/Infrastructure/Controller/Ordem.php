@@ -72,13 +72,7 @@ class Ordem
 
     public function listar(): array
     {
-        if (
-            ! $this->repositorio instanceof OrdemRepositorio
-            ||
-            ! $this->clienteRepositorio instanceof ClienteRepositorio
-            ||
-            ! $this->veiculoRepositorio instanceof VeiculoRepositorio
-        ) {
+        if (! $this->repositorio instanceof OrdemRepositorio) {
             throw new DomainHttpException('defina todas as fontes de dados necessárias: ordem, cliente e veiculo', 500);
         }
 
@@ -91,15 +85,13 @@ class Ordem
     public function obterUm(string $uuid): ?array
     {
         if (! $this->repositorio instanceof OrdemRepositorio) {
-            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+            throw new DomainHttpException('defina todas as fontes de dados necessárias: ordem, cliente e veiculo', 500);
         }
 
         $gateway = new OrdemGateway($this->repositorio);
         $useCase = new ReadOneUseCase($uuid);
 
-        $res = $useCase->exec($gateway);
-
-        return $res;
+        return $useCase->exec($gateway);
     }
 
     public function deletar(string $uuid): bool
