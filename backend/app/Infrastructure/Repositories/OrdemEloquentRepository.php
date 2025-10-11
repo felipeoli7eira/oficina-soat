@@ -55,7 +55,7 @@ class OrdemEloquentRepository implements RepositorioInterface
     {
         return $this->model
             ->query()
-            ->where('deletado_em', null)
+            ->with(['cliente', 'veiculo'])
             ->get($columns)
             ->toArray();
     }

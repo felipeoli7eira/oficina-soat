@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrdemModel extends Model
 {
@@ -25,4 +26,14 @@ class OrdemModel extends Model
         'atualizado_em',
         'deletado_em'
     ];
+
+    public function cliente(): BelongsTo
+    {
+        return $this->belongsTo(ClienteModel::class);
+    }
+
+    public function veiculo(): BelongsTo
+    {
+        return $this->belongsTo(VeiculoModel::class);
+    }
 }

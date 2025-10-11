@@ -72,16 +72,20 @@ class Ordem
 
     public function listar(): array
     {
-        if (! $this->repositorio instanceof OrdemRepositorio) {
-            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        if (
+            ! $this->repositorio instanceof OrdemRepositorio
+            ||
+            ! $this->clienteRepositorio instanceof ClienteRepositorio
+            ||
+            ! $this->veiculoRepositorio instanceof VeiculoRepositorio
+        ) {
+            throw new DomainHttpException('defina todas as fontes de dados necessárias: ordem, cliente e veiculo', 500);
         }
 
         $gateway = new OrdemGateway($this->repositorio);
         $useCase = new ReadUseCase();
 
-        $res = $useCase->exec($gateway);
-
-        return $res;
+        return $useCase->exec($gateway);
     }
 
     public function obterUm(string $uuid): ?array
