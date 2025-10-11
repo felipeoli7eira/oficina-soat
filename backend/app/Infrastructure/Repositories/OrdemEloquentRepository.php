@@ -147,4 +147,21 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         return DB::table('os_servico')->where('id', $id)->first()->uuid;
     }
+
+    public function removerServico(string $ordemUuid, string $servicoUuid): int
+    {
+        $ordemId = $this->model->query()->where('uuid', $ordemUuid)->first()->id;
+        $servicoId = $this->servicoModel->query()->where('uuid', $servicoUuid)->first()->id;
+
+        $rowCount = DB::table('os_servico')
+            ->where('os_id', $ordemId)
+            ->where('servico_id', $servicoId)
+            ->delete();
+
+        if (! $rowCount) {
+            throw new DomainHttpException('Erro ao remover serviço', 500);
+        }
+
+        return $rowCount;
+    }
 }

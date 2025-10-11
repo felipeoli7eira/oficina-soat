@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\UseCase\Ordem;
+
+use App\Domain\Entity\Ordem\Entidade as Ordem;
+use App\Domain\Entity\Servico\Entidade as Servico;
+
+use App\Infrastructure\Gateway\OrdemGateway;
+
+use App\Exception\DomainHttpException;
+use App\Infrastructure\Gateway\ServicoGateway;
+
+class removeServiceUseCase
+{
+    public function __construct(public readonly OrdemGateway $ordemGateway, public readonly ServicoGateway $servicoGateway) {}
+
+    public function exec(string $ordemUuid, string $servicoUuid): int
+    {
+        $ordem = $this->ordemGateway->encontrarPorIdentificadorUnico($ordemUuid, 'uuid');
+        if ($ordem instanceof Ordem === false) {
+            throw new DomainHttpException('Ordem não existe', 404);
+        }
+
+        if (! in_array($ordem->status, [
+            Ordem::STATUS_RECEBIDA,
+            Ordem::STATUS_AGUARDANDO_APROVACAO,
+        ])) {
+            throw new DomainHttpException('Apenas ordens que estão aguardando aprovação podem ter serviços removidos', 400);
+        }
+
+        $res = $this->ordemGateway->removerServico($ordemUuid, $servicoUuid);
+
+        return $res;
+    }
+}

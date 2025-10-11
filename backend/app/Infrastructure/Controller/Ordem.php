@@ -8,6 +8,9 @@ use App\Domain\UseCase\Ordem\ReadOneUseCase;
 use App\Domain\UseCase\Ordem\UpdateUseCase;
 use App\Domain\UseCase\Ordem\DeleteUseCase;
 
+use App\Domain\UseCase\Ordem\AddServiceUseCase;
+use App\Domain\UseCase\Ordem\RemoveServiceUseCase;
+
 use App\Infrastructure\Gateway\OrdemGateway;
 use App\Infrastructure\Gateway\ClienteGateway;
 use App\Infrastructure\Gateway\VeiculoGateway;
@@ -16,7 +19,6 @@ use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
-use App\Domain\UseCase\Ordem\AddServiceUseCase;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\ServicoGateway;
 
@@ -140,5 +142,18 @@ class Ordem
         $useCase = new AddServiceUseCase($gateway, $servicoGateway);
 
         return $useCase->exec($ordemUuid, $servicoUuid);
+    }
+
+    public function removeServico(string $ordemUuid, string $servicoUuid): bool
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio || ! $this->servicoRepositorio instanceof ServicoRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $servicoGateway = new ServicoGateway($this->servicoRepositorio);
+        $useCase = new RemoveServiceUseCase($gateway, $servicoGateway);
+
+        return $useCase->exec($ordemUuid, $servicoUuid) >= 1;
     }
 }
