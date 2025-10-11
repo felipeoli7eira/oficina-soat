@@ -182,6 +182,47 @@ class OrdemApi
         return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
     }
 
+    public function updateStatus(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'status']), [
+                'uuid'      => ['required', 'string', 'uuid'],
+                'status'    => ['required', 'string'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $dados = $validacao->validated();
+
+            $responseSuccess = $this->controller->useRepositorio($this->repositorio)->atualizarStatus($dados['uuid'], $dados['status']);
+        } catch (DomainHttpException $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ];
+
+            return response()->json($resErr, $err->getCode());
+        } catch (Throwable $err) {
+            $resErr = [
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ];
+
+            $cod = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            return response()->json($resErr, $cod);
+        }
+
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($responseSuccess);
+    }
+
     public function addService(Request $req)
     {
         try {

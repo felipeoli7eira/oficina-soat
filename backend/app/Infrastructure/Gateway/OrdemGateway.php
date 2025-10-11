@@ -63,8 +63,14 @@ class OrdemGateway
     {
         return $this->repositorio->adicionarServico($ordemUuid, $servicoUuid);
     }
+
     public function removerServico(string $ordemUuid, string $servicoUuid): int
     {
         return $this->repositorio->removerServico($ordemUuid, $servicoUuid);
+    }
+
+    public function atualizarStatus(string $uuid, string $novoStatus): array
+    {
+        return $this->repositorio->atualizarStatus($uuid, $novoStatus);
     }
 }

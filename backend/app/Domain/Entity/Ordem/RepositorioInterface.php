@@ -20,4 +20,5 @@ interface RepositorioInterface
     public function obterOrdensDoClienteComStatusDiferenteDe(string $clienteUuid, string $status): array;
     public function adicionarServico(string $ordemUuid, string $servicoUuid): string;
     public function removerServico(string $ordemUuid, string $servicoUuid): int;
+    public function atualizarStatus(string $uuid, string $novoStatus): array;
 }

@@ -83,6 +83,19 @@ class OrdemEloquentRepository implements RepositorioInterface
         return $updated->first()->toArray();
     }
 
+    public function atualizarStatus(string $uuid, string $novoStatus): array
+    {
+        $model = $this->model->query()->where('uuid', $uuid)->first();
+
+        $model->update([
+            'status' => $novoStatus
+        ]);
+
+        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+
+        return $updated->first()->toArray();
+    }
+
     /**
      * Metodo responsavel por devolver um id numero, caso haja, a partir de um uuid
      *

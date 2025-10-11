@@ -19,6 +19,7 @@ use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
+use App\Domain\UseCase\Ordem\UpdateStatusUseCase;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\ServicoGateway;
 
@@ -129,6 +130,18 @@ class Ordem
         $useCase = new UpdateUseCase($gateway);
 
         return $useCase->exec($uuid, $novosDados)->toExternal();
+    }
+
+    public function atualizarStatus(string $uuid, string $novoStatus): array
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $useCase = new UpdateStatusUseCase($gateway);
+
+        return $useCase->exec($uuid, $novoStatus)->toExternal();
     }
 
     public function adicionaServico(string $ordemUuid, string $servicoUuid): string

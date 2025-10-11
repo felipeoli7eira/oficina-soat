@@ -22,7 +22,7 @@ class Entidade
     public const STATUS_APROVADA                    = 'APROVADA';
     public const STATUS_REPROVADA                   = 'REPROVADA';
     public const STATUS_CANCELADA                   = 'CANCELADA';
-    public const STATUS_EM_EXECUSAO                 = 'EM_EXECUSAO';
+    public const STATUS_EM_EXECUCAO                 = 'EM_EXECUCAO';
     public const STATUS_FINALIZADA                  = 'FINALIZADA';
     public const STATUS_ENTREGUE                    = 'ENTREGUE';
 
