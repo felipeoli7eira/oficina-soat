@@ -14,9 +14,9 @@ class ReadUseCase
 {
     public function __construct() {}
 
-    public function exec(OrdemGateway $gateway): array
+    public function exec(OrdemGateway $gateway, array $filters = []): array
     {
-        $dados = $gateway->listar();
+        $dados = $gateway->listar($filters);
 
         return array_map(function ($d) {
             $entidade = new Entidade(

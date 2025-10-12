@@ -79,20 +79,30 @@ class OrdemApi
     public function read(Request $req)
     {
         try {
+            $queryParams = $req->all(['status']);
+
             $res = $this->controller
                 ->useRepositorio($this->repositorio)
                 ->useClienteRepositorio($this->clienteRepositorio)
                 ->useVeiculoRepositorio($this->veiculoRepositorio)
-                ->listar();
+                ->listar($queryParams);
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
             ], $err->getCode());
         } catch (Throwable $err) {
             return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

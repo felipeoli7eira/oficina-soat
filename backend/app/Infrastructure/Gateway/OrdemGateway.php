@@ -28,9 +28,9 @@ class OrdemGateway
         );
     }
 
-    public function listar(): array
+    public function listar($filters = []): array
     {
-        return $this->repositorio->listar(['*']);
+        return $this->repositorio->listar($filters);
     }
 
     public function deletar(string $uuid): bool

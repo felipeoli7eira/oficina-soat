@@ -97,7 +97,7 @@ class Ordem
         return $res->toExternal();
     }
 
-    public function listar(): array
+    public function listar(array $filters = []): array
     {
         if (! $this->repositorio instanceof OrdemRepositorio) {
             throw new DomainHttpException('defina todas as fontes de dados necessárias: ordem, cliente e veiculo', 500);
@@ -106,7 +106,7 @@ class Ordem
         $gateway = new OrdemGateway($this->repositorio);
         $useCase = new ReadUseCase();
 
-        return $useCase->exec($gateway);
+        return $useCase->exec($gateway, $filters);
     }
 
     public function obterUm(string $uuid): ?array
