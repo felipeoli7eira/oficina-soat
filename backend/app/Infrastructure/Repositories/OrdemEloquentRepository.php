@@ -197,4 +197,21 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         return DB::table('os_material')->where('id', $id)->first()->uuid;
     }
+
+    public function removerMaterial(string $ordemUuid, string $materialUuid): int
+    {
+        $ordemId = $this->model->query()->where('uuid', $ordemUuid)->first()->id;
+        $materialId = $this->materialModel->query()->where('uuid', $materialUuid)->first()->id;
+
+        $rowCount = DB::table('os_material')
+            ->where('os_id', $ordemId)
+            ->where('material_id', $materialId)
+            ->delete();
+
+        if (! $rowCount) {
+            throw new DomainHttpException('Erro ao remover material', 500);
+        }
+
+        return $rowCount;
+    }
 }

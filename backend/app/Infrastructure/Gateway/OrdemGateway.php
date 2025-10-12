@@ -74,6 +74,11 @@ class OrdemGateway
         return $this->repositorio->removerServico($ordemUuid, $servicoUuid);
     }
 
+    public function removerMaterial(string $ordemUuid, string $materialUuid): int
+    {
+        return $this->repositorio->removerMaterial($ordemUuid, $materialUuid);
+    }
+
     public function atualizarStatus(string $uuid, string $novoStatus): array
     {
         return $this->repositorio->atualizarStatus($uuid, $novoStatus);

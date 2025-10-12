@@ -348,4 +348,45 @@ class OrdemApi
 
         $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
     }
+
+    public function removeMaterial(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->only(['ordem_uuid', 'material_uuid']), [
+                'ordem_uuid'    => ['required', 'string', 'uuid'],
+                'material_uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $dados = $validacao->validated();
+
+            $res = $this->controller
+                ->useRepositorio($this->repositorio)
+                ->useMaterialRepositorio($this->materialRepositorio)
+                ->removeMaterial(
+                    $dados['ordem_uuid'],
+                    $dados['material_uuid'],
+                );
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
+    }
 }

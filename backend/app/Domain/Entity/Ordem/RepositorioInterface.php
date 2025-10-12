@@ -22,4 +22,5 @@ interface RepositorioInterface
     public function removerServico(string $ordemUuid, string $servicoUuid): int;
     public function atualizarStatus(string $uuid, string $novoStatus): array;
     public function adicionarMaterial(string $ordemUuid, string $materialUuid): string;
+    public function removerMaterial(string $ordemUuid, string $materialUuid): int;
 }

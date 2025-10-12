@@ -12,6 +12,8 @@ use App\Domain\UseCase\Ordem\AddServiceUseCase;
 use App\Domain\UseCase\Ordem\RemoveServiceUseCase;
 
 use App\Domain\UseCase\Ordem\AddMaterialUseCase;
+use App\Domain\UseCase\Ordem\RemoveMaterialUseCase;
+
 
 use App\Infrastructure\Gateway\OrdemGateway;
 use App\Infrastructure\Gateway\ClienteGateway;
@@ -194,5 +196,18 @@ class Ordem
         $useCase = new AddMaterialUseCase($gateway, $materialGateway);
 
         return $useCase->exec($ordemUuid, $materialUuid);
+    }
+
+    public function removeMaterial(string $ordemUuid, string $materialUuid): bool
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio || ! $this->materialRepositorio instanceof MaterialRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $materialGateway = new MaterialGateway($this->materialRepositorio);
+        $useCase = new RemoveMaterialUseCase($gateway, $materialGateway);
+
+        return $useCase->exec($ordemUuid, $materialUuid) >= 1;
     }
 }
