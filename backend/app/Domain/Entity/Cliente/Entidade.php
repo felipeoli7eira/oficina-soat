@@ -118,6 +118,20 @@ class Entidade
         ];
     }
 
+    public function toExternal(): array
+    {
+        return [
+            'uuid'              => $this->uuid,
+            'nome'              => $this->nome,
+            'documento'         => $this->documento,
+            'email'             => $this->email,
+            'fone'              => $this->fone,
+
+            'criado_em'         => $this->criadoEm instanceof DateTimeImmutable ? $this->criadoEm->format('d/m/Y H:i') : null,
+            'atualizado_em'     => $this->atualizadoEm instanceof DateTimeImmutable ? $this->atualizadoEm->format('d/m/Y H:i') : null,
+        ];
+    }
+
     public function toCreateDataArray(): array
     {
         return [
