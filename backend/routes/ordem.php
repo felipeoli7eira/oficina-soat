@@ -13,3 +13,6 @@ Route::put('/ordem/{uuid}/status', [OrdemApi::class, 'updateStatus']);
 
 Route::post('/ordem/servico', [OrdemApi::class, 'addService']);
 Route::delete('/ordem/servico', [OrdemApi::class, 'removeService']);
+
+Route::post('/ordem/material', [OrdemApi::class, 'addMaterial']);
+Route::delete('/ordem/material', [OrdemApi::class, 'removeMaterial']);

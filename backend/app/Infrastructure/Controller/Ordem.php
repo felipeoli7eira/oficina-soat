@@ -11,6 +11,8 @@ use App\Domain\UseCase\Ordem\DeleteUseCase;
 use App\Domain\UseCase\Ordem\AddServiceUseCase;
 use App\Domain\UseCase\Ordem\RemoveServiceUseCase;
 
+use App\Domain\UseCase\Ordem\AddMaterialUseCase;
+
 use App\Infrastructure\Gateway\OrdemGateway;
 use App\Infrastructure\Gateway\ClienteGateway;
 use App\Infrastructure\Gateway\VeiculoGateway;
@@ -19,8 +21,12 @@ use App\Domain\Entity\Ordem\RepositorioInterface as OrdemRepositorio;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
+use App\Domain\Entity\Material\RepositorioInterface as MaterialRepositorio;
+
 use App\Domain\UseCase\Ordem\UpdateStatusUseCase;
+
 use App\Exception\DomainHttpException;
+use App\Infrastructure\Gateway\MaterialGateway;
 use App\Infrastructure\Gateway\ServicoGateway;
 
 class Ordem
@@ -29,6 +35,7 @@ class Ordem
     public readonly ClienteRepositorio $clienteRepositorio;
     public readonly VeiculoRepositorio $veiculoRepositorio;
     public readonly ServicoRepositorio $servicoRepositorio;
+    public readonly MaterialRepositorio $materialRepositorio;
 
     public function __construct() {}
 
@@ -53,6 +60,12 @@ class Ordem
     public function useServicoRepositorio(ServicoRepositorio $servicoRepositorio): self
     {
         $this->servicoRepositorio = $servicoRepositorio;
+        return $this;
+    }
+
+    public function useMaterialRepositorio(MaterialRepositorio $materialRepositorio): self
+    {
+        $this->materialRepositorio = $materialRepositorio;
         return $this;
     }
 
@@ -168,5 +181,18 @@ class Ordem
         $useCase = new RemoveServiceUseCase($gateway, $servicoGateway);
 
         return $useCase->exec($ordemUuid, $servicoUuid) >= 1;
+    }
+
+    public function adicionaMaterial(string $ordemUuid, string $materialUuid): string
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio || ! $this->materialRepositorio instanceof MaterialRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $materialGateway = new MaterialGateway($this->materialRepositorio);
+        $useCase = new AddMaterialUseCase($gateway, $materialGateway);
+
+        return $useCase->exec($ordemUuid, $materialUuid);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\ClienteModel;
 use App\Models\OrdemModel;
 use App\Models\VeiculoModel;
 use App\Models\ServicoModel;
+use App\Models\MaterialModel;
 
 use Illuminate\Support\Str;
 use App\Domain\Entity\Ordem\Entidade;
@@ -22,7 +23,8 @@ class OrdemEloquentRepository implements RepositorioInterface
         public readonly OrdemModel $model,
         public readonly ClienteModel $clienteModel,
         public readonly VeiculoModel $veiculoModel,
-        public readonly ServicoModel $servicoModel
+        public readonly ServicoModel $servicoModel,
+        public readonly MaterialModel $materialModel,
     ) {}
 
     public function encontrarPorIdentificadorUnico(string|int $identificador, ?string $nomeIdentificador = 'uuid'): ?Entidade
@@ -176,5 +178,23 @@ class OrdemEloquentRepository implements RepositorioInterface
         }
 
         return $rowCount;
+    }
+
+    public function adicionarMaterial(string $ordemUuid, string $materialUuid): string
+    {
+        $ordem = $this->model->query()->where('uuid', $ordemUuid)->first();
+        $material = $this->materialModel->query()->where('uuid', $materialUuid)->first();
+
+        $id = DB::table('os_material')->insertGetId([
+            'uuid'        => Str::uuid()->toString(),
+            'os_id'       => $ordem->id,
+            'material_id' => $material->id,
+        ]);
+
+        if (! $id) {
+            throw new DomainHttpException('Erro ao adicionar o material na ordem de serviço', 500);
+        }
+
+        return DB::table('os_material')->where('id', $id)->first()->uuid;
     }
 }
