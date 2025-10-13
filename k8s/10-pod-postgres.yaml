@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-soat-postgres
+  namespace: lab-soat
+spec:
+  selector:
+    matchLabels:
+      app: lab-soat-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: lab-soat-postgres
+    spec:
+      containers:
+        - name: lab-soat-postgres
+          imagePullPolicy: "IfNotPresent"
+          image: postgres:17.5
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: lab-soat-secret-postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: lab-postgres-pvc

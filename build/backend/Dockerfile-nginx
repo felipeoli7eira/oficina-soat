@@ -1,0 +1,9 @@
+FROM nginx
+
+WORKDIR /var/www/html
+
+COPY build/server/nginx-k8s.conf /etc/nginx/conf.d/default.conf
+
+COPY ./backend .
+
+EXPOSE 80

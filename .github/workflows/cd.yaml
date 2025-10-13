@@ -1,0 +1,152 @@
+name: Pipeline CD - FIAP Fase 2
+
+on:
+    workflow_run:
+        workflows: ["Pipeline CI - FIAP Fase 2"]
+        types:
+            - completed
+        branches:
+            - main
+
+jobs:
+    validate_workflow_ci_run:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        steps:
+            - name: Validando execução bem-sucedida do workflow CI
+              run: echo "O workflow CI foi concluído com sucesso. Prosseguindo com o CD."
+
+    copy_manifests_to_kubernetes:
+        needs: validate_workflow_ci_run
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Copiando manifestos Kubernetes para a VPS
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  source: "k8s/"
+                  target: "/tmp/k8s-deploy-manifests/"
+
+    deploy_to_kubernetes:
+        needs: [copy_manifests_to_kubernetes]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Aplicando manifestos Kubernetes na VPS
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  script: |
+                      # 1. Configura o kubeconfig na VPS para o usuário de deploy
+                      mkdir -p ~/.kube
+                      echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > ~/.kube/config
+                      chmod 600 ~/.kube/config
+                      export KUBECONFIG=~/.kube/config # Garante que kubectl use este arquivo
+
+                      # 2. Navega para o diretório onde os manifests foram copiados
+                      MANIFESTS_DIR="/tmp/k8s-deploy-manifests/k8s"
+                      cd "$MANIFESTS_DIR"
+
+                      # 4. Aplica os manifests um por um na ordem definida
+                      echo "Aplicando manifests..."
+                      kubectl apply -f .
+
+                      # 5. Verifique o status do rollout de AMBOS os Deployments
+                      kubectl rollout status deployment/lab-soat-php -n lab-soat --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
+                      kubectl rollout status deployment/lab-soat-nginx -n lab-soat --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+                      kubectl rollout status deployment/lab-soat-postgres -n lab-soat --timeout=5m || { echo "Postgres Deployment rollout falhou ou houve timeout!"; exit 1; }
+
+                      # 6. Limpa o diretório temporário dos manifests na VPS
+                      rm -rf /tmp/k8s-deploy-manifests
+
+                      # 7. Remove o kubeconfig temporário por segurança
+                      rm -rf ~/.kube
+
+    send_success_notification:
+        needs: [deploy_to_kubernetes]
+        if: success()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Enviando email de sucesso do Deploy
+              uses: dawidd6/action-send-mail@v3
+              with:
+                  server_address: smtp.gmail.com
+                  server_port: 587
+                  username: ${{ secrets.EMAIL_USERNAME }}
+                  password: ${{ secrets.EMAIL_PASSWORD }}
+                  subject: "✅ Sucesso Pipeline CD"
+                  body: |
+                      Prezado William,
+
+                      O workflow Pipeline CD em ${{ github.repository }} foi executado com sucesso.
+
+                      DETALHES
+                      - Status: Sucesso ✅
+                      - Autor do Commit: ${{ github.event.head_commit.author.name }} 
+                      - Branch: ${{ github.ref_name }}
+                      - Commit: ${{ github.sha }}
+                      - Mensagem do Commit: ${{ github.event.head_commit.message }}
+                      - Tag da Imagem Utilizada: fase2
+                      - Link do Commit: ${{ github.event.head_commit.url }}
+
+                      Você pode revisar os detalhes da execução aqui: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  to: "william@wllsistemas.com.br"
+                  from: "wllsistemas02@gmail.com"
+
+    send_failure_notification:
+        needs: [deploy_to_kubernetes, copy_manifests_to_kubernetes]
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Obter informações da falha
+              id: get_failure_info # ID do step para referenciar seus outputs
+              run: |
+                  # Inicializa a mensagem de detalhes
+                  FAILURE_MESSAGE="Detalhes da falha:"
+
+                  if [[ "${{ needs.build_and_push_images.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Build e Push das Imagens Docker' falhou."
+                  fi
+                  if [[ "${{ needs.run_tests.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Executar Testes' falhou."
+                  fi
+                  if [[ "${{ needs.deploy_to_kubernetes.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Deploy para Kubernetes' falhou."
+                  fi
+                  if [[ "${{ needs.copy_manifests_to_kubernetes.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Copiar Manifests para Kubernetes' falhou."
+                  fi
+
+                  echo "message=$FAILURE_MESSAGE" >> $GITHUB_OUTPUT
+
+            - name: Send failure email
+              uses: dawidd6/action-send-mail@v3
+              with:
+                  server_address: smtp.gmail.com
+                  server_port: 587
+                  username: ${{ secrets.EMAIL_USERNAME }}
+                  password: ${{ secrets.EMAIL_PASSWORD }}
+                  subject: "❌ Falha no workflow Pipeline CD"
+                  body: |
+                      Prezado William,
+
+                      O workflow Pipeline CD em ${{ github.repository }} **FALHOU**!
+
+                      DETALHES:
+                      - Status: Falha ❌
+                      - Autor do Commit: ${{ github.event.head_commit.author.name }} 
+                      - Branch: ${{ github.ref_name }}
+                      - Commit: ${{ github.sha }}
+                      - Mensagem do Commit: ${{ github.event.head_commit.message }}
+                      - Link do Commit: ${{ github.event.head_commit.url }}
+                      - Falha: ${{ steps.get_failure_info.outputs.message }}
+
+                      Por favor, verifique os logs para mais detalhes e identifique a causa da falha: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  to: "william@wllsistemas.com.br"
+                  from: "wllsistemas02@gmail.com"

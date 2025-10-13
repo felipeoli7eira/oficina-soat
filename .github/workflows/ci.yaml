@@ -1,0 +1,158 @@
+name: Pipeline CI - FIAP Fase 2
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    run_tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  extensions: mbstring, pdo_mysql, dom, filter, gd, iconv, json, simplexml
+                  ini-values: post_max_size=256M, upload_max_filesize=256M
+                  coverage: pcov
+
+            - name: Lendo diretório de cache do Composer
+              id: composer-cache
+              working-directory: ./backend
+              run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+            - name: Analisando cache do Composer
+              uses: actions/cache@v3
+              with:
+                  path: ${{ env.COMPOSER_CACHE_DIR }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Instalado dependências via Composer
+              working-directory: ./backend
+              run: composer install --prefer-dist --no-interaction --no-progress
+
+            - name: Criando arquivo .env para testes
+              working-directory: ./backend
+              run: |
+                  cp .env.example .env
+                  # Se os testes precisarem de um banco de dados, você pode configurar um SQLite em memória ou em arquivo
+                  # Sed para configurar SQLite para testes, se necessário:
+                  sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+                  sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env # SQLite em memória
+
+            - name: Gerando application key
+              working-directory: ./backend
+              run: php artisan key:generate
+
+            - name: Executando migrações para testes
+              working-directory: ./backend
+              run: php artisan migrate --env=testing --force
+
+            - name: Executando Testes Laravel
+              working-directory: ./backend
+              run: php artisan test
+
+    build_and_push_images:
+        needs: run_tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Login no Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Build e push da imagem PHP no Docker HUB
+              run: |
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2 -f build/backend/Dockerfile .
+                  docker push ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2
+
+            - name: Build e push da imagem Nginx no Docker HUB
+              run: |
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2 -f build/backend/Dockerfile-nginx .
+                  docker push ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2
+
+    send_success_notification:
+        needs: [build_and_push_images]
+        if: success()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Enviando email de sucesso do Deploy
+              uses: dawidd6/action-send-mail@v3
+              with:
+                  server_address: smtp.gmail.com
+                  server_port: 587
+                  username: ${{ secrets.EMAIL_USERNAME }}
+                  password: ${{ secrets.EMAIL_PASSWORD }}
+                  subject: "✅ Sucesso Pipeline CI"
+                  body: |
+                      Prezado William,
+
+                      O workflow Pipeline CI em ${{ github.repository }} foi executado com sucesso.
+
+                      DETALHES
+                      - Status: Sucesso ✅
+                      - Autor do Commit: ${{ github.event.head_commit.author.name }} 
+                      - Branch: ${{ github.ref_name }}
+                      - Commit: ${{ github.sha }}
+                      - Mensagem do Commit: ${{ github.event.head_commit.message }}
+                      - Tag da Imagem Utilizada: fase2
+                      - Link do Commit: ${{ github.event.head_commit.url }}
+
+                      Você pode revisar os detalhes da execução aqui: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  to: "william@wllsistemas.com.br"
+                  from: "wllsistemas02@gmail.com"
+
+    send_failure_notification:
+        needs: [run_tests, build_and_push_images]
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Obter informações da falha
+              id: get_failure_info # ID do step para referenciar seus outputs
+              run: |
+                  # Inicializa a mensagem de detalhes
+                  FAILURE_MESSAGE="Detalhes da falha:"
+
+                  if [[ "${{ needs.build_and_push_images.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Build e Push das Imagens Docker' falhou."
+                  fi
+                  if [[ "${{ needs.run_tests.result }}" == "failure" ]]; then
+                    FAILURE_MESSAGE="${FAILURE_MESSAGE}\n  - Job 'Executar Testes' falhou."
+                  fi
+
+                  echo "message=$FAILURE_MESSAGE" >> $GITHUB_OUTPUT
+
+            - name: Send failure email
+              uses: dawidd6/action-send-mail@v3
+              with:
+                  server_address: smtp.gmail.com
+                  server_port: 587
+                  username: ${{ secrets.EMAIL_USERNAME }}
+                  password: ${{ secrets.EMAIL_PASSWORD }}
+                  subject: "❌ Falha no workflow Pipeline CI"
+                  body: |
+                      Prezado William,
+
+                      O workflow Pipeline CI em ${{ github.repository }} **FALHOU**!
+
+                      DETALHES:
+                      - Status: Falha ❌
+                      - Autor do Commit: ${{ github.event.head_commit.author.name }} 
+                      - Branch: ${{ github.ref_name }}
+                      - Commit: ${{ github.sha }}
+                      - Mensagem do Commit: ${{ github.event.head_commit.message }}
+                      - Link do Commit: ${{ github.event.head_commit.url }}
+                      - Falha: ${{ steps.get_failure_info.outputs.message }}
+
+                      Por favor, verifique os logs para mais detalhes e identifique a causa da falha: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  to: "william@wllsistemas.com.br"
+                  from: "wllsistemas02@gmail.com"
