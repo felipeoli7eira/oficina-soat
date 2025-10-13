@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class UpdateUseCaseTest extends TestCase
 {
+
     public function testExecComSucesso()
     {
         $gateway = $this->createMock(UsuarioGateway::class);

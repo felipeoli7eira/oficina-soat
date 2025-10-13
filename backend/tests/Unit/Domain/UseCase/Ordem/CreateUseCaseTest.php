@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateUseCaseTest extends TestCase
 {
+
     public function testExecComSucesso()
     {
         $ordemGateway = $this->createMock(OrdemGateway::class);

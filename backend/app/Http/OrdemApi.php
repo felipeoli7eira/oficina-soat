@@ -73,7 +73,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
 
     public function read(Request $req)
@@ -106,7 +106,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
     public function readOne(Request $req)
@@ -144,7 +144,7 @@ class OrdemApi
             $this->presenter->setStatusCode(Response::HTTP_NOT_FOUND)->toPresent([]);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
     public function update(Request $req)
@@ -274,7 +274,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
     }
 
     public function removeService(Request $req)
@@ -315,7 +315,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
     }
 
     public function addMaterial(Request $req)
@@ -356,7 +356,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['uuid' => $res]);
     }
 
     public function removeMaterial(Request $req)
@@ -397,7 +397,7 @@ class OrdemApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
     }
 
     public function aprovacao(Request $req)

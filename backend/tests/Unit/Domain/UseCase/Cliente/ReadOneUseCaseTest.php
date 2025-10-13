@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class ReadOneUseCaseTest extends TestCase
 {
+
     public function testExecComSucesso()
     {
         $gateway = $this->createMock(ClienteGateway::class);

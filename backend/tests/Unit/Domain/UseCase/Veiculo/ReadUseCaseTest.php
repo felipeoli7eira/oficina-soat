@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ReadUseCaseTest extends TestCase
 {
+
     public function testExecRetornaListaDeVeiculos()
     {
         $veiculoGateway = $this->createMock(VeiculoGateway::class);

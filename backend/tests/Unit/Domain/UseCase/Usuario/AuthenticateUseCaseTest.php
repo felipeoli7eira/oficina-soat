@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class AuthenticateUseCaseTest extends TestCase
 {
+
     public function testExecComCredenciaisValidas()
     {
         $authService = $this->createMock(AuthServiceInterface::class);

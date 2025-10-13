@@ -11,9 +11,9 @@ final class HttpJsonPresenter implements PresenterInterface
     private int $statusCode = 200;
 
     #[\Override]
-    public function toPresent(array $dados): void
+    public function toPresent(array $dados): mixed
     {
-        response()->json($dados, $this->statusCode)->send();
+        return response()->json($dados, $this->statusCode);
     }
 
     public function setStatusCode(int $statusCode): HttpjsonPresenter

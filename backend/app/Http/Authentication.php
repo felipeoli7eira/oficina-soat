@@ -53,6 +53,6 @@ class Authentication
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res->toAssociativeArray());
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res->toAssociativeArray());
     }
 }

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ReadUseCaseTest extends TestCase
 {
+
     public function testExecRetornaListaDeOrdens()
     {
         $gateway = $this->createMock(OrdemGateway::class);

@@ -4,5 +4,5 @@ namespace App\Signature;
 
 interface PresenterInterface
 {
-    public function toPresent(array $dados): void;
+    public function toPresent(array $dados): mixed;
 }

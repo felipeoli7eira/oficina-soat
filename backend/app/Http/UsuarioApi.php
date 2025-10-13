@@ -64,7 +64,7 @@ class UsuarioApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
 
     public function read(Request $req)
@@ -83,7 +83,7 @@ class UsuarioApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
     public function update(Request $req)

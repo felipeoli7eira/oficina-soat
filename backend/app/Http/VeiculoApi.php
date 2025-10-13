@@ -67,7 +67,7 @@ class VeiculoApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent($res);
     }
 
     public function castsUpdate(array $dados): array
@@ -96,7 +96,7 @@ class VeiculoApi
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
     public function readOne(Request $req)
@@ -133,7 +133,7 @@ class VeiculoApi
             $this->presenter->setStatusCode(Response::HTTP_NOT_FOUND)->toPresent([]);
         }
 
-        $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
     public function update(Request $req)

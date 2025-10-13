@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateUseCaseTest extends TestCase
 {
+
     public function testExecComSucesso()
     {
         $veiculoGateway = $this->createMock(VeiculoGateway::class);

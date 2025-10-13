@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateUseCaseTest extends TestCase
 {
+
     public function testExecComSucesso()
     {
         $gateway = $this->createMock(UsuarioGateway::class);
