@@ -11,14 +11,14 @@ use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\OrdemGateway;
 use DateTimeImmutable;
 
-class UpdateStatusUseCase
+class DisapproveUseCase
 {
     public function __construct(public readonly OrdemGateway $gateway) {}
 
-    public function exec(string $uuid, string $novoStatus): Entidade
+    public function exec(string $uuid): Entidade
     {
         if (empty($uuid)) {
-            throw new DomainHttpException('identificador único não informado', 400);
+            throw new DomainHttpException('Ordem não informada corretamente', 400);
         }
 
         $existente = $this->gateway->encontrarPorIdentificadorUnico($uuid, 'uuid');
@@ -27,26 +27,26 @@ class UpdateStatusUseCase
             throw new DomainHttpException('Não encontrado(a)', 404);
         }
 
-        $statusDisponiveis = [
-            Entidade::STATUS_RECEBIDA,
-            Entidade::STATUS_EM_DIAGNOSTICO,
-            Entidade::STATUS_AGUARDANDO_APROVACAO,
+        $naoPodeMaisSerAprovadoQuando = [
             Entidade::STATUS_APROVADA,
-            Entidade::STATUS_REPROVADA,
             Entidade::STATUS_CANCELADA,
             Entidade::STATUS_EM_EXECUCAO,
             Entidade::STATUS_FINALIZADA,
             Entidade::STATUS_ENTREGUE,
         ];
 
-        if (!in_array($novoStatus, $statusDisponiveis)) {
-            throw new DomainHttpException('Opções de status disponíveis: ' . implode(', ', $statusDisponiveis), 400);
+        if (in_array($existente->status, $naoPodeMaisSerAprovadoQuando)) {
+            throw new DomainHttpException('Ordem não pode mais ser reprovada pois seu status atual é: ' . $existente->status, 404);
         }
 
-        $update = $this->gateway->atualizarStatus($uuid, $novoStatus);
+        if ($existente->status === Entidade::STATUS_REPROVADA) {
+            throw new DomainHttpException('Ordem já está reprovada', 400);
+        }
+
+        $update = $this->gateway->atualizarStatus($uuid, Entidade::STATUS_REPROVADA);
 
         if (! is_array($update)) {
-            throw new DomainHttpException('Erro na atualização', 500);
+            throw new DomainHttpException('Erro não mapeado ao reprovar a ordem', 500);
         }
 
         return new Entidade(

@@ -52,6 +52,8 @@ class CreateUseCase
             dtAbertura: new DateTimeImmutable(),
             dtFinalizacao: null,
             dtAtualizacao: null,
+            servicos: [],
+            materiais: [],
         );
 
         $dadosOrdem = [
@@ -75,6 +77,8 @@ class CreateUseCase
             dtAbertura: new DateTimeImmutable($cadastro['dt_abertura']),
             dtFinalizacao: null,
             dtAtualizacao: null,
+            servicos: [],
+            materiais: [],
         );
     }
 }

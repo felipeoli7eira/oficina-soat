@@ -24,7 +24,8 @@ use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
 use App\Domain\Entity\Veiculo\RepositorioInterface as VeiculoRepositorio;
 use App\Domain\Entity\Servico\RepositorioInterface as ServicoRepositorio;
 use App\Domain\Entity\Material\RepositorioInterface as MaterialRepositorio;
-
+use App\Domain\UseCase\Ordem\ApproveUseCase;
+use App\Domain\UseCase\Ordem\DisapproveUseCase;
 use App\Domain\UseCase\Ordem\UpdateStatusUseCase;
 
 use App\Exception\DomainHttpException;
@@ -97,7 +98,7 @@ class Ordem
         return $res->toExternal();
     }
 
-    public function listar(): array
+    public function listar(array $filters = []): array
     {
         if (! $this->repositorio instanceof OrdemRepositorio) {
             throw new DomainHttpException('defina todas as fontes de dados necessárias: ordem, cliente e veiculo', 500);
@@ -106,7 +107,7 @@ class Ordem
         $gateway = new OrdemGateway($this->repositorio);
         $useCase = new ReadUseCase();
 
-        return $useCase->exec($gateway);
+        return $useCase->exec($gateway, $filters);
     }
 
     public function obterUm(string $uuid): ?array
@@ -209,5 +210,28 @@ class Ordem
         $useCase = new RemoveMaterialUseCase($gateway, $materialGateway);
 
         return $useCase->exec($ordemUuid, $materialUuid) >= 1;
+    }
+    public function aprovarOrdem(string $uuid): array
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $useCase = new ApproveUseCase($gateway);
+
+        return $useCase->exec($uuid)->toExternal();
+    }
+
+    public function reprovarOrdem(string $uuid): array
+    {
+        if (! $this->repositorio instanceof OrdemRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new OrdemGateway($this->repositorio);
+        $useCase = new DisapproveUseCase($gateway);
+
+        return $useCase->exec($uuid)->toExternal();
     }
 }

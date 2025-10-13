@@ -16,8 +16,8 @@ class Mapper
     public function fromModelToEntity(OrdemModel $m): Entidade
     {
         return new Entidade(
-            $m->uuid,
-            new ClienteEntidade(
+            uuid: $m->uuid,
+            cliente: new ClienteEntidade(
                 $m->cliente->uuid,
                 $m->cliente->nome,
                 $m->cliente->documento,
@@ -26,7 +26,7 @@ class Mapper
                 new DateTimeImmutable($m->cliente->criado_em),
                 new DateTimeImmutable($m->cliente->atualizado_em),
             ),
-            new VeiculoEntidade(
+            veiculo: new VeiculoEntidade(
                 $m->veiculo->uuid,
                 $m->veiculo->marca,
                 $m->veiculo->modelo,
@@ -36,11 +36,13 @@ class Mapper
                 new DateTimeImmutable($m->veiculo->criado_em),
                 new DateTimeImmutable($m->veiculo->atualizado_em),
             ),
-            $m->descricao,
-            $m->status,
-            new DateTimeImmutable($m->dt_abertura),
-            $m->dt_finalizacao ? new DateTimeImmutable($m->dt_finalizacao) : null,
-            $m->dt_atualizacao ? new DateTimeImmutable($m->dt_atualizacao) : null,
+            descricao: $m->descricao,
+            status: $m->status,
+            dtAbertura: new DateTimeImmutable($m->dt_abertura),
+            dtFinalizacao: $m->dt_finalizacao ? new DateTimeImmutable($m->dt_finalizacao) : null,
+            dtAtualizacao: $m->dt_atualizacao ? new DateTimeImmutable($m->dt_atualizacao) : null,
+            servicos: $m?->servicos?->toArray(),
+            materiais: $m->materiais?->toArray(),
         );
     }
 

@@ -35,7 +35,9 @@ class OrdemEloquentRepository implements RepositorioInterface
             return null;
         }
 
-        return (new Mapper())->fromModelToEntity($model->with(['cliente', 'veiculo'])->first());
+        return (new Mapper())->fromModelToEntity(
+            $model->with(['cliente', 'veiculo', 'servicos', 'materiais'])->first()
+        );
     }
 
     public function criar(string $clienteUuid, string $veiculoUuid, array $dados): array
@@ -54,13 +56,30 @@ class OrdemEloquentRepository implements RepositorioInterface
         return $model->refresh()->toArray();
     }
 
-    public function listar(array $columns = ['*']): array
+    public function listar(array $filters = []): array
     {
-        return $this->model
+        $statusNotIn = [
+            \App\Domain\Entity\Ordem\Entidade::STATUS_ENTREGUE,
+            \App\Domain\Entity\Ordem\Entidade::STATUS_FINALIZADA
+        ];
+
+        if (array_key_exists('status', $filters) && in_array($filters['status'], $statusNotIn)) {
+            throw new DomainHttpException('Não é possível listar ordens com o status informado.', 400);
+        }
+
+        $stmt = $this->model
             ->query()
-            ->with(['cliente', 'veiculo'])
-            ->get($columns)
-            ->toArray();
+            ->with(['cliente', 'veiculo', 'servicos', 'materiais']);
+
+        if (array_key_exists('status', $filters) && !empty($filters['status'])) {
+            $stmt->where('status', $filters['status']);
+        } else {
+            $stmt->whereNotIn('status', $statusNotIn);
+        }
+
+        $stmt->orderBy('dt_abertura', 'desc');
+
+        return $stmt->get()->toArray();
     }
 
     public function deletar(string $uuid): bool
@@ -80,7 +99,7 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         $model->update($novosDados);
 
-        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+        $updated = $model->refresh()->with(['cliente', 'veiculo', 'servicos', 'materiais'])->get();
 
         return $updated->first()->toArray();
     }
@@ -93,7 +112,7 @@ class OrdemEloquentRepository implements RepositorioInterface
             'status' => $novoStatus
         ]);
 
-        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+        $updated = $model->refresh()->with(['cliente', 'veiculo', 'servicos', 'materiais'])->get();
 
         return $updated->first()->toArray();
     }

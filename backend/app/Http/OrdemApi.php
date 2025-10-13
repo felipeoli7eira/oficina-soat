@@ -79,20 +79,30 @@ class OrdemApi
     public function read(Request $req)
     {
         try {
+            $queryParams = $req->all(['status']);
+
             $res = $this->controller
                 ->useRepositorio($this->repositorio)
                 ->useClienteRepositorio($this->clienteRepositorio)
                 ->useVeiculoRepositorio($this->veiculoRepositorio)
-                ->listar();
+                ->listar($queryParams);
         } catch (DomainHttpException $err) {
             return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
             ], $err->getCode());
         } catch (Throwable $err) {
             return response()->json([
                 'err' => true,
                 'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -388,5 +398,75 @@ class OrdemApi
         }
 
         $this->presenter->setStatusCode(Response::HTTP_CREATED)->toPresent(['success' => $res]);
+    }
+
+    public function aprovacao(Request $req)
+    {
+        try {
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
+                'uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $response = $this->controller->useRepositorio($this->repositorio)->aprovarOrdem($validacao->validated()['uuid']);
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent([
+            'err' => false,
+            'msg' => 'Ordem aprovada com sucesso',
+            'data' => $response,
+        ]);
+    }
+
+    public function reprovacao(Request $req)
+    {
+        try {
+            $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
+                'uuid' => ['required', 'string', 'uuid'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $response = $this->controller->useRepositorio($this->repositorio)->reprovarOrdem($validacao->validated()['uuid']);
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+                'meta' => [
+                    'getFile' => $err->getFile(),
+                    'getLine' => $err->getLine(),
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent([
+            'err' => false,
+            'msg' => 'Ordem reprovada',
+            'data' => $response,
+        ]);
     }
 }

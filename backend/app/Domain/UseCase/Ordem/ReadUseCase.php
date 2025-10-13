@@ -14,14 +14,14 @@ class ReadUseCase
 {
     public function __construct() {}
 
-    public function exec(OrdemGateway $gateway): array
+    public function exec(OrdemGateway $gateway, array $filters = []): array
     {
-        $dados = $gateway->listar();
+        $dados = $gateway->listar($filters);
 
         return array_map(function ($d) {
             $entidade = new Entidade(
-                $d['uuid'],
-                new ClienteEntidade(
+                uuid: $d['uuid'],
+                cliente: new ClienteEntidade(
                     $d['cliente']['uuid'],
                     $d['cliente']['nome'],
                     $d['cliente']['documento'],
@@ -30,7 +30,7 @@ class ReadUseCase
                     new DateTimeImmutable($d['cliente']['criado_em']),
                     new DateTimeImmutable($d['cliente']['atualizado_em']),
                 ),
-                new VeiculoEntidade(
+                veiculo: new VeiculoEntidade(
                     $d['veiculo']['uuid'],
                     $d['veiculo']['marca'],
                     $d['veiculo']['modelo'],
@@ -40,11 +40,13 @@ class ReadUseCase
                     new DateTimeImmutable($d['veiculo']['criado_em']),
                     new DateTimeImmutable($d['veiculo']['atualizado_em']),
                 ),
-                $d['descricao'],
-                $d['status'],
-                new DateTimeImmutable($d['dt_abertura']),
-                $d['dt_finalizacao'] ? new DateTimeImmutable($d['dt_finalizacao']) : null,
-                $d['dt_atualizacao'] ? new DateTimeImmutable($d['dt_atualizacao']) : null,
+                descricao: $d['descricao'],
+                status: $d['status'],
+                dtAbertura: new DateTimeImmutable($d['dt_abertura']),
+                dtFinalizacao: $d['dt_finalizacao'] ? new DateTimeImmutable($d['dt_finalizacao']) : null,
+                dtAtualizacao: $d['dt_atualizacao'] ? new DateTimeImmutable($d['dt_atualizacao']) : null,
+                servicos: $d['servicos'],
+                materiais: $d['materiais'],
             );
 
             return $entidade->toExternal();
