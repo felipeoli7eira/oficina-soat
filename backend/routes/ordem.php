@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\JsonWebTokenMiddleware;
 use App\Http\OrdemApi;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +17,7 @@ Route::delete('/ordem/servico', [OrdemApi::class, 'removeService']);
 
 Route::post('/ordem/material', [OrdemApi::class, 'addMaterial']);
 Route::delete('/ordem/material', [OrdemApi::class, 'removeMaterial']);
+
+// endpoints somente para aprovacao/reprovacao de uma ordem
+Route::match(['get', 'put'], '/ordem/{uuid}/aprovacao', [OrdemApi::class, 'aprovacao'])->withoutMiddleware(JsonWebTokenMiddleware::class);
+Route::match(['get', 'put'], '/ordem/{uuid}/reprovacao', [OrdemApi::class, 'reprovacao'])->withoutMiddleware(JsonWebTokenMiddleware::class);
