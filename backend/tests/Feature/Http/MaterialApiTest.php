@@ -5,22 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use Tests\TestCase;
-use App\Http\Middleware\JsonWebTokenMiddleware;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MaterialApiTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(JsonWebTokenMiddleware::class);
-    }
 
     public function testCreateComSucesso()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -37,7 +28,7 @@ class MaterialApiTest extends TestCase
 
     public function testCreateComCamposOpcionaisNulos()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Filtro de Óleo',
             'gtin' => '7891234567891',
             'estoque' => 50,
@@ -53,7 +44,7 @@ class MaterialApiTest extends TestCase
 
     public function testCreateComNomeVazio()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => '',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -68,7 +59,7 @@ class MaterialApiTest extends TestCase
 
     public function testCreateComGtinVazio()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '',
             'estoque' => 100,
@@ -83,7 +74,7 @@ class MaterialApiTest extends TestCase
 
     public function testCreateComEstoqueInvalido()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 'invalido',
@@ -98,7 +89,7 @@ class MaterialApiTest extends TestCase
 
     public function testReadRetornaListaDeMateriais()
     {
-        $this->postJson('/api/material', [
+        $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -107,7 +98,7 @@ class MaterialApiTest extends TestCase
             'preco_uso_interno' => 50.00,
         ]);
 
-        $response = $this->getJson('/api/material');
+        $response = $this->authenticatedGetJson('/api/material');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -117,7 +108,7 @@ class MaterialApiTest extends TestCase
 
     public function testReadOneComSucesso()
     {
-        $createResponse = $this->postJson('/api/material', [
+        $createResponse = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -138,7 +129,7 @@ class MaterialApiTest extends TestCase
 
     public function testReadOneComUuidInvalido()
     {
-        $response = $this->getJson('/api/material/uuid-invalido');
+        $response = $this->authenticatedGetJson('/api/material/uuid-invalido');
 
         $response->assertStatus(400)
             ->assertJson(['err' => true]);
@@ -154,7 +145,7 @@ class MaterialApiTest extends TestCase
 
     public function testUpdateComSucesso()
     {
-        $createResponse = $this->postJson('/api/material', [
+        $createResponse = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -165,7 +156,7 @@ class MaterialApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/material/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/material/{$uuid}", [
             'estoque' => 150,
         ]);
 
@@ -184,7 +175,7 @@ class MaterialApiTest extends TestCase
 
     public function testDeleteComSucesso()
     {
-        $createResponse = $this->postJson('/api/material', [
+        $createResponse = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,
@@ -194,7 +185,7 @@ class MaterialApiTest extends TestCase
         ]);
 
         $uuid = $createResponse->json('uuid');
-        $response = $this->deleteJson("/api/material/{$uuid}");
+        $response = $this->authenticatedDeleteJson("/api/material/{$uuid}");
 
         $response->assertStatus(204);
     }
@@ -209,7 +200,7 @@ class MaterialApiTest extends TestCase
 
     public function testCastsCreateConvertePrecos()
     {
-        $response = $this->postJson('/api/material', [
+        $response = $this->authenticatedPostJson('/api/material', [
             'nome' => 'Óleo 5W30',
             'gtin' => '7891234567890',
             'estoque' => 100,

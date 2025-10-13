@@ -5,22 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Http\Middleware\JsonWebTokenMiddleware;
 
 class ClienteApiTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(JsonWebTokenMiddleware::class);
-    }
 
     public function testCreateComSucesso()
     {
-        $response = $this->postJson('/api/cliente', [
+        $response = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -33,7 +24,7 @@ class ClienteApiTest extends TestCase
 
     public function testCreateComNomeVazio()
     {
-        $response = $this->postJson('/api/cliente', [
+        $response = $this->authenticatedPostJson('/api/cliente', [
             'nome' => '',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -46,7 +37,7 @@ class ClienteApiTest extends TestCase
 
     public function testCreateComDocumentoVazio()
     {
-        $response = $this->postJson('/api/cliente', [
+        $response = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '',
             'email' => 'joao@example.com',
@@ -59,7 +50,7 @@ class ClienteApiTest extends TestCase
 
     public function testCreateComEmailInvalido()
     {
-        $response = $this->postJson('/api/cliente', [
+        $response = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'email-invalido',
@@ -72,7 +63,7 @@ class ClienteApiTest extends TestCase
 
     public function testCreateComFoneVazio()
     {
-        $response = $this->postJson('/api/cliente', [
+        $response = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -86,21 +77,21 @@ class ClienteApiTest extends TestCase
     public function testReadRetornaListaDeClientes()
     {
         // Cria alguns clientes primeiro
-        $this->postJson('/api/cliente', [
+        $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
             'fone' => '11999999999',
         ]);
 
-        $this->postJson('/api/cliente', [
+        $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'Maria Santos',
             'documento' => '98765432109',
             'email' => 'maria@example.com',
             'fone' => '11988888888',
         ]);
 
-        $response = $this->getJson('/api/cliente');
+        $response = $this->authenticatedGetJson('/api/cliente');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -110,7 +101,7 @@ class ClienteApiTest extends TestCase
 
     public function testReadOneComSucesso()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -131,7 +122,7 @@ class ClienteApiTest extends TestCase
 
     public function testReadOneComUuidInvalido()
     {
-        $response = $this->getJson('/api/cliente/uuid-invalido');
+        $response = $this->authenticatedGetJson('/api/cliente/uuid-invalido');
 
         $response->assertStatus(400)
             ->assertJson(['err' => true]);
@@ -147,7 +138,7 @@ class ClienteApiTest extends TestCase
 
     public function testUpdateComSucesso()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -156,7 +147,7 @@ class ClienteApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/cliente/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/cliente/{$uuid}", [
             'nome' => 'João da Silva Santos',
         ]);
 
@@ -179,7 +170,7 @@ class ClienteApiTest extends TestCase
 
     public function testUpdateComEmailInvalido()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -188,7 +179,7 @@ class ClienteApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/cliente/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/cliente/{$uuid}", [
             'email' => 'email-invalido',
         ]);
 
@@ -198,7 +189,7 @@ class ClienteApiTest extends TestCase
 
     public function testDeleteComSucesso()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -207,7 +198,7 @@ class ClienteApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->deleteJson("/api/cliente/{$uuid}");
+        $response = $this->authenticatedDeleteJson("/api/cliente/{$uuid}");
 
         $response->assertStatus(204);
     }
@@ -222,7 +213,7 @@ class ClienteApiTest extends TestCase
 
     public function testCastsUpdateRemoveCaracteresEspeciaisDoDocumento()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -231,7 +222,7 @@ class ClienteApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/cliente/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/cliente/{$uuid}", [
             'documento' => '123.456.789-01',
         ]);
 
@@ -241,7 +232,7 @@ class ClienteApiTest extends TestCase
 
     public function testCastsUpdateRemoveCaracteresEspeciaisDoFone()
     {
-        $createResponse = $this->postJson('/api/cliente', [
+        $createResponse = $this->authenticatedPostJson('/api/cliente', [
             'nome' => 'João Silva',
             'documento' => '12345678901',
             'email' => 'joao@example.com',
@@ -250,7 +241,7 @@ class ClienteApiTest extends TestCase
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/cliente/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/cliente/{$uuid}", [
             'fone' => '(11) 99999-9999',
         ]);
 

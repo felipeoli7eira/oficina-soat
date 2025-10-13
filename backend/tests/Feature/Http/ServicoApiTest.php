@@ -5,22 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use Tests\TestCase;
-use App\Http\Middleware\JsonWebTokenMiddleware;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ServicoApiTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(JsonWebTokenMiddleware::class);
-    }
 
     public function testCreateComSucesso()
     {
-        $response = $this->postJson('/api/servico', [
+        $response = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
@@ -31,7 +22,7 @@ class ServicoApiTest extends TestCase
 
     public function testCreateComNomeVazio()
     {
-        $response = $this->postJson('/api/servico', [
+        $response = $this->authenticatedPostJson('/api/servico', [
             'nome' => '',
             'valor' => 150.00,
         ]);
@@ -42,7 +33,7 @@ class ServicoApiTest extends TestCase
 
     public function testCreateComValorInvalido()
     {
-        $response = $this->postJson('/api/servico', [
+        $response = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 'invalido',
         ]);
@@ -53,7 +44,7 @@ class ServicoApiTest extends TestCase
 
     public function testCreateComValorVazio()
     {
-        $response = $this->postJson('/api/servico', [
+        $response = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
         ]);
 
@@ -63,17 +54,17 @@ class ServicoApiTest extends TestCase
 
     public function testReadRetornaListaDeServicos()
     {
-        $this->postJson('/api/servico', [
+        $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
 
-        $this->postJson('/api/servico', [
+        $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Alinhamento',
             'valor' => 80.00,
         ]);
 
-        $response = $this->getJson('/api/servico');
+        $response = $this->authenticatedGetJson('/api/servico');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -83,7 +74,7 @@ class ServicoApiTest extends TestCase
 
     public function testReadOneComSucesso()
     {
-        $createResponse = $this->postJson('/api/servico', [
+        $createResponse = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
@@ -100,7 +91,7 @@ class ServicoApiTest extends TestCase
 
     public function testReadOneComUuidInvalido()
     {
-        $response = $this->getJson('/api/servico/uuid-invalido');
+        $response = $this->authenticatedGetJson('/api/servico/uuid-invalido');
 
         $response->assertStatus(400)
             ->assertJson(['err' => true]);
@@ -116,14 +107,14 @@ class ServicoApiTest extends TestCase
 
     public function testUpdateComSucesso()
     {
-        $createResponse = $this->postJson('/api/servico', [
+        $createResponse = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/servico/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/servico/{$uuid}", [
             'nome' => 'Troca de Óleo Completa',
             'valor' => 200.00,
         ]);
@@ -148,14 +139,14 @@ class ServicoApiTest extends TestCase
 
     public function testUpdateComNomeVazio()
     {
-        $createResponse = $this->postJson('/api/servico', [
+        $createResponse = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
 
         $uuid = $createResponse->json('uuid');
 
-        $response = $this->putJson("/api/servico/{$uuid}", [
+        $response = $this->authenticatedPutJson("/api/servico/{$uuid}", [
             'nome' => '',
             'valor' => 200.00,
         ]);
@@ -166,13 +157,13 @@ class ServicoApiTest extends TestCase
 
     public function testDeleteComSucesso()
     {
-        $createResponse = $this->postJson('/api/servico', [
+        $createResponse = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.00,
         ]);
 
         $uuid = $createResponse->json('uuid');
-        $response = $this->deleteJson("/api/servico/{$uuid}");
+        $response = $this->authenticatedDeleteJson("/api/servico/{$uuid}");
 
         $response->assertStatus(204);
     }
@@ -187,7 +178,7 @@ class ServicoApiTest extends TestCase
 
     public function testConversaoDeValorEmCentavos()
     {
-        $response = $this->postJson('/api/servico', [
+        $response = $this->authenticatedPostJson('/api/servico', [
             'nome' => 'Troca de Óleo',
             'valor' => 150.50,
         ]);
