@@ -35,7 +35,9 @@ class OrdemEloquentRepository implements RepositorioInterface
             return null;
         }
 
-        return (new Mapper())->fromModelToEntity($model->with(['cliente', 'veiculo'])->first());
+        return (new Mapper())->fromModelToEntity(
+            $model->with(['cliente', 'veiculo', 'servicos', 'materiais'])->first()
+        );
     }
 
     public function criar(string $clienteUuid, string $veiculoUuid, array $dados): array
@@ -67,11 +69,11 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         $stmt = $this->model
             ->query()
-            ->with(['cliente', 'veiculo']);
+            ->with(['cliente', 'veiculo', 'servicos', 'materiais']);
 
         if (array_key_exists('status', $filters) && !empty($filters['status'])) {
             $stmt->where('status', $filters['status']);
-        }else{
+        } else {
             $stmt->whereNotIn('status', $statusNotIn);
         }
 
@@ -97,7 +99,7 @@ class OrdemEloquentRepository implements RepositorioInterface
 
         $model->update($novosDados);
 
-        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+        $updated = $model->refresh()->with(['cliente', 'veiculo', 'servicos', 'materiais'])->get();
 
         return $updated->first()->toArray();
     }
@@ -110,7 +112,7 @@ class OrdemEloquentRepository implements RepositorioInterface
             'status' => $novoStatus
         ]);
 
-        $updated = $model->refresh()->with(['cliente', 'veiculo'])->get();
+        $updated = $model->refresh()->with(['cliente', 'veiculo', 'servicos', 'materiais'])->get();
 
         return $updated->first()->toArray();
     }

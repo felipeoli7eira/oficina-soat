@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrdemModel extends Model
 {
@@ -35,5 +36,25 @@ class OrdemModel extends Model
     public function veiculo(): BelongsTo
     {
         return $this->belongsTo(VeiculoModel::class);
+    }
+
+    public function servicos()
+    {
+        return $this->belongsToMany(
+            ServicoModel::class,   // model relacionado
+            'os_servico',          // tabela pivot
+            'os_id',               // chave estrangeira da tabela atual (os)
+            'servico_id'           // chave estrangeira da tabela relacionada (servicos)
+        );
+    }
+
+    public function materiais()
+    {
+        return $this->belongsToMany(
+            MaterialModel::class,   // model relacionado
+            'os_material',          // tabela pivot
+            'os_id',               // chave estrangeira da tabela atual (os)
+            'material_id'           // chave estrangeira da tabela relacionada (materiais)
+        );
     }
 }

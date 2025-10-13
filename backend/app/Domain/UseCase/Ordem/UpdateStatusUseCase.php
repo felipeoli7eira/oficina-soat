@@ -50,8 +50,8 @@ class UpdateStatusUseCase
         }
 
         return new Entidade(
-            $update['uuid'],
-            new ClienteEntidade(
+            uuid: $update['uuid'],
+            cliente: new ClienteEntidade(
                 $update['cliente']['uuid'],
                 $update['cliente']['nome'],
                 $update['cliente']['documento'],
@@ -61,7 +61,7 @@ class UpdateStatusUseCase
                 new DateTimeImmutable($update['cliente']['atualizado_em']),
                 $update['cliente']['deletado_em'] ? new DateTimeImmutable($update['cliente']['deletado_em']) : null,
             ),
-            new VeiculoEntidade(
+            veiculo: new VeiculoEntidade(
                 $update['veiculo']['uuid'],
                 $update['veiculo']['marca'],
                 $update['veiculo']['modelo'],
@@ -72,11 +72,13 @@ class UpdateStatusUseCase
                 new DateTimeImmutable($update['veiculo']['atualizado_em']),
                 $update['veiculo']['deletado_em'] ? new DateTimeImmutable($update['veiculo']['deletado_em']) : null,
             ),
-            $update['descricao'],
-            $update['status'],
-            new DateTimeImmutable($update['dt_abertura']),
-            $update['dt_finalizacao'] ? new DateTimeImmutable($update['dt_finalizacao']) : null,
-            $update['dt_atualizacao'] ? new DateTimeImmutable($update['dt_atualizacao']) : null,
+            descricao: $update['descricao'],
+            status: $update['status'],
+            dtAbertura: new DateTimeImmutable($update['dt_abertura']),
+            dtFinalizacao: $update['dt_finalizacao'] ? new DateTimeImmutable($update['dt_finalizacao']) : null,
+            dtAtualizacao: $update['dt_atualizacao'] ? new DateTimeImmutable($update['dt_atualizacao']) : null,
+            servicos: $update['servicos'],
+            materiais: $update['materiais'],
         );
     }
 }

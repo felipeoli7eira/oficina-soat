@@ -30,9 +30,11 @@ class Entidade
         public string $uuid,
         public readonly Cliente $cliente,
         public readonly Veiculo $veiculo,
+        public DateTimeImmutable $dtAbertura,
         public ?string $descricao = null,
         public ?string $status = self::STATUS_RECEBIDA,
-        public DateTimeImmutable $dtAbertura,
+        public ?array $servicos = null,
+        public ?array $materiais = null,
         public ?DateTimeImmutable $dtFinalizacao = null,
         public ?DateTimeImmutable $dtAtualizacao = null,
     ) {
@@ -59,12 +61,31 @@ class Entidade
 
     public function toExternal(): array
     {
+        $servicos = array_map(fn($serv) => [
+            'uuid'   => $serv['uuid'],
+            'nome'   => $serv['nome'],
+            'valor'  => $serv['valor'] / 100,
+        ], $this->servicos);
+
+        $materiais = array_map(fn($mat) => [
+            'uuid'   => $mat['uuid'],
+            'nome'   => $mat['nome'],
+            'valor'  => $mat['preco_uso_interno'] / 100,
+        ], $this->materiais);
+
+        $totalMateriaisUsados = array_reduce($this->materiais, fn($acc, $mat) => $acc + $mat['preco_uso_interno'], 0);
+        $totalServicosRealizados = array_reduce($this->servicos, fn($acc, $serv) => $acc + $serv['valor'], 0);
+
+        $totalGeral = $totalMateriaisUsados + $totalServicosRealizados;
+
         return [
             'uuid'              => $this->uuid,
             'cliente'           => $this->cliente->toExternal(),
             'veiculo'           => $this->veiculo->toExternal(),
             'descricao'         => $this->descricao,
             'status'            => $this->status,
+            'servicos'          => $servicos,
+            'materiais'         => $materiais,
             'dt_abertura'       => $this->dtAbertura->format('Y-m-d H:i:s'),
             'dt_finalizacao'    => (
                 is_null($this->dtFinalizacao)
@@ -76,6 +97,9 @@ class Entidade
                 ? null
                 : $this->dtAtualizacao->format('Y-m-d H:i:s')
             ),
+            'total_materiais' => $totalMateriaisUsados / 100,
+            'total_servicos'  => $totalServicosRealizados / 100,
+            'total_geral'     => $totalGeral / 100,
         ];
     }
 }
