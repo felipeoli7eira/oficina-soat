@@ -11,6 +11,11 @@ abstract class TestCase extends BaseTestCase
 
     protected ?string $authToken = null;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     /**
      * Cria um usuário de teste e retorna o token JWT
      */
@@ -18,7 +23,7 @@ abstract class TestCase extends BaseTestCase
         string $email = 'test@example.com',
         string $senha = 'senha123',
         string $nome = 'Usuario Teste',
-        string $perfil = 'ATENDENTE'
+        string $perfil = 'atendente'
     ): string {
         // Cria o usuário diretamente no banco de dados
         \Illuminate\Support\Facades\DB::table('usuarios')->insert([
