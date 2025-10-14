@@ -276,6 +276,55 @@ O resultado esperado é que 3 containers estejam em pleno funcionamento:
 
 Agora, como dito anteriormente, você pode tentar acessar o endpoint `http://localhost:8080/api/ping` e verificar se a api responde com "pong".
 
+# Testes
+
+O projeto conta com testes unitários e de integração desenvolvidos com PHPUnit. Os testes garantem a qualidade e confiabilidade do código, cobrindo desde a lógica de domínio até a persistência de dados.
+
+## Executando os Testes Localmente
+
+Com os containers em execução, você pode rodar os testes usando o seguinte comando:
+
+```sh
+docker compose exec php php artisan test
+```
+
+Para executar os testes com relatório de cobertura:
+
+```sh
+docker compose exec php php artisan test --coverage
+```
+
+Para uma visualização mais compacta:
+
+```sh
+docker compose exec php php artisan test --coverage --compact
+```
+
+![testes.png](./docs/img/testes.png)
+
+### Relatório de Cobertura HTML
+
+Ao executar os testes com a flag `--coverage`, um relatório HTML detalhado é gerado automaticamente na pasta `backend/var/coverage`. Para visualizar:
+
+1. Abra o arquivo `backend/var/coverage/index.html` no seu navegador
+2. Navegue pelas classes e métodos para ver detalhes da cobertura linha por linha
+
+Além do HTML, também é gerado um arquivo texto com resumo em `backend/var/coverage.txt`.
+
+## Estrutura dos Testes
+
+Os testes estão organizados em duas categorias:
+
+- **Testes Unitários** (`tests/Unit`): Validam a lógica de negócio das entidades e casos de uso do domínio
+- **Testes de Integração** (`tests/Feature`): Testam a interação entre as camadas da aplicação, incluindo repositórios e controllers
+
+## Configuração
+
+A configuração dos testes está definida no arquivo `backend/phpunit.xml`, que especifica:
+- Conexão com PostgreSQL para testes de integração
+- Configurações de ambiente de teste
+- Diretórios de cobertura de código
+
 # API Documentation
 
 O [postman](https://www.postman.com) foi usado para criar a documentação da API. O workspace com a collection está [disponível aqui](https://app.getpostman.com/join-team?invite_code=a8f7c5db50618a4d057b1e50ca129cef16d68fbd74f03c9d4f532c18e9fff4c3&target_code=0249e09988430bb18a9413c8067664c2). Você notará que cada recurso está organizado em pastas:
