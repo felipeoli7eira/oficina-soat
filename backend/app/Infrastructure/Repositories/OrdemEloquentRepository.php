@@ -108,9 +108,15 @@ class OrdemEloquentRepository implements RepositorioInterface
     {
         $model = $this->model->query()->where('uuid', $uuid)->first();
 
-        $model->update([
+        $dadosUpdate = [
             'status' => $novoStatus
-        ]);
+        ];
+
+        if ($novoStatus === Entidade::STATUS_FINALIZADA) {
+            $dadosUpdate['dt_finalizacao'] = date('Y-m-d H:i:s');
+        }
+
+        $model->update($dadosUpdate);
 
         $updated = $model->refresh()->with(['cliente', 'veiculo', 'servicos', 'materiais'])->get();
 
