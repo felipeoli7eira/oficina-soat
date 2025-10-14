@@ -12,7 +12,7 @@ use App\Infrastructure\Gateway\OrdemGateway;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\MaterialGateway;
 
-class removeMaterialUseCase
+class RemoveMaterialUseCase
 {
     public function __construct(public readonly OrdemGateway $ordemGateway, public readonly MaterialGateway $materialGateway) {}
 
