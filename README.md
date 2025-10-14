@@ -72,6 +72,7 @@ Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos f
 
 #### Arquivos de Manifesto
 ```bash
+  00-metrics-server.yaml **
   01-namespace.yaml
   02-configmap.yaml
   03-secret.yaml
@@ -85,7 +86,6 @@ Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos f
   11-pod-php.yaml
   12-pod-nginx.yaml
   13-hpa-ngix.yaml
-  metrics-server.yaml **
 ```
 ### Namespace kubernetes
 Para melhor organização do ambiente, todos os manifestos são criados dentro do namespace **lab-soat** através do manifesto **01-namespace.yaml**.
@@ -213,10 +213,10 @@ Escrevemos um manifesto kubernetes `13-hpa-nginx.yaml` para automatizar o escalo
 
 | Métrica | Valor | Und Medida |
 |---|---|---|
-| Utilização de CPU | 15 | % |
-|Média de Consumo Memória RAM| 15 | MegaBytes |
+| Utilização de CPU | 10 | % |
+|Média de Consumo Memória RAM| 10 | MegaBytes |
 
-O HPA garante que o Deployment **lab-soat-nginx** tenha entre 1 e 10 pods, escalando para cima se a utilização média da CPU exceder 15% (em relação ao request do pod) ou se o consumo médio de memória exceder 15Mi. O objetivo é manter a performance da aplicação otimizada, adicionando ou removendo pods conforme a demanda, sem intervenção manual
+O HPA garante que o Deployment **lab-soat-nginx** tenha entre 1 e 10 pods, escalando para cima se a utilização média da CPU exceder 10% (em relação ao request do pod) ou se o consumo médio de memória exceder 10Mi. O objetivo é manter a performance da aplicação otimizada, adicionando ou removendo pods conforme a demanda, sem intervenção manual
 
 ## 🚀 Pipeline GitHub Actions
 
