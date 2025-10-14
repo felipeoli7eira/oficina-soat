@@ -82,7 +82,8 @@ class VeiculoEloquentRepositoryTest extends TestCase
 
     public function testEncontrarPorIdentificadorUnicoRetornaNullQuandoNaoEncontrado()
     {
-        $found = $this->repository->encontrarPorIdentificadorUnico('uuid-inexistente', 'uuid');
+        $uuidInexistente = '550e8400-e29b-41d4-a716-446655440000';
+        $found = $this->repository->encontrarPorIdentificadorUnico($uuidInexistente, 'uuid');
         $this->assertNull($found);
     }
 
@@ -172,7 +173,8 @@ class VeiculoEloquentRepositoryTest extends TestCase
 
     public function testDeletarRetornaFalseQuandoNaoEncontra()
     {
-        $result = $this->repository->deletar('uuid-inexistente');
+        $uuidInexistente = '550e8400-e29b-41d4-a716-446655440001';
+        $result = $this->repository->deletar($uuidInexistente);
         $this->assertFalse($result);
     }
 
