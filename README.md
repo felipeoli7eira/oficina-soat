@@ -151,11 +151,11 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 ### Recursos do Cluster
 
 > [!NOTE]
-> É necessário criar recursos de métricas em nível de cluster, esses recursos estão na subpasta **./infra/base_cluster** e precisam ser criados apenas na primeira execução.
+> É necessário criar recursos de métricas em nível de cluster, esses recursos estão na subpasta **./infra/cluster_base** e precisam ser criados apenas na primeira execução.
 
 #### Navegar até o diretório dos scripts
 ```bash
-  cd infra/base_cluster
+  cd infra/cluster_base
 ```
 
 #### Inicializar terraform
