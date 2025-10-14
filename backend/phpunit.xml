@@ -10,9 +10,6 @@
                   highLowerBound="80" />
             <text outputFile="var/coverage.txt" />
         </report>
-        <include>
-            <directory>app</directory>  
-        </include>
     </coverage>
     <testsuites>
         <testsuite name="Unit">
