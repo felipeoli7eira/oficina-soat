@@ -8,6 +8,22 @@ on:
 jobs:
     run_tests:
         runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:17.5
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: postgres
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -16,7 +32,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: "8.4"
-                  extensions: mbstring, pdo_mysql, dom, filter, gd, iconv, json, simplexml
+                  extensions: mbstring, pdo_pgsql, pgsql, dom, filter, gd, iconv, json, simplexml
                   ini-values: post_max_size=256M, upload_max_filesize=256M
                   coverage: pcov
 
@@ -40,10 +56,12 @@ jobs:
               working-directory: ./backend
               run: |
                   cp .env.example .env
-                  # Se os testes precisarem de um banco de dados, você pode configurar um SQLite em memória ou em arquivo
-                  # Sed para configurar SQLite para testes, se necessário:
-                  sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
-                  sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env # SQLite em memória
+                  sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
+                  sed -i 's/DB_HOST=.*/DB_HOST=localhost/' .env
+                  sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env
+                  sed -i 's/DB_DATABASE=.*/DB_DATABASE=postgres/' .env
+                  sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env
+                  sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=postgres/' .env
 
             - name: Gerando application key
               working-directory: ./backend
