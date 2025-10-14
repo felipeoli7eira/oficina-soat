@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  namespace: lab-soat
+spec:
+  type: NodePort
+  selector:
+    app: lab-soat-nginx # Seleciona Pods com label app: nginx-app
+  ports:
+    - port: 80 # Porta que o Service expõe internamente
+      targetPort: 80 # Porta na qual o container Nginx está escutando
+      nodePort: 31000 # Porta que será aberta em CADA Node para acesso externo

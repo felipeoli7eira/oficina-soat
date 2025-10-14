@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: lab-soat
+spec:
+  type: ClusterIP
+  selector:
+    app: lab-soat-postgres
+  ports:
+    - port: 5432 # Porta que o Service expõe internamente
+      targetPort: 5432 # Porta na qual o container PostgreSQL está rodando

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-soat-nginx
+  namespace: lab-soat
+spec:
+  selector:
+    matchLabels:
+      app: lab-soat-nginx
+  template:
+    metadata:
+      labels:
+        app: lab-soat-nginx
+    spec:
+      containers:
+        - name: lab-soat-nginx
+          image: wllsistemas/nginx_lab_soat:fase2
+          ports:
+            - containerPort: 80

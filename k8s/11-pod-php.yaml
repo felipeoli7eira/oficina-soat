@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-soat-php
+  namespace: lab-soat
+spec:
+  selector:
+    matchLabels:
+      app: lab-soat-php
+  template:
+    metadata:
+      labels:
+        app: lab-soat-php
+    spec:
+      containers:
+        - name: lab-soat-php
+          image: wllsistemas/php_lab_soat:fase2
+          ports:
+            - containerPort: 9000
+          env:
+            - name: ENV_APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: lab-app-config
+                  key: APP_ENV
+            - name: ENV_APP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: lab-app-config
+                  key: APP_NAME
+            - name: ENV_APP_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: lab-app-config
+                  key: APP_VERSION
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: lab-soat-secret
+                  key: DB_NAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lab-soat-secret
+                  key: DB_PASSWORD
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: lab-soat-secret
+                  key: DB_USERNAME
