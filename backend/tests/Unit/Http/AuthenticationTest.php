@@ -20,13 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationTest extends TestCase
 {
-    public function testAuthenticateComCredenciaisValidas()
-    {
-        // Este teste requer mocking de classes final (HttpJsonPresenter)
-        // Como é um teste unitário focado na lógica de negócio, vamos testar apenas os fluxos que não dependem do presenter
-        $this->markTestSkipped('HttpJsonPresenter é final e não pode ser mockada. Use testes de integração para este cenário.');
-    }
-
     public function testAuthenticateComEmailVazio()
     {
         // Arrange

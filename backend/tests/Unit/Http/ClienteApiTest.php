@@ -18,11 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ClienteApiTest extends TestCase
 {
-    public function testCreateComSucesso()
-    {
-        // Este teste requer mocking de classes final (HttpJsonPresenter)
-        $this->markTestSkipped('HttpJsonPresenter é final e não pode ser mockada. Use testes de integração para este cenário.');
-    }
 
     public function testCreateComNomeVazio()
     {
@@ -198,12 +193,6 @@ class ClienteApiTest extends TestCase
         $data = json_decode($result->getContent(), true);
         $this->assertTrue($data['err']);
         $this->assertEquals('Erro interno', $data['msg']);
-    }
-
-    public function testReadComSucesso()
-    {
-        // Este teste requer mocking de classes final (HttpJsonPresenter)
-        $this->markTestSkipped('HttpJsonPresenter é final e não pode ser mockada. Use testes de integração para este cenário.');
     }
 
     public function testReadComThrowableGenerico()
