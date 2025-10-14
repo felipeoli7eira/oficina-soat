@@ -170,7 +170,7 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 
 #### Como Executar todos os scripts
 ```bash
-  terraform apply -auto-approve
+  terraform apply
 ```
 
 ### Recursos da Aplicação
@@ -197,7 +197,7 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 Executar o comando abaixo, passando como parâmetro o valor das variáveis contendo as TAGs das imagens no Docker Hub.
 
 ```bash
-  terraform apply -auto-approve -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
+  terraform apply -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
 ```
 
 #### Como Deletar todo o Ambiente
