@@ -12,7 +12,7 @@ use App\Infrastructure\Gateway\OrdemGateway;
 use App\Exception\DomainHttpException;
 use App\Infrastructure\Gateway\ServicoGateway;
 
-class removeServiceUseCase
+class RemoveServiceUseCase
 {
     public function __construct(public readonly OrdemGateway $ordemGateway, public readonly ServicoGateway $servicoGateway) {}
 
