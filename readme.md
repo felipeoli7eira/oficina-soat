@@ -39,6 +39,10 @@ O **PostgreSQL** é uma escolha de longo prazo segura, [preparada para o futuro]
 
 # Documentação sobre infra
 
+## Desenho do Arquitetura
+
+![clean-arch.png](./docs/img/arquitetura-kubernetes.png)
+
 ## 🐳 Deploy da Aplicação
 
 - Foram escritos 2 arquivos Dockerfile que estão na pasta **./build/backend**
