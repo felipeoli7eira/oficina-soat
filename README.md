@@ -1,6 +1,6 @@
 # Oficina SOAT
 
-_Tech challenge_ da pós tech em arquitetura de software - FIAP
+_Tech challenge_ da pós tech em arquitetura de software - FIAP Fase 2
 
 # Alunos
 
@@ -18,8 +18,8 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
     - LinkedIn: [@William Francisco Leite](https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 
 # Material
-- [Vídeo de apresentação](https://youtu.be/LR9RVo93RMQ)
-- [Documento de entrega - PDF](https://docs.google.com/document/d/1_qPgbBC32TNpTJXttlJKYTJUsvqLhWWISQJlgQUQ_4M/edit?usp=sharing)
+- [Vídeo de apresentação](https://www.youtube.com/watch?v=POC_FaWt39E)
+- [Documento de entrega - PDF](https://drive.google.com/file/d/1Xl_8YgZHRIELfM3yCWjbswp4tD7Gxoin/view?usp=drive_link)
 
 # Sobre o projeto
 Este projeto foi desenvolvido com [Laravel](https://laravel.com), [nginx](https://nginx.org) e [postgresql](https://www.postgresql.org) e por volta dessas 3 tecnologias, está o [docker](https://www.docker.com)/[docker compose](https://docs.docker.com/compose) e toda uma arquitetura com kubernetes que entraremos em mais detalhes em seções posteriores.
