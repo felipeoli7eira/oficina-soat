@@ -311,6 +311,15 @@ Clique nas setinhas em cada endpoint para ver os exemplos de respostas:
 
 ![variaveis-postman.png](./docs/img/exemplo-respostas-aberto.png)
 
+# Fluxo principal da API
+Sem dúvidas, o fluxo principal da API é o cadastro e gestão de ordens de serviço. Nosso fluxo de cadastro de ordens funciona da seguinte forma:
+
+- Cadastro da ordem: informando somente uuid do cliente e veículo
+- Cadastro de materiais (peças e insumos) na OS: use o endpoint dentro de `ordem/ordem-material/adiciona material`
+- Cadastro de serviços na OS: use o endpoint dentro de `ordem/ordem-servico/adiciona servico`
+
+Feito isso, a ordem estará montada com os materiais necessários e serviços que serão executados. Feito isso, as próximas ações a serem tomadas, são de atualização de status. Para isso use o endpoint `ordem/update status`.
+
 # Clean architecture
 
 O projeto foi organizado usando clean architecture. Essa organização pode ser vista dentro da pasta `backend/app` e vamos entrar em detalhesa agora.
@@ -327,12 +336,12 @@ Algumas boas práticas e padrões foram adotados para desenvoler o projeto, como
 
 Nossos métodos possuem nomes simples e claros, que demonstram o que fazem, como por exemplo:
 ```php
-    public function validarNome(): void
-    {
-        if (strlen(trim($this->nome)) < 3) {
-            throw new InvalidArgumentException('Nome deve ter pelo menos 3 caracteres');
-        }
+public function validarNome(): void
+{
+    if (strlen(trim($this->nome)) < 3) {
+        throw new InvalidArgumentException('Nome deve ter pelo menos 3 caracteres');
     }
+}
 ```
 
 Codificamos para interfaces e não para implementações concretas, como é o caso da interface que gera o JWT:
@@ -350,4 +359,4 @@ Nossas dependências são de fora para dentro:
 
 ![clean-arch.png](./docs/img/clean-arch.png)
 
-Nossas regras de negócio estão seguras nos _use cases_ e _enenties_, conforme deve ser.
+Nossas regras de negócio estão seguras nos _use cases_ e _entities_, conforme deve ser.
