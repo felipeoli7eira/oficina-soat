@@ -18,7 +18,6 @@ _Tech challenge_ da pós tech em arquitetura de software - FIAP
     - LinkedIn: [@William Francisco Leite](https://www.linkedin.com/in/william-francisco-leite-9b3ba9269/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 
 # Material
-- [Documentação DDD](https://miro.com/app/board/uXjVIgj8PiU=/?share_link_id=264509076152)
 - [Vídeo de apresentação](https://youtu.be/LR9RVo93RMQ)
 - [Documento de entrega - PDF](https://docs.google.com/document/d/1_qPgbBC32TNpTJXttlJKYTJUsvqLhWWISQJlgQUQ_4M/edit?usp=sharing)
 
@@ -39,7 +38,7 @@ O **PostgreSQL** é uma escolha de longo prazo segura, [preparada para o futuro]
 
 # Documentação sobre infra
 
-## Desenho do Arquitetura
+## Desenho da Arquitetura
 
 ![clean-arch.png](./docs/img/arquitetura-kubernetes.png)
 
