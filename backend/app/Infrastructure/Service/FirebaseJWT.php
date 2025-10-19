@@ -48,6 +48,17 @@ class FirebaseJWT implements TokenHandlerContract
         return $token;
     }
 
+    public function decode(string $token): ?array
+    {
+        try {
+            $decoded = JWT::decode($token, new Key($this->secret, $this->algo));
+        } catch (Exception $err) {
+            return null;
+        }
+
+        return (array) $decoded;
+    }
+
     // public function validate(string $token): ?JsonWebTokenFragment
     // {
     //     try {

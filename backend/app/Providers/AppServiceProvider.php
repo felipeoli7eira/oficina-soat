@@ -36,46 +36,46 @@ class AppServiceProvider extends ServiceProvider
         // );
 
         // "servicos" repository binding
-        $this->app->bind(
-            ServicoRepository::class,
-            ServicoEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     ServicoRepository::class,
+        //     ServicoEloquentRepository::class
+        // );
 
         // "material" repository binding
-        $this->app->bind(
-            MaterialRepository::class,
-            MaterialEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     MaterialRepository::class,
+        //     MaterialEloquentRepository::class
+        // );
 
         // "cliente" repository binding
-        $this->app->bind(
-            ClienteRepository::class,
-            ClienteEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     ClienteRepository::class,
+        //     ClienteEloquentRepository::class
+        // );
 
         // "veiculo" repository binding
-        $this->app->bind(
-            VeiculoRepository::class,
-            VeiculoEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     VeiculoRepository::class,
+        //     VeiculoEloquentRepository::class
+        // );
 
         // "ordem" repository binding
-        $this->app->bind(
-            OrdemRepository::class,
-            OrdemEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     OrdemRepository::class,
+        //     OrdemEloquentRepository::class
+        // );
 
         // "token" service binding
-        $this->app->bind(
-            TokenServiceInterface::class,
-            JsonWebToken::class
-        );
+        // $this->app->bind(
+        //     TokenServiceInterface::class,
+        //     JsonWebToken::class
+        // );
 
         // "auth" service binding
-        $this->app->bind(
-            AuthServiceInterface::class,
-            LaravelAuthService::class
-        );
+        // $this->app->bind(
+        //     AuthServiceInterface::class,
+        //     LaravelAuthService::class
+        // );
 
 
 

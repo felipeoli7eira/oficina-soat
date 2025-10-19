@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api([
-            'auth:jwt' => JsonWebTokenMiddleware::class
+            'app-web-token' => JsonWebTokenMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

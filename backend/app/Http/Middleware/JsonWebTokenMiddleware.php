@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Domain\Contract\TokenHandlerContract;
 use Closure;
 use Illuminate\Http\Request;
-use App\Signature\TokenServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
-use App\Domain\Entity\Usuario\RepositorioInterface as UsuarioRepositorio;
+use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 
 class JsonWebTokenMiddleware
 {
     public function __construct(
-        private TokenServiceInterface $tokenService,
-        private UsuarioRepositorio $usuarioRepositorio,
+        public readonly TokenHandlerContract $tokenHandler,
+        public readonly UsuarioRepository $usuarioRepository,
     ) {}
 
     public function handle(Request $request, Closure $nextRequest)
@@ -23,30 +23,30 @@ class JsonWebTokenMiddleware
 
         $responseErr = [
             'err' => true,
-            'msg' => 'Informe as credenciais de autenticação',
+            'msg' => 'Credenciais não informadas',
         ];
 
-        if (! $token) {
+        if ($token === null) {
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
-        $claims = $this->tokenService->validate($token);
+        $dadosDoToken = $this->tokenHandler->decode($token);
 
-        if ($claims === null) {
-            $responseErr['msg'] = 'Token inválido';
+        if ($dadosDoToken === null) {
+            $responseErr['msg'] = 'Credenciais inválidas';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
-        // Carrega usuário
-        $user = $this->usuarioRepositorio->encontrarPorIdentificadorUnico($claims->sub, 'uuid');
+        // Carrega o usuário na request
+        $usuario = $this->usuarioRepository->findOneBy('uuid', $dadosDoToken['sub']);
 
-        if ($user === null) {
+        if ($usuario === null) {
             $responseErr['msg'] = 'É necessário autenticação para acessar este recurso';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 
         // injeta usuário na request
-        $request->attributes->set('user', $user);
+        $request->attributes->set('user', $usuario);
 
         return $nextRequest($request);
     }
