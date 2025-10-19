@@ -1,9 +1,14 @@
 <?php
 
-use App\Http\UsuarioApi;
 use Illuminate\Support\Facades\Route;
+use App\Infrastructure\Web\UsuarioWebController;
+use App\Http\Middleware\JsonWebTokenMiddleware;
 
-Route::post('/usuario', [UsuarioApi::class, 'create']);
-Route::get('/usuario', [UsuarioApi::class, 'read']);
-Route::put('/usuario/{uuid}', [UsuarioApi::class, 'update']);
-Route::delete('/usuario/{uuid}', [UsuarioApi::class, 'delete']);
+Route::withoutMiddleware(JsonWebTokenMiddleware::class)->group(function () {
+    Route::get('/usuario', [UsuarioWebController::class, 'read']);
+    Route::get('/usuario/{uuid}', [UsuarioWebController::class, 'readOneByUuid']);
+    Route::post('/usuario', [UsuarioWebController::class, 'create']);
+
+    // Route::put('/usuario/{uuid}', [UsuarioApi::class, 'update']);
+    // Route::delete('/usuario/{uuid}', [UsuarioApi::class, 'delete']);
+});

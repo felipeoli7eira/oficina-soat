@@ -30,10 +30,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // "usuario" repository binding
-        $this->app->bind(
-            UsuarioRepository::class,
-            UsuarioEloquentRepository::class
-        );
+        // $this->app->bind(
+        //     UsuarioRepository::class,
+        //     \App\Infrastructure\Repositories\UsuarioArrayRepository::class
+        // );
 
         // "servicos" repository binding
         $this->app->bind(
@@ -75,6 +75,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthServiceInterface::class,
             LaravelAuthService::class
+        );
+
+
+
+        // ------------ FASE 3 ------------ //
+
+        $this->app->bind(
+            \App\Domain\Usuario\RepositoryContract::class,
+            \App\Infrastructure\Repositories\UsuarioFileRepository::class
         );
     }
 
