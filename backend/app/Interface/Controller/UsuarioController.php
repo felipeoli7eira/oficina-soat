@@ -20,7 +20,16 @@ use RuntimeException;
 
 class UsuarioController
 {
+    private string $authenticatedUserUuid = '';
+
     public function __construct(public readonly UsuarioRepository $repo) {}
+
+    public function authenticatedUser(string $authenticatedUserUuid): self
+    {
+        $this->authenticatedUserUuid = $authenticatedUserUuid;
+
+        return $this;
+    }
 
     /**
      * @param array $readParams Filtros, ordenações, paginação, etc.
@@ -78,12 +87,16 @@ class UsuarioController
             throw new RuntimeException('Fonte de dados não definida');
         }
 
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
+
         $gateway = new UsuarioGateway($this->repo);
 
         $useCase = new DeleteUseCase($uuid);
         $useCase->useGateway($gateway);
 
-        return $useCase->handle();
+        return $useCase->handle($this->authenticatedUserUuid);
     }
 
     public function update(string $uuid, array $novosDados): array

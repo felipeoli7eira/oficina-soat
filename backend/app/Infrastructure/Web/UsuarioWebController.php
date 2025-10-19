@@ -147,7 +147,7 @@ class UsuarioWebController extends WebController
         try {
             $dados = $validacao->validated();
 
-            $data = $this->usuarioController->delete($dados['uuid']);
+            $data = $this->usuarioController->authenticatedUser($req->get('user')['uuid'])->delete($dados['uuid']);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {

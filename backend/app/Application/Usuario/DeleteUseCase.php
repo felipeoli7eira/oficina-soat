@@ -23,16 +23,30 @@ final class DeleteUseCase
         return $this;
     }
 
-    public function handle(): bool
+    public function handle(string $authenticatedUserUuid): bool
     {
+        if (empty(trim($authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
+
         if ($this->gateway instanceof UsuarioGateway === false) {
             throw new RuntimeException('Gateway não definido');
+        }
+
+        $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
+
+        if ($authenticatedUser === null) {
+            throw new DomainHttpException('O usuário com as credenciais informadas não foi encontrado', 404);
+        }
+
+        if ($authenticatedUser['perfil'] !== ProfileEnum::ADMIN->value) {
+            throw new DomainHttpException('Você não tem permissão para realizar essa ação. Somente um administrador pode finalizar um cadastro.', 404);
         }
 
         $rawData = $this->gateway->findOneBy('uuid', $this->uuid);
 
         if ($rawData === null) {
-            throw new DomainHttpException('Não encontrado(a)', 404);
+            throw new DomainHttpException('Usuário com o identificador informado não foi encontrado(a)', 404);
         }
 
         $domainEntity = new Entity(
