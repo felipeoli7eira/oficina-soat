@@ -53,6 +53,41 @@ class UsuarioWebController extends WebController
         return $this->successResponse('Sucesso', 201, ['data' => $data]);
     }
 
+    public function createUnauthenticated(Request $req)
+    {
+        // validacoes basicas sem regra de negocio
+
+        $validacao = Validator::make($req->only(['nome', 'email', 'senha', 'perfil']), [
+            'nome'      => ['required', 'string'],
+            'email'     => ['required', 'string', 'email'],
+            'senha'     => ['required', 'string'],
+            'perfil'    => ['required', 'string'],
+        ]);
+
+        $validacao->stopOnFirstFailure(true);
+
+        if ($validacao->fails()) {
+            return $this->errResponse($validacao->errors()->first(), 400);
+        }
+
+        $dados = $validacao->validated();
+
+        try {
+            $data = $this->usuarioController->createUnauthenticated(
+                $dados['nome'],
+                $dados['email'],
+                $dados['senha'],
+                $dados['perfil'],
+            );
+        } catch (DomainHttpException $err) {
+            return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
+        } catch (Throwable $err) {
+            return $this->useException($err)->errResponse('Erro no procedimento', 500);
+        }
+
+        return $this->successResponse('Sucesso', 201, ['data' => $data]);
+    }
+
     public function read(Request $req)
     {
         try {

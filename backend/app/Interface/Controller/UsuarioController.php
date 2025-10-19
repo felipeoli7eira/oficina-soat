@@ -11,6 +11,8 @@ use App\Application\Usuario\DeleteUseCase;
 use App\Application\Usuario\UpdateUseCase;
 use App\Application\Usuario\PasswordVerifyUseCase;
 use App\Application\Usuario\AuthenticateUseCase;
+use App\Application\Usuario\CreateUnauthenticatedUseCase;
+
 use App\Domain\Contract\TokenHandlerContract;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 use App\Exception\DomainHttpException;
@@ -59,6 +61,26 @@ class UsuarioController
         $useCase = new ReadOneByUuidUseCase($gateway);
 
         return $useCase->handle($uuid);
+    }
+
+    public function createUnauthenticated(string $nome, string $email, string $senhaAcessoSistema, string $perfil, bool $ativo = true)
+    {
+        if ($this->repo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
+
+        $gateway = new UsuarioGateway($this->repo);
+
+        $useCase = new CreateUnauthenticatedUseCase(
+            $nome,
+            $email,
+            $senhaAcessoSistema,
+            $perfil,
+            $ativo,
+        );
+        $useCase->useGateway($gateway);
+
+        return $useCase->handle();
     }
 
     public function create(string $nome, string $email, string $senhaAcessoSistema, string $perfil, bool $ativo = true)
