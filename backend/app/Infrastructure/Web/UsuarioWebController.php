@@ -150,14 +150,11 @@ class UsuarioWebController extends WebController
         try {
             $dados = $validacao->validated();
 
-            $dadosUpdate = [
-                'nome' => $dados['nome'],
-                'email' => $dados['email'],
-                'senha' => $dados['senha'],
-                'perfil' => $dados['perfil'],
-            ];
+            $usuarioAutenticado = $req->get('user');
 
-            $res = $this->usuarioController->update($dados['uuid'], $dadosUpdate);
+            $res = $this->usuarioController
+                ->authenticatedUser($usuarioAutenticado['uuid'])
+                ->update($dados['uuid'], $dados);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {

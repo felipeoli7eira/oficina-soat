@@ -69,7 +69,7 @@ final class Entity
         }
 
         if (isset($novosDados['senha'])) {
-            $this->senhaAcessoSistema = $novosDados['senha'];
+            $this->senhaAcessoSistema = password_hash($novosDados['senha'], PASSWORD_BCRYPT);
         }
 
         if (isset($novosDados['perfil'])) {
