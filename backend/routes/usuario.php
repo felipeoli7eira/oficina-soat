@@ -10,5 +10,5 @@ Route::withoutMiddleware(JsonWebTokenMiddleware::class)->group(function () {
     Route::post('/usuario', [UsuarioWebController::class, 'create']);
 
     // Route::put('/usuario/{uuid}', [UsuarioApi::class, 'update']);
-    // Route::delete('/usuario/{uuid}', [UsuarioApi::class, 'delete']);
+    Route::delete('/usuario/{uuid}', [UsuarioWebController::class, 'delete']);
 });

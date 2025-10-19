@@ -9,6 +9,7 @@ use App\Domain\Usuario\ProfileEnum;
 use App\Interface\Gateway\UsuarioGateway;
 use DateTime;
 use RuntimeException;
+use \App\Exception\DomainHttpException;
 
 final class ReadUseCase
 {

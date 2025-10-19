@@ -11,24 +11,32 @@ use DateTime;
 use RuntimeException;
 use \App\Exception\DomainHttpException;
 
-final class ReadOneByUuidUseCase
+final class DeleteUseCase
 {
-    public function __construct(public readonly UsuarioGateway $gateway) {}
+    private ?UsuarioGateway $gateway = null;
 
-    public function handle(string $uuid): array
+    public function __construct(public readonly string $uuid) {}
+
+    public function useGateway(UsuarioGateway $gateway): self
+    {
+        $this->gateway = $gateway;
+        return $this;
+    }
+
+    public function handle(): bool
     {
         if ($this->gateway instanceof UsuarioGateway === false) {
             throw new RuntimeException('Gateway não definido');
         }
 
-        $rawData = $this->gateway->findOneBy('uuid', $uuid);
+        $rawData = $this->gateway->findOneBy('uuid', $this->uuid);
 
         if ($rawData === null) {
             throw new DomainHttpException('Não encontrado(a)', 404);
         }
 
         $domainEntity = new Entity(
-            $rawData['uuid'] ?? '',
+            $rawData['uuid'],
             $rawData['nome'],
             $rawData['email'],
             $rawData['senha'],
@@ -41,6 +49,10 @@ final class ReadOneByUuidUseCase
             isset($rawData['deletado_em']) ? new DateTime($rawData['deletado_em']) : null,
         );
 
-        return $domainEntity->toExternal();
+        $domainEntity->delete();
+
+        $res = $this->gateway->delete($domainEntity->asArray());
+
+        return $res;
     }
 }

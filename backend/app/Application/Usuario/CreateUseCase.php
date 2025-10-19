@@ -9,10 +9,10 @@ use App\Domain\Usuario\ProfileEnum;
 use App\Interface\Gateway\UsuarioGateway;
 use DateTime;
 use RuntimeException;
+use \App\Exception\DomainHttpException;
 
 final class CreateUseCase
 {
-    private array $dados;
     private ?UsuarioGateway $gateway = null;
 
     public function __construct(
@@ -36,7 +36,7 @@ final class CreateUseCase
         }
 
         if (!is_null($this->gateway->findOneBy('email', $this->email))) {
-            throw new \App\Exception\DomainHttpException('Já existe um usuário com este e-mail', 400);
+            throw new DomainHttpException('Já existe um usuário com este e-mail', 400);
         }
 
         $entity = new Entity(

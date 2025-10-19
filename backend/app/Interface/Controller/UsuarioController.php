@@ -7,6 +7,7 @@ namespace App\Interface\Controller;
 use App\Application\Usuario\CreateUseCase;
 use App\Application\Usuario\ReadUseCase;
 use App\Application\Usuario\ReadOneByUuidUseCase;
+use App\Application\Usuario\DeleteUseCase;
 
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 
@@ -21,7 +22,7 @@ class UsuarioController
     /**
      * @param array $readParams Filtros, ordenações, paginação, etc.
      * @return array
-    */
+     */
     public function read(array $readParams = []): array
     {
         if ($this->repo instanceof UsuarioRepository === false) {
@@ -63,7 +64,20 @@ class UsuarioController
             $perfil,
             $ativo,
         );
+        $useCase->useGateway($gateway);
 
+        return $useCase->handle();
+    }
+
+    public function delete(string $uuid): bool
+    {
+        if ($this->repo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
+
+        $gateway = new UsuarioGateway($this->repo);
+
+        $useCase = new DeleteUseCase($uuid);
         $useCase->useGateway($gateway);
 
         return $useCase->handle();

@@ -26,4 +26,9 @@ class UsuarioGateway
             $value
         );
     }
+
+    public function delete(array $data): bool
+    {
+        return $this->repo->delete($data);
+    }
 }
