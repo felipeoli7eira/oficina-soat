@@ -67,6 +67,10 @@ class UsuarioController
             throw new RuntimeException('Fonte de dados não definida');
         }
 
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
+
         $gateway = new UsuarioGateway($this->repo);
 
         $useCase = new CreateUseCase(
@@ -78,7 +82,7 @@ class UsuarioController
         );
         $useCase->useGateway($gateway);
 
-        return $useCase->handle();
+        return $useCase->handle($this->authenticatedUserUuid);
     }
 
     public function delete(string $uuid): bool

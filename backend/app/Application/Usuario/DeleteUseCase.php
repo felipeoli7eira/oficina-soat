@@ -36,7 +36,7 @@ final class DeleteUseCase
         $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
 
         if ($authenticatedUser === null) {
-            throw new DomainHttpException('O usuário com as credenciais informadas não foi encontrado', 404);
+            throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
         }
 
         if ($authenticatedUser['perfil'] !== ProfileEnum::ADMIN->value) {

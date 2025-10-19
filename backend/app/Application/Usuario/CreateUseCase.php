@@ -29,10 +29,25 @@ final class CreateUseCase
         return $this;
     }
 
-    public function handle(): array
+    public function handle(string $authenticatedUserUuid): array
     {
+        if (empty(trim($authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
+
         if ($this->gateway instanceof UsuarioGateway === false) {
             throw new RuntimeException('Gateway não definido');
+        }
+
+        $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
+
+        if ($authenticatedUser === null) {
+            throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
+        }
+
+        // Um usuario so pode cadastrar alguem do mesmo perfil que ele, a menos que ele seja um admin.
+        if ($authenticatedUser['perfil'] !== ProfileEnum::ADMIN->value && $authenticatedUser['perfil'] !== $this->perfil) {
+            throw new DomainHttpException('Você não tem permissão para realizar essa ação. Somente um administrador pode cadastrar um usuário com o perfil informado', 404);
         }
 
         if (!is_null($this->gateway->findOneBy('email', $this->email))) {

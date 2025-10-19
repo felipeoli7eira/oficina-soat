@@ -35,8 +35,10 @@ class UsuarioWebController extends WebController
 
         $dados = $validacao->validated();
 
+        $authenticatedUserUuid = $req->get('user')['uuid'];
+
         try {
-            $data = $this->usuarioController->create(
+            $data = $this->usuarioController->authenticatedUser($authenticatedUserUuid)->create(
                 $dados['nome'],
                 $dados['email'],
                 $dados['senha'],
@@ -147,7 +149,9 @@ class UsuarioWebController extends WebController
         try {
             $dados = $validacao->validated();
 
-            $data = $this->usuarioController->authenticatedUser($req->get('user')['uuid'])->delete($dados['uuid']);
+            $authenticatedUserUuid = $req->get('user')['uuid'];
+
+            $data = $this->usuarioController->authenticatedUser($authenticatedUserUuid)->delete($dados['uuid']);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {
