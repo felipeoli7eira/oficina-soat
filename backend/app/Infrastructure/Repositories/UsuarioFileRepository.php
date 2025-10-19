@@ -112,4 +112,39 @@ class UsuarioFileRepository implements \App\Domain\Usuario\RepositoryContract
 
         return true;
     }
+
+    /**
+     * @return int linhas afetadas pelo update
+     */
+    public function update(string $uuid, array $novosDados): int
+    {
+        $database = Storage::disk('local')->get('database/database.json');
+
+        $database = json_decode($database, true);
+
+        if (!isset($database['usuarios']) || !is_array($database['usuarios'])) {
+            return 0;
+        }
+
+        $key = array_find_key($database['usuarios'], fn($u) => $u['uuid'] === $uuid);
+
+        if ($key === null) {
+            return 0;
+        }
+
+        /** @var array $dadosAtuais Os dados encontrados no banco de dados antes do update */
+        $dadosAtuais = $database['usuarios'][$key];
+
+        $novos = array_merge($dadosAtuais, $novosDados);
+
+        $database['usuarios'][$key] = $novos;
+
+        $updated = Storage::disk('local')->put('database/database.json', json_encode($database));
+
+        if (! $updated) {
+            return 0;
+        }
+
+        return 1;
+    }
 }

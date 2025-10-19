@@ -57,4 +57,29 @@ final class Entity
         $this->atualizadoEm = new DateTime();
         $this->deletadoEm = new DateTime();
     }
+
+    public function update(array $novosDados): void
+    {
+        if (isset($novosDados['nome'])) {
+            $this->nome = $novosDados['nome'];
+        }
+
+        if (isset($novosDados['email'])) {
+            $this->email = $novosDados['email'];
+        }
+
+        if (isset($novosDados['senha'])) {
+            $this->senhaAcessoSistema = $novosDados['senha'];
+        }
+
+        if (isset($novosDados['perfil'])) {
+            $this->perfil = ProfileEnum::from($novosDados['perfil']);
+        }
+
+        if (isset($novosDados['ativo'])) {
+            $this->ativo = $novosDados['ativo'];
+        }
+
+        $this->atualizadoEm = new DateTime();
+    }
 }

@@ -8,6 +8,7 @@ use App\Application\Usuario\CreateUseCase;
 use App\Application\Usuario\ReadUseCase;
 use App\Application\Usuario\ReadOneByUuidUseCase;
 use App\Application\Usuario\DeleteUseCase;
+use App\Application\Usuario\UpdateUseCase;
 
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 
@@ -81,5 +82,21 @@ class UsuarioController
         $useCase->useGateway($gateway);
 
         return $useCase->handle();
+    }
+
+    public function update(string $uuid, array $novosDados): array
+    {
+        if ($this->repo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
+
+        $gateway = new UsuarioGateway($this->repo);
+
+        $useCase = new UpdateUseCase($uuid, $novosDados);
+        $useCase->useGateway($gateway);
+
+        $res = $useCase->handle();
+
+        return $res;
     }
 }

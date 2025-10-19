@@ -31,4 +31,9 @@ class UsuarioGateway
     {
         return $this->repo->delete($data);
     }
+
+    public function update(string $uuid, array $data): int
+    {
+        return $this->repo->update($uuid, $data);
+    }
 }

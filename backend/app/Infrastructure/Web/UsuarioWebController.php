@@ -90,7 +90,44 @@ class UsuarioWebController extends WebController
         return $this->successResponse('Sucesso', 200, ['data' => $data]);
     }
 
-    public function update() {}
+    public function update(Request $req)
+    {
+        // validacoes basicas sem regra de negocio
+
+        $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'email', 'senha', 'perfil', 'ativo']), [
+            'uuid'   => ['required', 'string', 'uuid'],
+            'nome'   => ['nullable', 'string'],
+            'email'  => ['nullable', 'string', 'email'],
+            'senha'  => ['nullable', 'string'],
+            'perfil' => ['nullable', 'string'],
+            'ativo'  => ['nullable', 'boolean'],
+        ]);
+
+        $validacao->stopOnFirstFailure(true);
+
+        if ($validacao->fails()) {
+            return $this->errResponse($validacao->errors()->first(), 400);
+        }
+
+        try {
+            $dados = $validacao->validated();
+
+            $dadosUpdate = [
+                'nome' => $dados['nome'],
+                'email' => $dados['email'],
+                'senha' => $dados['senha'],
+                'perfil' => $dados['perfil'],
+            ];
+
+            $res = $this->usuarioController->update($dados['uuid'], $dadosUpdate);
+        } catch (DomainHttpException $err) {
+            return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
+        } catch (Throwable $err) {
+            return $this->useException($err)->errResponse('Erro no procedimento', 500);
+        }
+
+        return $this->successResponse('Sucesso', 200, ['data' => $res]);
+    }
 
     public function delete(Request $req)
     {
