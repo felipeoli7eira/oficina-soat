@@ -9,9 +9,11 @@ use App\Application\Usuario\ReadUseCase;
 use App\Application\Usuario\ReadOneByUuidUseCase;
 use App\Application\Usuario\DeleteUseCase;
 use App\Application\Usuario\UpdateUseCase;
-
+use App\Application\Usuario\PasswordVerifyUseCase;
+use App\Application\Usuario\AuthenticateUseCase;
+use App\Domain\Contract\TokenHandlerContract;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
-
+use App\Exception\DomainHttpException;
 use App\Interface\Gateway\UsuarioGateway;
 
 use RuntimeException;
@@ -98,5 +100,24 @@ class UsuarioController
         $res = $useCase->handle();
 
         return $res;
+    }
+
+    public function getAuthJwt(string $email, string $senhaAcessoSistema, TokenHandlerContract $tokenHandler): string
+    {
+        if ($this->repo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
+
+        $gateway = new UsuarioGateway($this->repo);
+
+        $passwordVerifyUseCase = new PasswordVerifyUseCase($email, $senhaAcessoSistema);
+        $passwordVerifyUseCase->useGateway($gateway);
+
+        $dadosEntity = $passwordVerifyUseCase->handle();
+
+        $generateTokenUseCase = new AuthenticateUseCase($dadosEntity, $tokenHandler);
+        $token = $generateTokenUseCase->handle();
+
+        return $token;
     }
 }

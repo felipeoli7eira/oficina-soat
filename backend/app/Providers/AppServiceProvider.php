@@ -85,6 +85,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\Usuario\RepositoryContract::class,
             \App\Infrastructure\Repositories\UsuarioFileRepository::class
         );
+
+        $this->app->bind(
+            \App\Domain\Contract\TokenHandlerContract::class,
+            \App\Infrastructure\Service\FirebaseJWT::class
+        );
     }
 
     /**

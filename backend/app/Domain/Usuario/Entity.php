@@ -9,17 +9,17 @@ use DateTime;
 final class Entity
 {
     public function __construct(
-        private string $uuid,
-        private string $nome,
-        private string $email,
-        private string $senhaAcessoSistema,
-        private bool $ativo,
+        public string $uuid,
+        public string $nome,
+        public string $email,
+        public string $senhaAcessoSistema,
+        public bool $ativo,
 
-        private ProfileEnum $perfil,
+        public ProfileEnum $perfil,
 
-        private DateTime $cadastradoEm,
-        private ?DateTime $atualizadoEm = null,
-        private ?DateTime $deletadoEm = null,
+        public DateTime $cadastradoEm,
+        public ?DateTime $atualizadoEm = null,
+        public ?DateTime $deletadoEm = null,
     ) {}
 
     public function asArray(): array
@@ -43,11 +43,11 @@ final class Entity
             'uuid'          => $this->uuid,
             'nome'          => $this->nome,
             'email'         => $this->email,
-            'ativo'         => $this->ativo,
+            // 'ativo'         => $this->ativo,
             'perfil'        => $this->perfil->value,
             'criado_em'     => $this->cadastradoEm->format('d/m/Y H:i:s'),
             'atualizado_em' => isset($this->atualizadoEm) ? $this->atualizadoEm->format('d/m/Y H:i:s') : null,
-            'deletado_em'   => isset($this->deletadoEm) ? $this->deletadoEm->format('d/m/Y H:i:s') : null,
+            // 'deletado_em'   => isset($this->deletadoEm) ? $this->deletadoEm->format('d/m/Y H:i:s') : null,
         ];
     }
 
@@ -81,5 +81,10 @@ final class Entity
         }
 
         $this->atualizadoEm = new DateTime();
+    }
+
+    public function passwordVerify(string $plainTextPassword): bool
+    {
+        return password_verify($plainTextPassword, $this->senhaAcessoSistema);
     }
 }

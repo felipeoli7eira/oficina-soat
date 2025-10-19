@@ -43,7 +43,7 @@ final class CreateUseCase
             '',
             $this->nome,
             $this->email,
-            $this->senhaAcessoSistema,
+            password_hash($this->senhaAcessoSistema, PASSWORD_BCRYPT),
             $this->ativo,
 
             ProfileEnum::from($this->perfil),
@@ -53,6 +53,9 @@ final class CreateUseCase
 
         $res = $this->gateway->create($entity->asArray());
 
-        return $res;
+        $entity->uuid = $res['uuid'];
+        $entity->cadastradoEm = new DateTime($res['cadastrado_em']);
+
+        return $entity->toExternal();
     }
 }

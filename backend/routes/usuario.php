@@ -11,4 +11,6 @@ Route::withoutMiddleware(JsonWebTokenMiddleware::class)->group(function () {
 
     Route::put('/usuario/{uuid}', [UsuarioWebController::class, 'update']);
     Route::delete('/usuario/{uuid}', [UsuarioWebController::class, 'delete']);
+
+    Route::post('/usuario/auth/login', [UsuarioWebController::class, 'getAuthJwt']);
 });

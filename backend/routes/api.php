@@ -24,10 +24,6 @@ Route::fallback(fn() => response()->json([
 ]));
 
 
-// auth
-
-Route::post('auth/login', [Authentication::class, 'authenticate'])->withoutMiddleware(JsonWebTokenMiddleware::class);
-
 Route::withoutMiddleware(JsonWebTokenMiddleware::class)->get('/media-exec-ordem', function () {
     $ordens = OrdemModel::query()
         ->where('status', Entidade::STATUS_FINALIZADA)
