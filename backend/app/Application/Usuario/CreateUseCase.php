@@ -41,7 +41,7 @@ final class CreateUseCase
 
         $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
 
-        if ($authenticatedUser === null) {
+        if ($authenticatedUser === null || (is_array($authenticatedUser) && sizeof($authenticatedUser) === 0) || (is_array($authenticatedUser['uuid']) && !isset($authenticatedUser['uuid']))) {
             throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
         }
 
@@ -50,7 +50,9 @@ final class CreateUseCase
             throw new DomainHttpException('Você não tem permissão para realizar essa ação. Somente um administrador pode cadastrar um usuário com o perfil informado', 404);
         }
 
-        if (!is_null($this->gateway->findOneBy('email', $this->email))) {
+        $usuarioComMesmoEmail = $this->gateway->findOneBy('email', $this->email);
+
+        if (is_array($usuarioComMesmoEmail) && sizeof($usuarioComMesmoEmail) && isset($usuarioComMesmoEmail['uuid'])) {
             throw new DomainHttpException('Já existe um usuário com este e-mail', 400);
         }
 
@@ -69,7 +71,7 @@ final class CreateUseCase
         $res = $this->gateway->create($entity->asArray());
 
         $entity->uuid = $res['uuid'];
-        $entity->cadastradoEm = new DateTime($res['cadastrado_em']);
+        $entity->cadastradoEm = new DateTime($res['criado_em']);
 
         return $entity->toExternal();
     }

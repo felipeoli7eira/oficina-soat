@@ -31,7 +31,7 @@ final class PasswordVerifyUseCase
 
         $rawData = $this->gateway->findOneBy('email', $this->email);
 
-        if ($rawData === null) {
+        if ($rawData === null || sizeof($rawData) === 0 || !isset($rawData['uuid'])) {
             throw new DomainHttpException('Não encontrado(a)', 404);
         }
 

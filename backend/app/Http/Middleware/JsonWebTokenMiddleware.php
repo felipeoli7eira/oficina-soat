@@ -40,7 +40,7 @@ class JsonWebTokenMiddleware
         // Carrega o usuário na request
         $usuario = $this->usuarioRepository->findOneBy('uuid', $dadosDoToken['sub']);
 
-        if ($usuario === null) {
+        if ($usuario === null || sizeof($usuario) === 0 || !isset($usuario['uuid'])) {
             $responseErr['msg'] = 'É necessário autenticação para acessar este recurso';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }

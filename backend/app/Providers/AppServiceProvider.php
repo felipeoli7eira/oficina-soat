@@ -81,14 +81,24 @@ class AppServiceProvider extends ServiceProvider
 
         // ------------ FASE 3 ------------ //
 
+        // Camada de infra
+
         $this->app->bind(
-            \App\Domain\Usuario\RepositoryContract::class,
-            \App\Infrastructure\Repositories\UsuarioFileRepository::class
+            \App\Infrastructure\Service\UuidGenerator\UuidGeneratorContract::class,
+            \App\Infrastructure\Service\UuidGenerator\LaravelUuidFacadeGenerator::class
         );
 
         $this->app->bind(
             \App\Domain\Contract\TokenHandlerContract::class,
             \App\Infrastructure\Service\FirebaseJWT::class
+        );
+
+        // Repositorios
+
+        $this->app->bind(
+            \App\Domain\Usuario\RepositoryContract::class,
+            // \App\Infrastructure\Repositories\UsuarioFileRepository::class
+            \App\Infrastructure\Repositories\UsuarioPostgresEloquentRepo::class
         );
     }
 

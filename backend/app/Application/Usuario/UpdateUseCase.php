@@ -35,13 +35,13 @@ final class UpdateUseCase
 
         $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
 
-        if ($authenticatedUser === null) {
+        if ($authenticatedUser === null || (is_array($authenticatedUser) && sizeof($authenticatedUser) === 0) || (is_array($authenticatedUser) && !isset($authenticatedUser['uuid']))) {
             throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
         }
 
         $usuarioDoUuidInformado = $this->gateway->findOneBy('uuid', $this->uuid);
 
-        if ($usuarioDoUuidInformado === null) {
+        if ($usuarioDoUuidInformado === null || (is_array($usuarioDoUuidInformado) && sizeof($usuarioDoUuidInformado) === 0) || (is_array($usuarioDoUuidInformado) && !isset($usuarioDoUuidInformado['uuid']))) {
             throw new DomainHttpException('Usuário informado não encontrado', 404);
         }
 
@@ -70,7 +70,7 @@ final class UpdateUseCase
 
             ProfileEnum::from($usuarioDoUuidInformado['perfil']),
 
-            new DateTime($usuarioDoUuidInformado['cadastrado_em']),
+            new DateTime($usuarioDoUuidInformado['criado_em']),
             new DateTime(),
         );
 

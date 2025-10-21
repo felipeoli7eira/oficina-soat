@@ -8,6 +8,9 @@ use DateTime;
 
 final class Entity
 {
+    public const STATUS_ATIVO = true;
+    public const STATUS_INATIVO = false;
+
     public function __construct(
         public string $uuid,
         public string $nome,
