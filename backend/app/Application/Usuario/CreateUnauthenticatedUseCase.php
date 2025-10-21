@@ -54,7 +54,7 @@ final class CreateUnauthenticatedUseCase
         $res = $this->gateway->create($entity->asArray());
 
         $entity->uuid = $res['uuid'];
-        $entity->cadastradoEm = new DateTime($res['cadastrado_em']);
+        $entity->cadastradoEm = new DateTime($res['criado_em']);
 
         return $entity->toExternal();
     }
