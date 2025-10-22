@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\ClienteApi;
+use App\Infrastructure\Web\ClienteWebController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/cliente', [ClienteApi::class, 'create']);
+Route::post('/cliente', [ClienteWebController::class, 'create']);
 
-Route::get('/cliente', [ClienteApi::class, 'read']);
-Route::get('/cliente/{uuid}', [ClienteApi::class, 'readOne']);
+Route::get('/cliente', [ClienteWebController::class, 'read']);
+Route::get('/cliente/{uuid}', [ClienteWebController::class, 'readOne']);
 
-Route::put('/cliente/{uuid}', [ClienteApi::class, 'update']);
-Route::delete('/cliente/{uuid}', [ClienteApi::class, 'delete']);
+Route::put('/cliente/{uuid}', [ClienteWebController::class, 'update']);
+Route::delete('/cliente/{uuid}', [ClienteWebController::class, 'delete']);
