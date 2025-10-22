@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Web;
 
-use App\Domain\Contract\TokenHandlerContract;
+use App\Infrastructure\Service\JsonWebTokenHandler\JsonWebTokenHandlerContract;
+use App\Domain\Usuario\Entity;
 use App\Exception\DomainHttpException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -91,7 +92,10 @@ class UsuarioWebController extends WebController
     public function read(Request $req)
     {
         try {
-            $data = $this->usuarioController->read($req->all());
+            $data = $this->usuarioController->read([
+                ...$req->all(),
+                'exclude_current' => $req->get('user')['uuid'], // para nao trazer o usuario autenticado
+            ]);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {
@@ -215,7 +219,7 @@ class UsuarioWebController extends WebController
         try {
             $dados = $validacao->validated();
 
-            $token = $this->usuarioController->getAuthJwt($dados['email'], $dados['senha'], app(TokenHandlerContract::class));
+            $token = $this->usuarioController->getAuthJwt($dados['email'], $dados['senha'], app(JsonWebTokenHandlerContract::class));
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {

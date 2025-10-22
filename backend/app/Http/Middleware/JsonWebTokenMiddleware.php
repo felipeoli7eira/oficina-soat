@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Domain\Contract\TokenHandlerContract;
+use App\Infrastructure\Service\JsonWebTokenHandler\JsonWebTokenHandlerContract;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 class JsonWebTokenMiddleware
 {
     public function __construct(
-        public readonly TokenHandlerContract $tokenHandler,
+        public readonly JsonWebTokenHandlerContract $tokenHandler,
         public readonly UsuarioRepository $usuarioRepository,
     ) {}
 

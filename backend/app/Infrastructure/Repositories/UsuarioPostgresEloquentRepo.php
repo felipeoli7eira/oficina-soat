@@ -20,14 +20,20 @@ class UsuarioPostgresEloquentRepo implements \App\Domain\Usuario\RepositoryContr
 {
     public function __construct(public readonly UuidGeneratorContract $uuidGenerator) {}
 
-    public function read(): array
+    public function read(array $readParamsAndFilters = []): array
     {
         // TODO: implementar paginacao
 
-        $mod = Model::query()->where([
+        $where = [
             ['ativo', '=', true],
             ['deletado_em', '=', null]
-        ])->get();
+        ];
+
+        if (isset($readParamsAndFilters['exclude_current']) && is_string($readParamsAndFilters['exclude_current']) && !empty($readParamsAndFilters['exclude_current'])) {
+            $where[] = ['uuid', '!=', $readParamsAndFilters['exclude_current']];
+        }
+
+        $mod = Model::query()->where($where)->get();
 
         return $mod->toArray();
     }

@@ -13,7 +13,7 @@ use App\Application\Usuario\PasswordVerifyUseCase;
 use App\Application\Usuario\AuthenticateUseCase;
 use App\Application\Usuario\CreateUnauthenticatedUseCase;
 
-use App\Domain\Contract\TokenHandlerContract;
+use App\Infrastructure\Service\JsonWebTokenHandler\JsonWebTokenHandlerContract;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 use App\Exception\DomainHttpException;
 use App\Interface\Gateway\UsuarioGateway;
@@ -145,7 +145,7 @@ class UsuarioController
         return $res;
     }
 
-    public function getAuthJwt(string $email, string $senhaAcessoSistema, TokenHandlerContract $tokenHandler): string
+    public function getAuthJwt(string $email, string $senhaAcessoSistema, JsonWebTokenHandlerContract $tokenHandler): string
     {
         if ($this->repo instanceof UsuarioRepository === false) {
             throw new RuntimeException('Fonte de dados não definida');

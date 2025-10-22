@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Service;
+namespace App\Infrastructure\Service\JsonWebTokenHandler;
 
-use App\Domain\Contract\TokenHandlerContract;
 use App\Domain\Usuario\Entity;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use App\Infrastructure\Dto\JsonWebTokenFragment;
 use RuntimeException;
 
-class FirebaseJWT implements TokenHandlerContract
+class FirebaseJWT implements JsonWebTokenHandlerContract
 {
     private string $secret;
     private string $algo = 'HS256';

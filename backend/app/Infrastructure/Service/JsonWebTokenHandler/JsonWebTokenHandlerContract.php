@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Contract;
+namespace App\Infrastructure\Service\JsonWebTokenHandler;
 
 use App\Domain\Usuario\Entity;
 
-interface TokenHandlerContract
+interface JsonWebTokenHandlerContract
 {
     public function generate(Entity $usuario): string;
     public function decode(string $token): ?array;
