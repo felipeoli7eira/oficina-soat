@@ -17,42 +17,42 @@ class ClienteWebController extends WebController
 {
     public function __construct(public readonly ClienteController $clienteController) {}
 
-    // public function create(Request $req)
-    // {
-    //     // validacoes basicas sem regra de negocio
+    public function create(Request $req)
+    {
+        // validacoes basicas sem regra de negocio
 
-    //     $validacao = Validator::make($req->only(['nome', 'email', 'senha', 'perfil']), [
-    //         'nome'      => ['required', 'string'],
-    //         'email'     => ['required', 'string', 'email'],
-    //         'senha'     => ['required', 'string'],
-    //         'perfil'    => ['required', 'string'],
-    //     ]);
+        $validacao = Validator::make($req->only(['nome', 'email', 'documento', 'fone']), [
+            'nome'      => ['required', 'string'],
+            'email'     => ['required', 'string', 'email'],
+            'documento' => ['required', 'string'],
+            'fone'      => ['required', 'string'],
+        ]);
 
-    //     $validacao->stopOnFirstFailure(true);
+        $validacao->stopOnFirstFailure(true);
 
-    //     if ($validacao->fails()) {
-    //         return $this->errResponse($validacao->errors()->first(), 400);
-    //     }
+        if ($validacao->fails()) {
+            return $this->errResponse($validacao->errors()->first(), 400);
+        }
 
-    //     $dados = $validacao->validated();
+        $dados = $validacao->validated();
 
-    //     $authenticatedUserUuid = $req->get('user')['uuid'];
+        $authenticatedUserUuid = $req->get('user')['uuid'];
 
-    //     try {
-    //         $data = $this->usuarioController->authenticatedUser($authenticatedUserUuid)->create(
-    //             $dados['nome'],
-    //             $dados['email'],
-    //             $dados['senha'],
-    //             $dados['perfil'],
-    //         );
-    //     } catch (DomainHttpException $err) {
-    //         return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return $this->useException($err)->errResponse('Erro no procedimento', 500);
-    //     }
+        try {
+            $data = $this->clienteController->authenticatedUser($authenticatedUserUuid)->create(
+                $dados['nome'],
+                $dados['email'],
+                $dados['documento'],
+                $dados['fone'],
+            );
+        } catch (DomainHttpException $err) {
+            return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
+        } catch (Throwable $err) {
+            return $this->useException($err)->errResponse('Erro no procedimento', 500);
+        }
 
-    //     return $this->successResponse('Sucesso', 201, ['data' => $data]);
-    // }
+        return $this->successResponse('Sucesso', 201, ['data' => $data]);
+    }
 
     public function read(Request $req)
     {

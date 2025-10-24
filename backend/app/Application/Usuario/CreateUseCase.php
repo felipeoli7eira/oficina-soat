@@ -41,7 +41,7 @@ final class CreateUseCase
 
         $authenticatedUser = $this->gateway->findOneBy('uuid', $authenticatedUserUuid);
 
-        if ($authenticatedUser === null || (is_array($authenticatedUser) && sizeof($authenticatedUser) === 0) || (is_array($authenticatedUser['uuid']) && !isset($authenticatedUser['uuid']))) {
+        if ($authenticatedUser === null || (is_array($authenticatedUser) && sizeof($authenticatedUser) === 0) || (is_array($authenticatedUser) && !isset($authenticatedUser['uuid']))) {
             throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
         }
 

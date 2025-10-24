@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Interface\Controller;
 
 use App\Application\Cliente\ReadUseCase;
-// use App\Application\Usuario\CreateUseCase;
+use App\Application\Cliente\CreateUseCase;
 // use App\Application\Usuario\ReadOneByUuidUseCase;
 // use App\Application\Usuario\DeleteUseCase;
 // use App\Application\Usuario\UpdateUseCase;
@@ -14,25 +14,29 @@ use App\Application\Cliente\ReadUseCase;
 // use App\Application\Usuario\CreateUnauthenticatedUseCase;
 
 use App\Infrastructure\Service\JsonWebTokenHandler\JsonWebTokenHandlerContract;
-use App\Domain\Cliente\RepositoryContract as ClienteRepository;
+use App\Domain\Cliente\RepositoryContract as Repository;
+use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 use App\Exception\DomainHttpException;
 
 use App\Interface\Gateway\ClienteGateway;
-
+use App\Interface\Gateway\UsuarioGateway;
 use RuntimeException;
 
 class ClienteController
 {
-    // private string $authenticatedUserUuid = '';
+    private string $authenticatedUserUuid = '';
 
-    public function __construct(public readonly ClienteRepository $repo) {}
+    public function __construct(
+        public readonly Repository $repo,
+        public readonly UsuarioRepository $usuarioRepo,
+    ) {}
 
-    // public function authenticatedUser(string $authenticatedUserUuid): self
-    // {
-    //     $this->authenticatedUserUuid = $authenticatedUserUuid;
+    public function authenticatedUser(string $authenticatedUserUuid): self
+    {
+        $this->authenticatedUserUuid = $authenticatedUserUuid;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     /**
      * @param array $readParams Filtros, ordenações, paginação, etc.
@@ -79,29 +83,25 @@ class ClienteController
     //     return $useCase->handle();
     // }
 
-    // public function create(string $nome, string $email, string $senhaAcessoSistema, string $perfil, bool $ativo = true)
-    // {
-    //     if ($this->repo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function create(string $nome, string $email, string $documento, string $fone)
+    {
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-    //     if (empty(trim($this->authenticatedUserUuid))) {
-    //         throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-    //     }
+        $gateway = new ClienteGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
-    //     $gateway = new UsuarioGateway($this->repo);
+        $useCase = new CreateUseCase(
+            $nome,
+            $email,
+            $documento,
+            $fone
+        );
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-    //     $useCase = new CreateUseCase(
-    //         $nome,
-    //         $email,
-    //         $senhaAcessoSistema,
-    //         $perfil,
-    //         $ativo,
-    //     );
-    //     $useCase->useGateway($gateway);
-
-    //     return $useCase->handle($this->authenticatedUserUuid);
-    // }
+        return $useCase->handle($this->authenticatedUserUuid);
+    }
 
     // public function delete(string $uuid): bool
     // {
