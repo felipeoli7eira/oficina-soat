@@ -80,14 +80,16 @@ final class CreateUseCase
             null,
         );
 
-        // TODO: criar validacoes coerentes e necessarias na entidade
+        $usuarioComMesmoDoc = $this->gateway->findOneBy('documento', $entity->documento);
 
-        dd($entity);
+        if (! is_null($usuarioComMesmoDoc) && is_array($usuarioComMesmoDoc) && sizeof($usuarioComMesmoDoc) && isset($usuarioComMesmoDoc['uuid'])) {
+            throw new DomainHttpException('Documento já cadastrado', 400);
+        }
 
         $res = $this->gateway->create($entity->asArray());
 
         $entity->uuid = $res['uuid'];
-        $entity->cadastradoEm = new DateTime($res['criado_em']);
+        $entity->criadoEm = new DateTime($res['criado_em']);
 
         return $entity->toExternal();
     }
