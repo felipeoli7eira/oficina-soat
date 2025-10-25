@@ -6,7 +6,7 @@ namespace App\Interface\Controller;
 
 use App\Application\Cliente\ReadUseCase;
 use App\Application\Cliente\CreateUseCase;
-// use App\Application\Usuario\ReadOneByUuidUseCase;
+use App\Application\Cliente\ReadOneByUuidUseCase;
 // use App\Application\Usuario\DeleteUseCase;
 // use App\Application\Usuario\UpdateUseCase;
 // use App\Application\Usuario\PasswordVerifyUseCase;
@@ -50,18 +50,14 @@ class ClienteController
         return $useCase->handle($readParams);
     }
 
-    // public function readOneByUuid(string $uuid): array
-    // {
-    //     if ($this->repo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function readOneByUuid(string $uuid): array
+    {
+        $gateway = new ClienteGateway($this->repo);
 
-    //     $gateway = new UsuarioGateway($this->repo);
+        $useCase = new ReadOneByUuidUseCase($gateway);
 
-    //     $useCase = new ReadOneByUuidUseCase($gateway);
-
-    //     return $useCase->handle($uuid);
-    // }
+        return $useCase->handle($uuid);
+    }
 
     // public function createUnauthenticated(string $nome, string $email, string $senhaAcessoSistema, string $perfil, bool $ativo = true)
     // {
