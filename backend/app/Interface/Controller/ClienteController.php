@@ -7,7 +7,7 @@ namespace App\Interface\Controller;
 use App\Application\Cliente\ReadUseCase;
 use App\Application\Cliente\CreateUseCase;
 use App\Application\Cliente\ReadOneByUuidUseCase;
-// use App\Application\Usuario\DeleteUseCase;
+use App\Application\Cliente\DeleteUseCase;
 // use App\Application\Usuario\UpdateUseCase;
 // use App\Application\Usuario\PasswordVerifyUseCase;
 // use App\Application\Usuario\AuthenticateUseCase;
@@ -99,23 +99,28 @@ class ClienteController
         return $useCase->handle($this->authenticatedUserUuid);
     }
 
-    // public function delete(string $uuid): bool
-    // {
-    //     if ($this->repo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function delete(string $uuid): bool
+    {
+        if ($this->repo instanceof Repository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     if (empty(trim($this->authenticatedUserUuid))) {
-    //         throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-    //     }
+        if ($this->usuarioRepo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     $gateway = new UsuarioGateway($this->repo);
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-    //     $useCase = new DeleteUseCase($uuid);
-    //     $useCase->useGateway($gateway);
+        $gateway = new ClienteGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
-    //     return $useCase->handle($this->authenticatedUserUuid);
-    // }
+        $useCase = new DeleteUseCase($uuid);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
+
+        return $useCase->handle($this->authenticatedUserUuid);
+    }
 
     // public function update(string $uuid, array $novosDados): array
     // {
