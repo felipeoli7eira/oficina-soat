@@ -21,11 +21,12 @@ class ClienteGateway
         return $this->repo->create($data);
     }
 
-    public function findOneBy(string $identifierName, mixed $value): ?array
+    public function findOneBy(string $identifierName, mixed $value, ?array $where = []): ?array
     {
         return $this->repo->findOneBy(
             $identifierName,
-            $value
+            $value,
+            $where
         );
     }
 

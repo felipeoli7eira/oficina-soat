@@ -49,6 +49,8 @@ final class Entity
         if (preg_match('/(\d)\1{10}/', $fone)) {
             throw new DomainHttpException('O telefone informado é inválido.', 400);
         }
+
+        $this->fone = $fone;
     }
 
     private function garantirNomeValido(): void
@@ -194,7 +196,7 @@ final class Entity
         }
 
         if (isset($novosDados['documento'])) {
-            $this->documento = password_hash($novosDados['documento'], PASSWORD_BCRYPT);
+            $this->documento = $novosDados['documento'];
         }
 
         if (isset($novosDados['fone'])) {
@@ -202,5 +204,7 @@ final class Entity
         }
 
         $this->atualizadoEm = new DateTime();
+
+        $this->validarEntrada();
     }
 }

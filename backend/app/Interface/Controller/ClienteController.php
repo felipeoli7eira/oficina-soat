@@ -8,12 +8,8 @@ use App\Application\Cliente\ReadUseCase;
 use App\Application\Cliente\CreateUseCase;
 use App\Application\Cliente\ReadOneByUuidUseCase;
 use App\Application\Cliente\DeleteUseCase;
-// use App\Application\Usuario\UpdateUseCase;
-// use App\Application\Usuario\PasswordVerifyUseCase;
-// use App\Application\Usuario\AuthenticateUseCase;
-// use App\Application\Usuario\CreateUnauthenticatedUseCase;
+use App\Application\Cliente\UpdateUseCase;
 
-use App\Infrastructure\Service\JsonWebTokenHandler\JsonWebTokenHandlerContract;
 use App\Domain\Cliente\RepositoryContract as Repository;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
 use App\Exception\DomainHttpException;
@@ -122,42 +118,25 @@ class ClienteController
         return $useCase->handle($this->authenticatedUserUuid);
     }
 
-    // public function update(string $uuid, array $novosDados): array
-    // {
-    //     if ($this->repo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function update(string $uuid, array $novosDados): array
+    {
+        if ($this->repo instanceof Repository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     if (empty(trim($this->authenticatedUserUuid))) {
-    //         throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-    //     }
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-    //     $gateway = new UsuarioGateway($this->repo);
+        $gateway = new ClienteGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
-    //     $useCase = new UpdateUseCase($uuid, $novosDados);
-    //     $useCase->useGateway($gateway);
 
-    //     $res = $useCase->handle($this->authenticatedUserUuid);
+        $useCase = new UpdateUseCase($uuid, $novosDados);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-    //     return $res;
-    // }
+        $res = $useCase->handle($this->authenticatedUserUuid);
 
-    // public function getAuthJwt(string $email, string $senhaAcessoSistema, JsonWebTokenHandlerContract $tokenHandler): string
-    // {
-    //     if ($this->repo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
-
-    //     $gateway = new UsuarioGateway($this->repo);
-
-    //     $passwordVerifyUseCase = new PasswordVerifyUseCase($email, $senhaAcessoSistema);
-    //     $passwordVerifyUseCase->useGateway($gateway);
-
-    //     $dadosEntity = $passwordVerifyUseCase->handle();
-
-    //     $generateTokenUseCase = new AuthenticateUseCase($dadosEntity, $tokenHandler);
-    //     $token = $generateTokenUseCase->handle();
-
-    //     return $token;
-    // }
+        return $res;
+    }
 }
