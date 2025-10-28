@@ -1,0 +1,59 @@
+┌──────────────────────────────────────────────────────┐
+│ Ordens Abertas: 23  | Finalizadas Hoje: 8     │
+│ Estoque Crítico: 5  | Faturamento Dia: R$     │
+└──────────────────────────────────────────────────────┘
+
+[Gráfico de linha] Ordens por Status (últimos 30 dias)
+- Aguardando Peças
+- Em Execução
+- Aguardando Cliente
+- Finalizadas
+
+[Gráfico de pizza] Tipos de Serviço Mais Comuns
+```
+
+#### 2. **Dashboard Financeiro**
+```
+[KPI Cards]
+- Faturamento Mensal
+- Ticket Médio por Ordem
+- Taxa de Conversão (orçamento → ordem)
+- Contas a Receber
+
+[Gráfico de barras] Top 10 Clientes (por valor)
+[Linha temporal] Faturamento vs Meta
+```
+
+#### 3. **Dashboard de Estoque**
+```
+[Alertas]
+🔴 Óleo de motor: 2 litros (mínimo: 20L)
+🟡 Pastilha de freio: 8 unid (mínimo: 15)
+
+[Gráfico] Giro de Estoque (itens mais usados)
+[Tabela] Peças com prazo de validade próximo
+[Heatmap] Consumo de insumos por dia da semana
+```
+
+#### 4. **Dashboard de Performance da Equipe**
+```
+[Barras] Ordens Finalizadas por Mecânico
+[Gauge] Tempo Médio de Atendimento
+[Tabela] SLA - Ordens Atrasadas
+[Gráfico] Retrabalho (ordens que voltaram)
+```
+
+#### 5. **Dashboard de Satisfação/Qualidade**
+```
+[NPS Score] Net Promoter Score
+[Trend] Avaliações ao longo do tempo
+[Word Cloud] Palavras mais citadas em feedbacks
+[Tabela] Clientes com reclamações pendentes
+```
+
+## Como implementar na prática
+
+Você vai precisar de uma **arquitetura assim**:
+```
+[Sistema de Gestão]  →  [Banco de Dados]  →  [Grafana]
+(cadastros, CRUD)       (PostgreSQL/MySQL)    (visualização)

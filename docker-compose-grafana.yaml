@@ -1,0 +1,24 @@
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafvol:/var/lib/grafana
+    networks:
+      - grafnet
+    environment:
+      - GF_LOG_LEVEL=debug
+      - GF_PLUGINS_PREINSTALL=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SECURITY_ADMIN_USER=grafana
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+      - GF_USERS_ALLOW_SIGN_UP=false # desabilita criação de contas
+      - GF_SERVER_ROOT_URL=http://localhost:3000  # URL base da aplicação
+
+networks:
+  grafnet:
+
+volumes:
+  grafvol:
