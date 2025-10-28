@@ -84,6 +84,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\Cliente\RepositoryContract::class,
             \App\Infrastructure\Repositories\ClientePostgresEloquentRepo::class
         );
+
+        $this->app->bind(
+            \App\Domain\Veiculo\RepositoryContract::class,
+            \App\Infrastructure\Repositories\VeiculoPostgresEloquentRepo::class
+        );
     }
 
     /**

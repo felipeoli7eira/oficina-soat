@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('veiculos', function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->foreignId('cliente_id')->references('id')->on('clientes')->onDelete('CASCADE');
+            $table->uuid('cliente_uuid')->unique();
             $table->string('marca');
             $table->string('modelo');
             $table->string('placa')->unique();

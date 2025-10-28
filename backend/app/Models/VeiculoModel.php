@@ -16,7 +16,7 @@ class VeiculoModel extends Model
         'modelo',
         'placa',
         'ano',
-        'cliente_id',
+        'cliente_uuid',
 
         'criado_em',
         'atualizado_em',

@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\VeiculoApi;
+use App\Infrastructure\Web\VeiculoWebController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/veiculo', [VeiculoApi::class, 'create']);
+Route::post('/veiculo', [VeiculoWebController::class, 'create']);
 
-Route::get('/veiculo', [VeiculoApi::class, 'read']);
-Route::get('/veiculo/{uuid}', [VeiculoApi::class, 'readOne']);
+Route::get('/veiculo', [VeiculoWebController::class, 'read']);
+Route::get('/veiculo/{uuid}', [VeiculoWebController::class, 'readOne']);
 
-Route::put('/veiculo/{uuid}', [VeiculoApi::class, 'update']);
-Route::delete('/veiculo/{uuid}', [VeiculoApi::class, 'delete']);
+Route::put('/veiculo/{uuid}', [VeiculoWebController::class, 'update']);
+Route::delete('/veiculo/{uuid}', [VeiculoWebController::class, 'delete']);
