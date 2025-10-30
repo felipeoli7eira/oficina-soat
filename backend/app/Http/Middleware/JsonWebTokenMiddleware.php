@@ -23,7 +23,7 @@ class JsonWebTokenMiddleware
 
         $responseErr = [
             'err' => true,
-            'msg' => 'Credenciais não informadas',
+            'msg' => 'É necessário identificação para acessar este recurso',
         ];
 
         if ($token === null) {
@@ -33,7 +33,7 @@ class JsonWebTokenMiddleware
         $dadosDoToken = $this->tokenHandler->decode($token);
 
         if ($dadosDoToken === null) {
-            $responseErr['msg'] = 'Credenciais inválidas';
+            $responseErr['msg'] = 'Credenciais não aceitas! Solicite um novo token de autenticação.';
             return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
         }
 

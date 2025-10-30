@@ -9,6 +9,7 @@ use App\Domain\Usuario\ProfileEnum;
 
 use App\Interface\Gateway\VeiculoGateway;
 use App\Interface\Gateway\UsuarioGateway;
+use App\Interface\Gateway\ClienteGateway;
 
 use DateTime;
 
@@ -18,6 +19,7 @@ final class CreateUseCase
 {
     private readonly VeiculoGateway $gateway;
     private readonly UsuarioGateway $usuarioGateway;
+    private readonly ClienteGateway $clienteGateway;
 
     public function __construct(
         public string $marca,
@@ -39,6 +41,12 @@ final class CreateUseCase
         return $this;
     }
 
+    public function useClienteGateway(ClienteGateway $gateway): self
+    {
+        $this->clienteGateway = $gateway;
+        return $this;
+    }
+
     public function handle(string $authenticatedUserUuid): array
     {
         if ($this->gateway instanceof VeiculoGateway === false) {
@@ -47,6 +55,10 @@ final class CreateUseCase
 
         if ($this->usuarioGateway instanceof UsuarioGateway === false) {
             throw new DomainHttpException('Gateway de usuário não definido', 500);
+        }
+
+        if ($this->clienteGateway instanceof ClienteGateway === false) {
+            throw new DomainHttpException('Gateway de cliente não definido', 500);
         }
 
         if (empty(trim($authenticatedUserUuid))) {
@@ -63,6 +75,11 @@ final class CreateUseCase
             throw new DomainHttpException('Você não tem permissão para realizar essa ação. Somente um administrador ou atendente pode cadastrar um cliente', 404);
         }
 
+        $cliente = $this->clienteGateway->findOneBy('uuid', $this->clienteDonoUuid);
+
+        if ($cliente === null || (is_array($cliente) && count($cliente) === 0) || (is_array($cliente) && !isset($cliente['uuid']))) {
+            throw new DomainHttpException('O cliente informado não foi encontrado', 404);
+        }
 
         $entity = new Entity(
             '',

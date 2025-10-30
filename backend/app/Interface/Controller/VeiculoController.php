@@ -12,8 +12,10 @@ use App\Application\Veiculo\CreateUseCase;
 
 use App\Domain\Veiculo\RepositoryContract as Repository;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
-use App\Exception\DomainHttpException;
+use App\Domain\Cliente\RepositoryContract as ClienteRepository;
 
+use App\Exception\DomainHttpException;
+use App\Interface\Gateway\ClienteGateway;
 use App\Interface\Gateway\VeiculoGateway;
 use App\Interface\Gateway\UsuarioGateway;
 use RuntimeException;
@@ -25,6 +27,7 @@ class VeiculoController
     public function __construct(
         public readonly Repository $repo,
         public readonly UsuarioRepository $usuarioRepo,
+        public readonly ClienteRepository $clienteRepo,
     ) {}
 
     public function authenticatedUser(string $uuid): self
@@ -63,6 +66,7 @@ class VeiculoController
 
         $gateway = new VeiculoGateway($this->repo);
         $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
+        $clienteGateway = new ClienteGateway($this->clienteRepo);
 
         $useCase = new CreateUseCase(
             $marca,
@@ -74,6 +78,7 @@ class VeiculoController
 
         $useCase->useGateway($gateway);
         $useCase->useUsuarioGateway($usuarioGateway);
+        $useCase->useClienteGateway($clienteGateway);
 
         return $useCase->handle($this->authenticatedUserUuid);
     }
