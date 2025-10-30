@@ -116,6 +116,8 @@ final class Entity
             'modelo'        => $this->modelo,
             'placa'         => $this->placa,
             'ano'           => $this->ano,
+            'cliente_uuid'  => $this->clienteDonoUuid,
+
             'criado_em'     => $this->criadoEm->format('d/m/Y H:i:s'),
         ];
     }
@@ -130,6 +132,6 @@ final class Entity
     {
         $this->atualizadoEm = new DateTime();
 
-        $this->validarEntrada();
+        $this->validarDados();
     }
 }

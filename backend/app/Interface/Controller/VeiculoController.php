@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Interface\Controller;
 
 use App\Application\Veiculo\CreateUseCase;
+use App\Application\Veiculo\ReadOneByUuidUseCase;
+
 // use App\Application\Veiculo\ReadUseCase;
-// use App\Application\Veiculo\ReadOneByUuidUseCase;
 // use App\Application\Veiculo\UpdateUseCase;
 // use App\Application\Veiculo\DeleteUseCase;
 
@@ -49,14 +50,14 @@ class VeiculoController
     //     return $useCase->handle($readParams);
     // }
 
-    // public function readOneByUuid(string $uuid): array
-    // {
-    //     $gateway = new ClienteGateway($this->repo);
+    public function readOneByUuid(string $uuid): array
+    {
+        $gateway = new VeiculoGateway($this->repo);
 
-    //     $useCase = new ReadOneByUuidUseCase($gateway);
+        $useCase = new ReadOneByUuidUseCase($gateway);
 
-    //     return $useCase->handle($uuid);
-    // }
+        return $useCase->handle($uuid);
+    }
 
     public function create(string $marca, string $modelo, string $placa, int $ano, string $clienteDonoUuid)
     {
