@@ -130,6 +130,11 @@ final class Entity
 
     public function update(array $novosDados): void
     {
+        $this->marca  = isset($novosDados['marca'])  ? $novosDados['marca']  : $this->marca;
+        $this->modelo = isset($novosDados['modelo']) ? $novosDados['modelo'] : $this->modelo;
+        $this->placa  = isset($novosDados['placa'])  ? $novosDados['placa']  : $this->placa;
+        $this->ano    = isset($novosDados['ano'])    ? $novosDados['ano']    : $this->ano;
+
         $this->atualizadoEm = new DateTime();
 
         $this->validarDados();

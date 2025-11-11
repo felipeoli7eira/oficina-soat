@@ -8,7 +8,7 @@ use App\Application\Veiculo\CreateUseCase;
 use App\Application\Veiculo\ReadOneByUuidUseCase;
 
 use App\Application\Veiculo\ReadUseCase;
-// use App\Application\Veiculo\UpdateUseCase;
+use App\Application\Veiculo\UpdateUseCase;
 // use App\Application\Veiculo\DeleteUseCase;
 
 use App\Domain\Veiculo\RepositoryContract as Repository;
@@ -107,25 +107,24 @@ class VeiculoController
     //     return $useCase->handle($this->authenticatedUserUuid);
     // }
 
-    // public function update(string $uuid, array $novosDados): array
-    // {
-    //     if ($this->repo instanceof Repository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function update(string $uuid, array $novosDados): array
+    {
+        if ($this->repo instanceof Repository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     if (empty(trim($this->authenticatedUserUuid))) {
-    //         throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-    //     }
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-    //     $gateway = new ClienteGateway($this->repo);
-    //     $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
+        $gateway = new VeiculoGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
+        $useCase = new UpdateUseCase($uuid, $novosDados);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-    //     $useCase = new UpdateUseCase($uuid, $novosDados);
-    //     $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
+        $res = $useCase->handle($this->authenticatedUserUuid);
 
-    //     $res = $useCase->handle($this->authenticatedUserUuid);
-
-    //     return $res;
-    // }
+        return $res;
+    }
 }

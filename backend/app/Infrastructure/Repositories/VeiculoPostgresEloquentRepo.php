@@ -40,6 +40,19 @@ class VeiculoPostgresEloquentRepo implements \App\Domain\Veiculo\RepositoryContr
     {
         $mod = Model::query()->where($identifierName, $value);
 
+        if (is_array($where) && count($where)) {
+            foreach ($where as $conditionName => $values) {
+                if ($conditionName === 'excludeEqual') {
+                    // exclui da query todos os registros que tenham uma [coluna] = valor informado. Logo, nao deve considerar os registros que batem com a coluna e valor informado
+                    foreach ($values as $v) {
+                        $mod = $mod->where($v[0], '!=', $v[1]);
+                    }
+                }
+
+                // fazer outros filtros conforme a necessidade
+            }
+        }
+
         $mod = $mod->first();
 
         if (is_null($mod)) {
