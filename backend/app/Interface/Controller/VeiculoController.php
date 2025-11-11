@@ -7,7 +7,7 @@ namespace App\Interface\Controller;
 use App\Application\Veiculo\CreateUseCase;
 use App\Application\Veiculo\ReadOneByUuidUseCase;
 
-// use App\Application\Veiculo\ReadUseCase;
+use App\Application\Veiculo\ReadUseCase;
 // use App\Application\Veiculo\UpdateUseCase;
 // use App\Application\Veiculo\DeleteUseCase;
 
@@ -42,13 +42,13 @@ class VeiculoController
      * @param array $readParams Filtros, ordenações, paginação, etc.
      * @return array
      */
-    // public function read(array $readParams = []): array
-    // {
-    //     $gateway = new ClienteGateway($this->repo);
-    //     $useCase = new ReadUseCase($gateway);
+    public function read(array $readParams = []): array
+    {
+        $gateway = new VeiculoGateway($this->repo);
+        $useCase = new ReadUseCase($gateway);
 
-    //     return $useCase->handle($readParams);
-    // }
+        return $useCase->handle($readParams);
+    }
 
     public function readOneByUuid(string $uuid): array
     {

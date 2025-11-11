@@ -56,18 +56,18 @@ class VeiculoWebController extends WebController
         return $this->successResponse('Sucesso', 201, ['data' => $cadastro]);
     }
 
-    // public function read(Request $req)
-    // {
-    //     try {
-    //         $data = $this->clienteController->read($req->all());
-    //     } catch (DomainHttpException $err) {
-    //         return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return $this->useException($err)->errResponse('Erro no procedimento', 500);
-    //     }
+    public function read(Request $req)
+    {
+        try {
+            $data = $this->veiculoController->read($req->all());
+        } catch (DomainHttpException $err) {
+            return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
+        } catch (Throwable $err) {
+            return $this->useException($err)->errResponse('Erro no procedimento', 500);
+        }
 
-    //     return $this->successResponse(msg: 'Sucesso', additionalData: ['data' => $data]);
-    // }
+        return $this->successResponse(msg: 'Sucesso', additionalData: ['data' => $data]);
+    }
 
     public function readOneByUuid(Request $req)
     {
