@@ -9,7 +9,7 @@ use App\Application\Veiculo\ReadOneByUuidUseCase;
 
 use App\Application\Veiculo\ReadUseCase;
 use App\Application\Veiculo\UpdateUseCase;
-// use App\Application\Veiculo\DeleteUseCase;
+use App\Application\Veiculo\DeleteUseCase;
 
 use App\Domain\Veiculo\RepositoryContract as Repository;
 use App\Domain\Usuario\RepositoryContract as UsuarioRepository;
@@ -84,28 +84,28 @@ class VeiculoController
         return $useCase->handle($this->authenticatedUserUuid);
     }
 
-    // public function delete(string $uuid): bool
-    // {
-    //     if ($this->repo instanceof Repository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+    public function delete(string $uuid): bool
+    {
+        if ($this->repo instanceof Repository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     if ($this->usuarioRepo instanceof UsuarioRepository === false) {
-    //         throw new RuntimeException('Fonte de dados não definida');
-    //     }
+        if ($this->usuarioRepo instanceof UsuarioRepository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-    //     if (empty(trim($this->authenticatedUserUuid))) {
-    //         throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-    //     }
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-    //     $gateway = new ClienteGateway($this->repo);
-    //     $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
+        $gateway = new VeiculoGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
-    //     $useCase = new DeleteUseCase($uuid);
-    //     $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
+        $useCase = new DeleteUseCase($uuid);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-    //     return $useCase->handle($this->authenticatedUserUuid);
-    // }
+        return $useCase->handle($this->authenticatedUserUuid);
+    }
 
     public function update(string $uuid, array $novosDados): array
     {

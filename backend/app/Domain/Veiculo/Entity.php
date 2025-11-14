@@ -50,8 +50,8 @@ final class Entity
 
     public function garantirAnoValido(): void
     {
-        if ($this->ano < 1900) {
-            throw new DomainHttpException('Ano não pode ser menor que 1900', 400);
+        if ($this->ano < 1900 || $this->ano > intval(date('Y'))) {
+            throw new DomainHttpException('Ano não pode ser menor que 1900 e nem maior que o ano atual', 400);
         }
     }
 

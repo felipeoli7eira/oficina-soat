@@ -139,38 +139,38 @@ class VeiculoWebController extends WebController
         return $this->successResponse('Sucesso', 200, ['data' => $res]);
     }
 
-    // public function delete(Request $req)
-    // {
-    //     // validacoes basicas sem regra de negocio
+    public function delete(Request $req)
+    {
+        // validacoes basicas sem regra de negocio
 
-    //     $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
-    //         'uuid' => ['required', 'string', 'uuid'],
-    //     ]);
+        $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid']), [
+            'uuid' => ['required', 'string', 'uuid'],
+        ]);
 
-    //     $validacao->stopOnFirstFailure(true);
+        $validacao->stopOnFirstFailure(true);
 
-    //     if ($validacao->fails()) {
-    //         return $this->errResponse($validacao->errors()->first(), 400);
-    //     }
+        if ($validacao->fails()) {
+            return $this->errResponse($validacao->errors()->first(), 400);
+        }
 
-    //     try {
-    //         $dados = $validacao->validated();
+        try {
+            $dados = $validacao->validated();
 
-    //         $authenticatedUserUuid = $req->get('user')['uuid'];
+            $authenticatedUserUuid = $req->get('user')['uuid'];
 
-    //         $data = $this->clienteController
-    //             ->authenticatedUser($authenticatedUserUuid)
-    //             ->delete($dados['uuid']);
-    //     } catch (DomainHttpException $err) {
-    //         return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
-    //     } catch (Throwable $err) {
-    //         return $this->useException($err)->errResponse('Erro no procedimento', 500);
-    //     }
+            $data = $this->veiculoController
+                ->authenticatedUser($authenticatedUserUuid)
+                ->delete($dados['uuid']);
+        } catch (DomainHttpException $err) {
+            return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
+        } catch (Throwable $err) {
+            return $this->useException($err)->errResponse('Erro no procedimento', 500);
+        }
 
-    //     if ($data === false) {
-    //         return $this->errResponse('Erro no procedimento', 500);
-    //     }
+        if ($data === false) {
+            return $this->errResponse('Erro no procedimento', 500);
+        }
 
-    //     return response()->noContent();
-    // }
+        return response()->noContent();
+    }
 }
