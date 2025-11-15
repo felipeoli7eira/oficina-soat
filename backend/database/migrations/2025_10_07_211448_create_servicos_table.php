@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid();
             $table->string('nome')->unique();
             $table->unsignedBigInteger('valor'); // inteiro para representar os valores em centavos
+            $table->boolean('disponivel')->default(false);
             $defaultsTimestampsColumns = require __DIR__ . '/../defaults/ColumnsTimestamps.php';
             $defaultsTimestampsColumns->addDefaultColumnsTimestamps($table);
         });

@@ -14,6 +14,7 @@ class ServicoModel extends Model
         'uuid',
         'nome',
         'valor',
+        'disponivel',
         'criado_em',
         'atualizado_em',
         'deletado_em'
