@@ -158,7 +158,7 @@ class ServicoWebController extends WebController
 
             $authenticatedUserUuid = $req->get('user')['uuid'];
 
-            $data = $this->clienteController
+            $data = $this->servicoController
                 ->authenticatedUser($authenticatedUserUuid)
                 ->delete($dados['uuid']);
         } catch (DomainHttpException $err) {

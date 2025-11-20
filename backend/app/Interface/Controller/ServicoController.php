@@ -81,20 +81,20 @@ class ServicoController
         }
 
         if ($this->usuarioRepo instanceof UsuarioRepository === false) {
-            throw new RuntimeException('Fonte de dados não definida');
+            throw new RuntimeException('Fonte de dados de usuário não definida');
         }
 
         if (empty(trim($this->authenticatedUserUuid))) {
             throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
         }
 
-        // $gateway = new ClienteGateway($this->repo);
-        // $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
+        $gateway = new ServicoGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
-        // $useCase = new DeleteUseCase($uuid);
-        // $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
+        $useCase = new DeleteUseCase($uuid);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-        // return $useCase->handle($this->authenticatedUserUuid);
+        return $useCase->handle($this->authenticatedUserUuid);
         return true;
     }
 

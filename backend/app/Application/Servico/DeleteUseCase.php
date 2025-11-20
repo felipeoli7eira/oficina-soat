@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Cliente;
+namespace App\Application\Servico;
 
-use App\Domain\Cliente\Entity;
-use App\Domain\Cliente\ProfileEnum;
+use App\Domain\Servico\Entity;
+use App\Domain\Servico\ProfileEnum;
 use App\Domain\Usuario\ProfileEnum as UsuarioProfileEnum;
-use App\Interface\Gateway\ClienteGateway;
+use App\Interface\Gateway\ServicoGateway;
 use DateTime;
 use RuntimeException;
 use \App\Exception\DomainHttpException;
@@ -15,12 +15,12 @@ use App\Interface\Gateway\UsuarioGateway;
 
 final class DeleteUseCase
 {
-    private ?ClienteGateway $gateway = null;
+    private ?ServicoGateway $gateway = null;
     private ?UsuarioGateway $usuarioGateway = null;
 
     public function __construct(public readonly string $uuid) {}
 
-    public function useGateway(ClienteGateway $gateway): self
+    public function useGateway(ServicoGateway $gateway): self
     {
         $this->gateway = $gateway;
         return $this;
@@ -38,7 +38,7 @@ final class DeleteUseCase
             throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
         }
 
-        if ($this->gateway instanceof ClienteGateway === false) {
+        if ($this->gateway instanceof ServicoGateway === false) {
             throw new RuntimeException('Gateway não definido');
         }
 
@@ -59,17 +59,16 @@ final class DeleteUseCase
         $rawData = $this->gateway->findOneBy('uuid', $this->uuid);
 
         if ($rawData === null) {
-            throw new DomainHttpException('Cliente com o identificador informado não foi encontrado(a)', 404);
+            throw new DomainHttpException('Serviço com o identificador informado não foi encontrado(a)', 404);
         }
 
         $domainEntity = new Entity(
             $rawData['uuid'],
             $rawData['nome'],
-            $rawData['documento'],
-            $rawData['email'],
-            $rawData['fone'],
+            $rawData['valor'],
+            $rawData['disponivel'],
 
-            isset($rawData['cadastrado_em']) ? new DateTime($rawData['criado_em']) : new DateTime(),
+            isset($rawData['criado_em']) ? new DateTime($rawData['criado_em']) : new DateTime(),
             isset($rawData['atualizado_em']) ? new DateTime($rawData['atualizado_em']) : null,
             isset($rawData['deletado_em']) ? new DateTime($rawData['deletado_em']) : null,
         );
