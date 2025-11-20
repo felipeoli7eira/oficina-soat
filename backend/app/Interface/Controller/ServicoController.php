@@ -50,13 +50,11 @@ class ServicoController
 
     public function readOneByUuid(string $uuid): array
     {
-        // $gateway = new ClienteGateway($this->repo);
+        $gateway = new ServicoGateway($this->repo);
 
-        // $useCase = new ReadOneByUuidUseCase($gateway);
+        $useCase = new ReadOneByUuidUseCase($gateway);
 
-        // return $useCase->handle($uuid);
-
-        return array();
+        return $useCase->handle($uuid);
     }
 
     public function create(string $nome, float $valor, bool $statusDisponivel = false)
@@ -102,25 +100,23 @@ class ServicoController
 
     public function update(string $uuid, array $novosDados): array
     {
-        // if ($this->repo instanceof Repository === false) {
-        //     throw new RuntimeException('Fonte de dados não definida');
-        // }
+        if ($this->repo instanceof Repository === false) {
+            throw new RuntimeException('Fonte de dados não definida');
+        }
 
-        // if (empty(trim($this->authenticatedUserUuid))) {
-        //     throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
-        // }
+        if (empty(trim($this->authenticatedUserUuid))) {
+            throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
+        }
 
-        // $gateway = new ClienteGateway($this->repo);
-        // $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
+        $gateway = new ServicoGateway($this->repo);
+        $usuarioGateway = new UsuarioGateway($this->usuarioRepo);
 
+        $useCase = new UpdateUseCase($uuid, $novosDados);
+        $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
 
-        // $useCase = new UpdateUseCase($uuid, $novosDados);
-        // $useCase->useGateway($gateway)->useUsuarioGateway($usuarioGateway);
+        $res = $useCase->handle($this->authenticatedUserUuid);
 
-        // $res = $useCase->handle($this->authenticatedUserUuid);
-
-        // return $res;
-        return array();
+        return $res;
     }
 
     private function validateAuthenticatedUser(): void

@@ -41,7 +41,7 @@ final class CreateUseCase
     public function handle(string $authenticatedUserUuid): array
     {
         if ($this->gateway instanceof ServicoGateway === false) {
-            throw new DomainHttpException('Gateway de cliente não definido', 500);
+            throw new DomainHttpException('Gateway de serviço não definido', 500);
         }
 
         if ($this->usuarioGateway instanceof UsuarioGateway === false) {
@@ -65,7 +65,7 @@ final class CreateUseCase
         $servicoComMesmoNome = $this->gateway->findOneBy('nome', $this->nome);
 
         if (is_array($servicoComMesmoNome) && isset($servicoComMesmoNome['uuid'])) {
-            throw new DomainHttpException('Já existe um serviço cadastrado com este nome: ' . $servicoComMesmoNome['nome'], 400);
+            throw new DomainHttpException('Já existe um serviço cadastrado com o nome: ' . $servicoComMesmoNome['nome'], 400);
         }
 
         $entity = new Entity(

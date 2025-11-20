@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Cliente;
+namespace App\Application\Servico;
 
-use App\Domain\Cliente\Entity;
+use App\Domain\Servico\Entity;
 use App\Domain\Usuario\ProfileEnum;
-use App\Interface\Gateway\ClienteGateway;
+use App\Interface\Gateway\ServicoGateway;
 use DateTime;
 use RuntimeException;
 use App\Exception\DomainHttpException;
@@ -14,12 +14,12 @@ use App\Interface\Gateway\UsuarioGateway;
 
 final class UpdateUseCase
 {
-    private ?ClienteGateway $gateway = null;
+    private ?ServicoGateway $gateway = null;
     private ?UsuarioGateway $usuarioGateway = null;
 
     public function __construct(public string $uuid, public array $novosDados) {}
 
-    public function useGateway(ClienteGateway $gateway): self
+    public function useGateway(ServicoGateway $gateway): self
     {
         $this->gateway = $gateway;
         return $this;
@@ -37,7 +37,7 @@ final class UpdateUseCase
             throw new DomainHttpException('É necessário identificação para realizar esse procedimento', 401);
         }
 
-        if ($this->gateway instanceof ClienteGateway === false) {
+        if ($this->gateway instanceof ServicoGateway === false) {
             throw new RuntimeException('Gateway não definido');
         }
 
@@ -51,48 +51,38 @@ final class UpdateUseCase
             throw new DomainHttpException('O usuário autenticado com o identificador informadas não foi encontrado', 404);
         }
 
-        $clienteParaAtualizacao = $this->gateway->findOneBy('uuid', $this->uuid);
+        $servicoParaAtualizacao = $this->gateway->findOneBy('uuid', $this->uuid);
 
-        if ($clienteParaAtualizacao === null || (is_array($clienteParaAtualizacao) && sizeof($clienteParaAtualizacao) === 0) || (is_array($clienteParaAtualizacao) && !isset($clienteParaAtualizacao['uuid']))) {
-            throw new DomainHttpException('Cliente informado não encontrado', 404);
+        if ($servicoParaAtualizacao === null || (is_array($servicoParaAtualizacao) && sizeof($servicoParaAtualizacao) === 0) || (is_array($servicoParaAtualizacao) && !isset($servicoParaAtualizacao['uuid']))) {
+            throw new DomainHttpException('Servico informado não encontrado', 404);
         }
 
-        // Somente um admin ou atendente pode atualizar dados de clientes.
+        // Somente um admin ou atendente pode atualizar os dados
 
         if (! in_array($authenticatedUser['perfil'], [ProfileEnum::ADMIN->value, ProfileEnum::ATENDENTE->value])) {
-            throw new DomainHttpException('Permissão negada! Somente um admin ou atendente pode atualizar os dados de clientes', 401);
+            throw new DomainHttpException('Permissão negada! Somente um admin ou atendente pode atualizar os dados', 401);
         }
 
         $entity = new Entity(
-            $clienteParaAtualizacao['uuid'],
+            $servicoParaAtualizacao['uuid'],
 
-            $clienteParaAtualizacao['nome'],
-            $clienteParaAtualizacao['documento'],
-            $clienteParaAtualizacao['email'],
-            $clienteParaAtualizacao['fone'],
+            $servicoParaAtualizacao['nome'],
+            $servicoParaAtualizacao['valor'],
+            $servicoParaAtualizacao['disponivel'],
 
-            new DateTime($clienteParaAtualizacao['criado_em']),
+            new DateTime($servicoParaAtualizacao['criado_em']),
             new DateTime(),
         );
 
-        if ($existeOutroComDocInformado = $this->gateway->findOneBy('documento', $entity->documento, ['excludeEqual' => [['uuid', $this->uuid]]])) {
-            throw new DomainHttpException('Documento já sendo usado por outro cliente', 400);
+        if ($existeOutroComMesmoNome = $this->gateway->findOneBy('nome', $entity->nome, ['excludeEqual' => [['uuid', $this->uuid]]])) {
+            throw new DomainHttpException('Já existe um serviço com esse nome', 400);
         }
 
-        if ($existeOutroComMesmoEmail = $this->gateway->findOneBy('email', $entity->email, ['excludeEqual' => [['uuid', $this->uuid]]])) {
-            throw new DomainHttpException('E-mail já sendo usado por outro cliente', 400);
-        }
+        $entity->update($this->novosDados);
 
-        if ($existeOutroComMesmoFone = $this->gateway->findOneBy('fone', $entity->fone, ['excludeEqual' => [['uuid', $this->uuid]]])) {
-            throw new DomainHttpException('Fone já sendo usado por outro cliente', 400);
+        if (array_key_exists('valor', $this->novosDados)) {
+            $entity->converteValorEmCentavos();
         }
-
-        $entity->update([
-            'nome'      => isset($this->novosDados['nome'])      ? $this->novosDados['nome']      : $clienteParaAtualizacao['nome'],
-            'email'     => isset($this->novosDados['email'])     ? $this->novosDados['email']     : $clienteParaAtualizacao['email'],
-            'documento' => isset($this->novosDados['documento']) ? $this->novosDados['documento'] : $clienteParaAtualizacao['documento'],
-            'fone'      => isset($this->novosDados['fone'])      ? $this->novosDados['fone']      : $clienteParaAtualizacao['fone'],
-        ]);
 
         $dadosParaUpdate = $entity->asArray();
 

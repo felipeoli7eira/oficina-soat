@@ -80,12 +80,12 @@ final class Entity
     public function toExternal(): array
     {
         return [
-            'uuid'          => $this->uuid,
-            'nome'          => $this->nome,
-            'valor'         => $this->valor / 100,
-            'valor_gui'     => number_format($this->valor / 100, 2, ',', '.'), // valor formatado para uma GUI (grafic user interface)
-            'disponivel'    => $this->disponivel,
-            'criado_em'     => $this->criadoEm->format('d/m/Y H:i:s'),
+            'uuid'       => $this->uuid,
+            'nome'       => $this->nome,
+            'valor'      => $this->valor / 100, // converte de volta em reais
+            'valor_gui'  => number_format($this->valor / 100, 2, ',', '.'), // valor formatado para uma GUI (grafic user interface)
+            'disponivel' => $this->disponivel,
+            'criado_em'  => $this->criadoEm->format('d/m/Y H:i:s'),
         ];
     }
 

@@ -22,8 +22,8 @@ class ServicoWebController extends WebController
         // validacoes basicas sem regra de negocio
 
         $validacao = Validator::make($req->only(['nome', 'valor', 'disponivel']), [
-            'nome'       => ['required', 'string'],
-            'valor'      => ['required', 'numeric'],
+            'nome'         => ['required', 'string'],
+            'valor'         => ['required', 'numeric'],
             'disponivel' => ['nullable', 'boolean'],
         ]);
 
@@ -86,7 +86,7 @@ class ServicoWebController extends WebController
         try {
             $dados = $validacao->validated();
 
-            $data = $this->clienteController->readOneByUuid($dados['uuid']);
+            $data = $this->servicoController->readOneByUuid($dados['uuid']);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {
@@ -100,12 +100,11 @@ class ServicoWebController extends WebController
     {
         // validacoes basicas sem regra de negocio
 
-        $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'email', 'documento', 'fone']), [
-            'uuid'      => ['required', 'string', 'uuid'],
-            'email'     => ['nullable', 'string', 'email'],
-            'nome'      => ['nullable', 'string'],
-            'documento' => ['nullable', 'string'],
-            'fone'      => ['nullable', 'string'],
+        $validacao = Validator::make($req->merge(['uuid' => $req->route('uuid')])->only(['uuid', 'nome', 'valor', 'disponivel']), [
+            'uuid'          => ['required', 'uuid'],
+            'nome'         => ['nullable', 'string'],
+            'valor'         => ['nullable', 'numeric'],
+            'disponivel' => ['nullable', 'boolean'],
         ]);
 
         $validacao->stopOnFirstFailure(true);
@@ -114,14 +113,23 @@ class ServicoWebController extends WebController
             return $this->errResponse($validacao->errors()->first(), 400);
         }
 
-        try {
-            $dados = $validacao->validated();
+        $dados = $validacao->validated();
 
+        $uuidServico = $dados['uuid'];
+
+        // reconstroi a $dados retirando a chave "uuid"
+        $dados = array_diff_key($dados, array_flip(['uuid']));
+
+        if (sizeof($dados) === 0) {
+            return $this->errResponse('Nenhuma informação enviada para atualização', 400);
+        }
+
+        try {
             $usuarioAutenticado = $req->get('user');
 
-            $res = $this->clienteController
+            $res = $this->servicoController
                 ->authenticatedUser($usuarioAutenticado['uuid'])
-                ->update($dados['uuid'], $dados);
+                ->update($uuidServico, $dados);
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {
