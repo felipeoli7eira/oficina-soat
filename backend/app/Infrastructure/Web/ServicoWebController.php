@@ -59,7 +59,7 @@ class ServicoWebController extends WebController
     public function read(Request $req)
     {
         try {
-            $data = $this->clienteController->read($req->all());
+            $data = $this->servicoController->read($req->all());
         } catch (DomainHttpException $err) {
             return $this->useException($err)->errResponse($err->getMessage(), $err->getCode());
         } catch (Throwable $err) {

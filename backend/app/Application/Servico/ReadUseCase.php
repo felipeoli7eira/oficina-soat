@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Cliente;
+namespace App\Application\Servico;
 
-use App\Domain\Cliente\Entity;
-use App\Interface\Gateway\ClienteGateway;
+use App\Domain\Servico\Entity;
+use App\Interface\Gateway\ServicoGateway;
 use DateTime;
 use RuntimeException;
 use App\Exception\DomainHttpException;
 
 final class ReadUseCase
 {
-    public function __construct(public readonly ClienteGateway $gateway) {}
+    public function __construct(public readonly ServicoGateway $gateway) {}
 
     public function handle(array $readParams = []): array
     {
@@ -21,11 +21,10 @@ final class ReadUseCase
         return array_map(function ($rawData) {
 
             $domainEntity = new Entity(
-                $rawData['uuid'] ?? '',
+                $rawData['uuid'],
                 $rawData['nome'],
-                $rawData['documento'],
-                $rawData['email'],
-                $rawData['fone'],
+                $rawData['valor'],
+                $rawData['disponivel'],
 
                 isset($rawData['criadodo_em']) ? new DateTime($rawData['criadodo_em']) : new DateTime(),
                 isset($rawData['atualizado_em']) ? new DateTime($rawData['atualizado_em']) : null,

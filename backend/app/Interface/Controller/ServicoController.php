@@ -40,10 +40,10 @@ class ServicoController
      */
     public function read(array $readParams = []): array
     {
-        // $gateway = new ClienteGateway($this->repo);
-        // $useCase = new ReadUseCase($gateway);
+        $gateway = new ServicoGateway($this->repo);
+        $useCase = new ReadUseCase($gateway);
 
-        // return $useCase->handle($readParams);
+        return $useCase->handle($readParams);
 
         return array();
     }
