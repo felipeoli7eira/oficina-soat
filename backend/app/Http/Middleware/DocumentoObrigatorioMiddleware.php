@@ -21,11 +21,11 @@ class DocumentoObrigatorioMiddleware
 
         $responseErr = [
             'err' => true,
-            'msg' => 'Informe o documento para continuar com esta operação.',
+            'msg' => 'Informe corretamente um documento para dar continuidade ao processo.',
         ];
 
-        if (! $documento) {
-            return response()->json($responseErr, Response::HTTP_UNAUTHORIZED);
+        if (! is_string($documento) || empty(trim($documento)) || !in_array(strlen($documento), array(11, 14))) {
+            return response()->json($responseErr, Response::HTTP_BAD_REQUEST);
         }
 
         // Carrega cliente
