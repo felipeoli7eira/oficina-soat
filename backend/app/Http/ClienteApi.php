@@ -169,6 +169,46 @@ class ClienteApi
         return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent($res);
     }
 
+    public function getStatus(Request $req)
+    {
+        try {
+            // validacao basica sem regras de negocio
+            $validacao = Validator::make($req->merge(['doc' => $req->query('d')])->only(['doc']), [
+                'doc' => ['required', 'string'],
+            ])->stopOnFirstFailure(true);
+
+            if ($validacao->fails()) {
+                throw new DomainHttpException($validacao->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $dados = $validacao->validated();
+
+            $res = $this->controller->useRepositorio($this->repositorio)->validaStatus($dados['doc']);
+        } catch (DomainHttpException $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], $err->getCode());
+        } catch (Throwable $err) {
+            return response()->json([
+                'err' => true,
+                'msg' => $err->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        if ($res === false) {
+            $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent([
+                'err' => false,
+                'msg' => 'Cliente informado encontra-se [inválido] no sistema'
+            ]);
+        }
+
+        return $this->presenter->setStatusCode(Response::HTTP_OK)->toPresent([
+            'err' => false,
+            'msg' => 'Cliente informado encontra-se [válido] no sistema'
+        ]);
+    }
+
     public function update(Request $req)
     {
         try {

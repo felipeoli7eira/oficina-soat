@@ -39,6 +39,11 @@ class ClienteGateway
         return $this->repositorio->atualizar($uuid, $novosDados);
     }
 
+    public function validaStatus(string $documento): bool
+    {
+        return $this->repositorio->validaStatus($documento);
+    }
+
     /**
      * Metodo responsavel por devolver um id numero, caso haja, a partir de um uuid
      *

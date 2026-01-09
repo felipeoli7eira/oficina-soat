@@ -16,4 +16,5 @@ interface RepositorioInterface
     public function deletar(string $uuid): bool;
     public function atualizar(string $uuid, array $novosDados): array;
     public function obterIdNumerico(string $uuid): int;
+    public function validaStatus(string $documento): bool;
 }

@@ -10,7 +10,7 @@ use App\Domain\UseCase\Cliente\DeleteUseCase;
 
 use App\Infrastructure\Gateway\ClienteGateway;
 use App\Domain\Entity\Cliente\RepositorioInterface as ClienteRepositorio;
-
+use App\Domain\UseCase\Cliente\ValidateStatusUseCase;
 use App\Exception\DomainHttpException;
 
 class Cliente
@@ -71,6 +71,20 @@ class Cliente
 
         $gateway = new ClienteGateway($this->repositorio);
         $useCase = new ReadOneUseCase($uuid);
+
+        $res = $useCase->exec($gateway);
+
+        return $res;
+    }
+
+    public function validaStatus(string $documento): bool
+    {
+        if (! $this->repositorio instanceof ClienteRepositorio) {
+            throw new DomainHttpException('fonte de dados deve ser definida', 500);
+        }
+
+        $gateway = new ClienteGateway($this->repositorio);
+        $useCase = new ValidateStatusUseCase($documento);
 
         $res = $useCase->exec($gateway);
 

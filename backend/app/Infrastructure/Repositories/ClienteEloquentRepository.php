@@ -12,7 +12,7 @@ use App\Domain\Entity\Cliente\Mapper;
 
 class ClienteEloquentRepository implements RepositorioInterface
 {
-    public function __construct(private readonly ClienteModel $model) {}
+    public function __construct(public readonly ClienteModel $model) {}
 
     public function encontrarPorIdentificadorUnico(string|int $identificador, ?string $nomeIdentificador = 'uuid'): ?Entidade
     {
@@ -88,5 +88,12 @@ class ClienteEloquentRepository implements RepositorioInterface
         }
 
         return $modelValue->id;
+    }
+
+    public function validaStatus(string $documento): bool
+    {
+        $modelResult = $this->model->query()->where('documento', $documento)->whereNull('deletado_em');
+
+        return $modelResult->exists();
     }
 }
