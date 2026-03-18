@@ -21,4 +21,8 @@ class UsuarioModel extends Model
         'atualizado_em',
         'deletado_em'
     ];
+
+    protected $casts = [
+        'ativo' => 'boolean',
+    ];
 }

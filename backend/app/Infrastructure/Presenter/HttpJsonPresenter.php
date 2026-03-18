@@ -16,7 +16,7 @@ final class HttpJsonPresenter implements PresenterInterface
         return response()->json($dados, $this->statusCode);
     }
 
-    public function setStatusCode(int $statusCode): HttpjsonPresenter
+    public function setStatusCode(int $statusCode): HttpJsonPresenter
     {
         $this->statusCode = $statusCode;
 
